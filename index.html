@@ -270,16 +270,20 @@
             </div>
           </div>
 
-          <input type="file" id="file-input" accept="image/*" capture="environment" />
+          <input type="file" id="file-input" accept="image/*" />
+          <input type="file" id="camera-input" accept="image/*" capture="environment" />
 
           <div class="row">
             <button class="btn secondary" onclick="document.getElementById('file-input').click()">
-              Choose photo
+              From gallery
             </button>
-            <button class="btn" id="analyze-btn" disabled onclick="analyzePhoto()">
-              <span id="analyze-label">Analyze</span>
+            <button class="btn secondary" onclick="document.getElementById('camera-input').click()">
+              Take photo
             </button>
           </div>
+          <button class="btn" id="analyze-btn" disabled onclick="analyzePhoto()" style="margin-top:10px">
+            <span id="analyze-label">Analyze</span>
+          </button>
         </div>
 
         <div id="scan-results" style="display:none">
