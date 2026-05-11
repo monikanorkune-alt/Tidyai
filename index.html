@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TidyAI" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>TidyAI — 3-Minute Clean</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-2: #111a36;
+      --card: rgba(255,255,255,0.06);
+      --card-strong: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.10);
+      --text: #e8ecf4;
+      --muted: #95a0b8;
+      --accent: #7c5cff;
+      --accent-2: #29d3a3;
+      --warn: #ffb547;
+      --danger: #ff5d73;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 0% -10%, #2a1c5e 0%, transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, #0d3f4f 0%, transparent 55%),
+        var(--bg);
+      overscroll-behavior-y: contain;
+    }
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+    .app {
+      flex: 1; display: flex; flex-direction: column;
+      padding-top: var(--safe-top);
+      padding-bottom: calc(72px + var(--safe-bottom));
+      max-width: 540px; margin: 0 auto; width: 100%;
+    }
+    header.appbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px 6px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.2px;
+    }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      display: grid; place-items: center; color: #0b1020; font-weight: 800;
+      box-shadow: 0 6px 20px rgba(124,92,255,0.35);
+    }
+    .logo-name { font-size: 18px; }
+    .badge {
+      font-size: 11px; color: var(--muted); border: 1px solid var(--border);
+      padding: 4px 8px; border-radius: 999px;
+    }
+    main { padding: 8px 16px 24px; flex: 1; }
+    .view { display: none; }
+    .view.active { display: block; animation: fade .25s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .card + .card { margin-top: 14px; }
+    h1 { font-size: 22px; margin: 8px 0 12px; }
+    h2 { font-size: 16px; margin: 0 0 8px; }
+    p { color: var(--muted); line-height: 1.45; margin: 0 0 8px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 16px; min-height: 44px; border-radius: 12px; border: 0;
+      font-weight: 600; font-size: 15px; cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #5e3df0);
+      color: white;
+      box-shadow: 0 8px 24px rgba(124,92,255,0.3);
+      width: 100%;
+    }
+    .btn.secondary {
+      background: var(--card-strong); color: var(--text); box-shadow: none;
+      border: 1px solid var(--border);
+    }
+    .btn.ghost { background: transparent; border: 1px dashed var(--border); color: var(--muted); }
+    .btn.small { padding: 8px 12px; min-height: 36px; font-size: 13px; width: auto; border-radius: 10px; }
+    .btn[disabled] { opacity: 0.5; pointer-events: none; }
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
+
+    .upload-zone {
+      position: relative;
+      border-radius: 18px; overflow: hidden;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, rgba(124,92,255,0.15), rgba(41,211,163,0.08));
+      border: 1px dashed rgba(255,255,255,0.18);
+      display: grid; place-items: center;
+      margin-bottom: 14px;
+    }
+    .upload-zone img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .upload-zone .placeholder { text-align: center; padding: 24px; color: var(--muted); }
+    .upload-zone .placeholder svg { opacity: 0.7; }
+
+    input[type="file"] { display: none; }
+    input[type="text"], input[type="password"], select, textarea {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border);
+      color: var(--text); font-size: 15px; outline: none;
+    }
+    label.field { display: block; margin-bottom: 12px; }
+    label.field > span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .score-wrap { display: flex; align-items: center; gap: 14px; }
+    .score-ring {
+      width: 84px; height: 84px; flex: none;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-2) calc(var(--p,0) * 1%), rgba(255,255,255,0.08) 0);
+      display: grid; place-items: center;
+      position: relative;
+    }
+    .score-ring::after {
+      content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--bg-2);
+    }
+    .score-ring > span { position: relative; z-index: 1; font-weight: 800; font-size: 22px; }
+    .score-meta h2 { font-size: 18px; margin-bottom: 4px; }
+    .score-meta p { margin: 0; }
+
+    .task-list { list-style: none; padding: 0; margin: 0; }
+    .task {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px; border-radius: 14px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .task.done { opacity: 0.55; }
+    .task.done .task-title { text-decoration: line-through; }
+    .checkbox {
+      width: 24px; height: 24px; flex: none; border-radius: 8px;
+      border: 1.5px solid rgba(255,255,255,0.3); margin-top: 2px;
+      display: grid; place-items: center; cursor: pointer; background: transparent;
+    }
+    .checkbox.checked { background: var(--accent-2); border-color: var(--accent-2); }
+    .checkbox.checked::after { content: "✓"; color: #0b1020; font-weight: 800; font-size: 14px; }
+    .task-body { flex: 1; min-width: 0; }
+    .task-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .task-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--muted); }
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 999px;
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border);
+    }
+    .chip.priority-high { color: var(--danger); border-color: rgba(255,93,115,0.35); }
+    .chip.priority-medium { color: var(--warn); border-color: rgba(255,181,71,0.35); }
+    .chip.priority-low { color: var(--accent-2); border-color: rgba(41,211,163,0.35); }
+    .chip.member { font-weight: 600; }
+
+    .quickplan {
+      background: linear-gradient(135deg, rgba(41,211,163,0.18), rgba(124,92,255,0.18));
+      border: 1px solid rgba(41,211,163,0.35);
+      border-radius: 18px; padding: 16px; margin-bottom: 14px;
+    }
+    .quickplan h2 { display: flex; align-items: center; gap: 8px; }
+    .quickplan .timer { font-weight: 800; font-size: 13px; color: var(--accent-2); }
+
+    .member-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      border-radius: 14px; background: var(--card-strong);
+      border: 1px solid var(--border); margin-bottom: 10px;
+    }
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+      color: #0b1020; font-weight: 800;
+    }
+    .empty {
+      text-align: center; color: var(--muted); padding: 30px 12px; font-size: 14px;
+    }
+    .add-member { display: flex; gap: 8px; }
+    .add-member input { flex: 1; }
+
+    nav.tabs {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; justify-content: space-around;
+      padding: 8px 8px calc(8px + var(--safe-bottom));
+      background: rgba(11,16,32,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      z-index: 50;
+    }
+    nav.tabs button {
+      flex: 1; max-width: 120px;
+      background: transparent; border: 0; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 6px 4px; font-size: 11px; cursor: pointer;
+    }
+    nav.tabs button.active { color: var(--text); }
+    nav.tabs button .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-2); opacity: 0; }
+    nav.tabs button.active .dot { opacity: 1; }
+    nav.tabs svg { width: 22px; height: 22px; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: calc(96px + var(--safe-bottom));
+      transform: translateX(-50%);
+      background: #1a2444; color: var(--text);
+      padding: 10px 14px; border-radius: 12px; font-size: 13px;
+      border: 1px solid var(--border);
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+      max-width: 320px; text-align: center; z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pill-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+    .pill-tabs button {
+      background: var(--card-strong); border: 1px solid var(--border); color: var(--muted);
+      padding: 6px 12px; border-radius: 999px; font-size: 12px; cursor: pointer; white-space: nowrap;
+    }
+    .pill-tabs button.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
+
+    .footer-note { color: var(--muted); font-size: 11px; text-align: center; padding: 16px 8px 0; }
+    a { color: var(--accent-2); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="appbar">
+      <div class="logo">
+        <div class="logo-mark">T</div>
+        <div>
+          <div class="logo-name">TidyAI</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:-2px">Snap. Clean. Done in 3.</div>
+        </div>
+      </div>
+      <span class="badge" id="api-badge">No API key</span>
+    </header>
+
+    <main>
+      <!-- SCAN VIEW -->
+      <section id="view-scan" class="view active">
+        <div class="card">
+          <h1>Scan a room</h1>
+          <p>Take or upload a photo. TidyAI will spot what's messy and build a 3-minute quick-clean plan.</p>
+
+          <div class="upload-zone" id="upload-zone">
+            <img id="preview-img" alt="Room preview" style="display:none" />
+            <div class="placeholder" id="upload-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 7h3l2-3h8l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <div style="margin-top:8px;font-size:14px">Tap below to add a photo</div>
+            </div>
+          </div>
+
+          <input type="file" id="file-input" accept="image/*" capture="environment" />
+
+          <div class="row">
+            <button class="btn secondary" onclick="document.getElementById('file-input').click()">
+              Choose photo
+            </button>
+            <button class="btn" id="analyze-btn" disabled onclick="analyzePhoto()">
+              <span id="analyze-label">Analyze</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="scan-results" style="display:none">
+          <div class="card" style="margin-top:14px">
+            <div class="score-wrap">
+              <div class="score-ring" id="score-ring" style="--p:0"><span id="score-num">--</span></div>
+              <div class="score-meta">
+                <h2 id="score-label">Cleanliness</h2>
+                <p id="score-summary">—</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="quickplan" id="quickplan-card" style="display:none">
+            <h2>⚡ 3-Minute Quick Win <span class="timer" id="quickplan-time">0:00</span></h2>
+            <p style="margin-bottom:10px">Do these in order — biggest visible impact first.</p>
+            <ul class="task-list" id="quickplan-list"></ul>
+            <button class="btn small secondary" onclick="addAllTasks()">Save all to my list</button>
+          </div>
+
+          <div class="card">
+            <h2>All suggested tasks</h2>
+            <ul class="task-list" id="suggested-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS VIEW -->
+      <section id="view-tasks" class="view">
+        <h1>Your tasks</h1>
+        <div class="pill-tabs" id="task-filter"></div>
+        <ul class="task-list" id="tasks-list"></ul>
+        <div class="empty" id="tasks-empty" style="display:none">
+          No tasks yet. Scan a room to get started.
+        </div>
+        <button class="btn secondary" id="reassign-btn" style="margin-top:8px;display:none" onclick="reassignAll()">
+          Reassign tasks fairly
+        </button>
+      </section>
+
+      <!-- FAMILY VIEW -->
+      <section id="view-family" class="view">
+        <h1>Family</h1>
+        <p>Add the people who'll share the work. Tasks get split fairly across everyone you add.</p>
+
+        <div class="card">
+          <h2>Add member</h2>
+          <div class="add-member">
+            <input type="text" id="new-member" placeholder="Name (e.g. Sam)" maxlength="20" />
+            <button class="btn small" onclick="addMember()">Add</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div id="members-list"></div>
+          <div class="empty" id="members-empty">No one added yet.</div>
+        </div>
+      </section>
+
+      <!-- SETTINGS VIEW -->
+      <section id="view-settings" class="view">
+        <h1>Settings</h1>
+
+        <div class="card">
+          <h2>OpenAI API key</h2>
+          <p>Stored locally in your browser. Get one at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.</p>
+          <label class="field">
+            <span>API key</span>
+            <input type="password" id="api-key-input" placeholder="sk-..." />
+          </label>
+          <label class="field">
+            <span>Model</span>
+            <select id="model-select">
+              <option value="gpt-4o-mini">gpt-4o-mini (cheap, fast)</option>
+              <option value="gpt-4o">gpt-4o (best quality)</option>
+            </select>
+          </label>
+          <button class="btn" onclick="saveSettings()">Save</button>
+        </div>
+
+        <div class="card">
+          <h2>Data</h2>
+          <p>All your tasks, family, and key are stored only on this device.</p>
+          <button class="btn secondary" onclick="clearData()">Clear all data</button>
+        </div>
+
+        <div class="footer-note">
+          TidyAI MVP · v0.1 · Built with Claude<br/>
+          Uses your own OpenAI API key — usage costs apply.
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabs">
+      <button data-tab="scan" class="active" onclick="switchTab('scan')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h3l2-3h8l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Scan</span>
+        <span class="dot"></span>
+      </button>
+      <button data-tab="tasks" onclick="switchTab('tasks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Tasks</span>
+        <span class="dot"></span>
+      </button>
+      <button data-tab="family" onclick="switchTab('family')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Family</span>
+        <span class="dot"></span>
+      </button>
+      <button data-tab="settings" onclick="switchTab('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+        <span class="dot"></span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
