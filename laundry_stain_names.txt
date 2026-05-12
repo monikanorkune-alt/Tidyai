@@ -1,0 +1,802 @@
+Black coffee
+Coffee with cream
+Latte / cappuccino
+Espresso
+Iced coffee
+Cold brew concentrate
+Coffee creamer (powdered, dry)
+Coffee creamer (liquid, sugary)
+Black tea
+Green tea
+Herbal tea (red rooibos, hibiscus)
+Matcha (green powder + milk)
+Bubble tea (boba) — milk tea drip
+Bubble tea — tapioca pearl crushed
+Chai tea (spiced + milk)
+Hot chocolate
+Mocha / chocolate latte
+Coffee shop syrup (caramel/vanilla)
+Pumpkin spice latte (orange tinge)
+Honey-sweetened tea
+Tea bag residue (orange-brown ring)
+Cola (Coke / Pepsi / dark soda)
+Root beer
+Diet cola (artificial sweetener)
+Citrus soda (Sprite, 7Up)
+Mountain Dew (neon yellow)
+Orange soda (Fanta)
+Grape soda
+Cream soda
+Energy drink (Red Bull, Monster)
+Red Bull (yellow)
+Energy drink (green/blue artificial)
+Kombucha
+Tonic water (quinine)
+Ginger ale / ginger beer
+Sparkling water (flavored)
+Slurpee / slushie (red)
+Slurpee / slushie (blue)
+Sno-cone syrup
+Orange juice (with pulp)
+Grapefruit juice
+Apple juice
+Cranberry juice
+Pomegranate juice
+Grape juice
+Cherry juice
+Beet juice
+Carrot juice
+Tomato juice
+Pineapple juice
+Mango juice / smoothie
+Pickle juice
+V8 / vegetable juice
+Lemon / lime juice (clear)
+Aloe juice / aloe vera gel
+Coconut water
+Watermelon juice
+Red wine
+White wine
+Rosé wine
+Champagne / sparkling wine
+Mulled wine (spiced red)
+Sangria
+Port wine
+Beer (light)
+Beer (dark / stout)
+Beer foam dried
+Bloody Mary (tomato + vodka + spice)
+Margarita (lime + sugar + salt)
+Mojito (mint + lime + sugar)
+Piña colada
+Cosmopolitan (cranberry + vodka)
+Espresso martini
+Whiskey (neat)
+Bourbon / rum
+Tequila (clear)
+Vodka (clear)
+Liqueur (Baileys / cream liqueur)
+Liqueur (coffee — Kahlúa)
+Aperol / Campari (orange-red bitter)
+Vermouth
+Hot toddy (whisky + lemon + honey)
+Ketchup
+Yellow mustard
+Dijon mustard
+Whole grain mustard
+Mayonnaise
+Tomato sauce / marinara
+Pasta sauce with meat
+Pizza sauce + grease ring
+BBQ sauce
+Hot sauce (red, vinegar-based)
+Sriracha
+Tabasco
+Buffalo sauce (butter + hot sauce)
+Gochujang (Korean chili paste)
+Sambal oelek
+Soy sauce
+Teriyaki sauce
+Hoisin sauce
+Fish sauce
+Oyster sauce
+Worcestershire sauce
+Ponzu / yuzu sauce
+Pad Thai sauce
+Curry (yellow Thai)
+Curry (red Thai)
+Curry (green Thai)
+Curry (Indian butter chicken)
+Curry (Japanese)
+Turmeric (powder, dry)
+Saffron
+Paprika
+Chili powder / cayenne
+Mustard powder
+Salsa (red)
+Salsa verde
+Guacamole
+Hummus
+Pesto
+Alfredo sauce
+Ranch dressing
+Caesar dressing
+Italian dressing (oil + vinegar)
+Vinaigrette
+Thousand Island dressing
+Tahini (sesame paste)
+Peanut sauce / peanut butter
+Chimichurri
+Tartar sauce
+Honey mustard
+Honey
+Maple syrup
+Corn syrup
+Molasses
+Agave nectar
+Milk chocolate
+Dark chocolate
+White chocolate
+Hot chocolate (drink)
+Chocolate syrup
+Nutella / hazelnut spread
+Cocoa powder dry
+Mocha drink
+Ice cream (vanilla)
+Ice cream (chocolate)
+Ice cream (strawberry)
+Gelato
+Sorbet (fruit)
+Popsicle / freezer pop (red)
+Popsicle (orange/yellow)
+Popsicle (blue)
+Milk
+Whole milk (set / sour)
+Buttermilk
+Cream / heavy cream
+Yogurt (plain)
+Yogurt (fruit)
+Sour cream
+Cottage cheese
+Cheese melted (mozzarella)
+Cheese (blue cheese)
+Cream cheese
+Cheese sauce / nacho cheese
+Eggnog
+Egg yolk
+Egg white
+Scrambled egg
+Hollandaise sauce
+Whipped cream / Cool Whip
+Butter / margarine
+Ghee (clarified butter)
+Lard / cooking fat
+Bacon grease
+Cooking oil (canola/vegetable)
+Olive oil
+Coconut oil
+Sesame oil
+Avocado / mashed avocado
+Avocado oil
+Olives (oil + brine)
+Jam (strawberry)
+Jam (raspberry / berry)
+Jam (apricot / peach)
+Marmalade
+Jelly (grape)
+Caramel
+Toffee / butterscotch
+Marshmallow
+Sticky candy (gummi)
+Lollipop residue
+Chewing gum
+Bubble gum (pink)
+Tomato (raw, fresh)
+Spaghetti sauce drips
+Lasagna drips
+Pesto (oily green)
+Soup (clear broth)
+Soup (cream-based)
+Soup (tomato)
+Miso paste
+Pickle juice / vinegar spill
+Sauerkraut
+Kimchi
+Sushi soy + wasabi
+Sushi rice (sticky)
+Onion juice (clear)
+Garlic oil
+Beet (raw)
+Carrot (cooked)
+Spinach (cooked)
+Pomegranate seeds (juice burst)
+Kiwi
+Banana (mashed)
+Mango (ripe pulp)
+Peach juice
+Pineapple (juice + pulp)
+Lemon zest / oil
+Vanilla extract
+Blood (fresh)
+Blood (dried, 24h+)
+Blood (set, washed already)
+Menstrual blood (fresh)
+Menstrual blood (set on underwear)
+Nose bleed
+Sweat (fresh)
+Sweat (yellow pit stains)
+Sweat (collar grime / ring)
+Sweat (gym clothes funk)
+Sweat (back / lower back)
+Body oil yellowing (sebum on collar)
+Vomit (fresh)
+Vomit (dried)
+Bile / acid reflux
+Saliva / drool (sleep stain on pillowcase)
+Drool on baby clothes
+Phlegm / mucus
+Earwax
+Semen
+Breast milk (fresh)
+Breast milk (set yellow)
+Baby spit-up
+Baby formula
+Diaper blowout (poop)
+Wound drainage / pus
+Tears + mascara (on collar)
+Skin oil rings on hat band
+Foot sweat (shoe interior)
+Lipstick (matte)
+Lipstick (glossy / waxy)
+Lipstick (liquid lip tint)
+Lipstick (red on white collar)
+Lip gloss
+Lip balm (Chapstick)
+Lip liner pencil
+Foundation (liquid)
+Foundation (powder)
+Foundation (cream/stick)
+Foundation (full coverage / waterproof)
+BB cream / CC cream
+Tinted moisturizer
+Concealer (liquid)
+Concealer (stick)
+Blush (powder)
+Blush (cream)
+Bronzer (powder)
+Contour stick
+Highlighter cosmetic (cream)
+Setting spray (clear residue)
+Setting powder (translucent)
+Brow gel (clear)
+Brow pomade
+Brow pencil
+Brow tint (semi-permanent)
+Mascara (regular)
+Mascara (waterproof)
+Mascara (clear)
+Eyeliner (liquid)
+Eyeliner (pencil)
+Eyeliner (gel)
+Eyeshadow (powder)
+Eyeshadow (cream)
+Eyeshadow (glitter)
+False eyelash glue
+Lash extension adhesive (cyanoacrylate)
+Nail polish (wet)
+Nail polish (dried)
+Gel polish (cured)
+Nail polish remover spill
+Acrylic nail dust
+Nail glue
+Hair dye (fresh, semi-permanent)
+Hair dye (fresh, permanent)
+Hair dye (set / dried)
+Bleach (hair bleach from salon)
+Henna paste (fresh)
+Henna (dried)
+Hair gel (clear)
+Hair gel (tinted root cover-up)
+Hair mousse
+Hair pomade / hair wax
+Hair oil (argan / coconut)
+Hair serum
+Leave-in conditioner
+Dry shampoo (powder)
+Dry shampoo (spray, white)
+Hairspray (set / sticky residue)
+Hair mask (clay-based)
+Hair mask (oil-based)
+Conditioner residue (greasy yellow)
+Shampoo (regular)
+Dandruff shampoo (medicated)
+Root touch-up spray (semi-permanent dye)
+Hair color (temporary chalk)
+Hair color (semi-permanent vegetable dye)
+Deodorant white marks (fresh)
+Antiperspirant aluminum yellowing (set)
+Spray deodorant (set)
+Body lotion (regular)
+Body butter (heavy)
+Body oil
+Hand cream
+Face cream / moisturizer (white)
+Sunscreen (fresh, white)
+Sunscreen (mineral / zinc oxide white residue)
+Sunscreen (chemical, set yellow on whites)
+Sunscreen + chlorine yellow (pool)
+Spray tan (fresh)
+Spray tan (dried streaks)
+Self-tanner / tan mousse
+Tan drops (face)
+Perfume (alcohol-based)
+Cologne
+Solid perfume / oil-based perfume
+Body spray
+Essential oil (lavender, eucalyptus)
+Massage oil
+Tea tree oil
+Aromatherapy oil blend
+Wax depilatory (cool)
+Wax depilatory (warm/strip wax)
+Sugar wax
+Nair / depilatory cream
+Threading paste / shaving foam
+Ballpoint ink (blue, fresh)
+Ballpoint ink (black)
+Ballpoint ink (red)
+Ballpoint ink (other colors)
+Ballpoint ink (set, washed already)
+Gel pen ink
+Rollerball ink
+Fountain pen ink (water-based)
+India ink
+Calligraphy ink
+Permanent marker / Sharpie (black)
+Permanent marker (other colors)
+Highlighter (yellow)
+Highlighter (pink)
+Highlighter (green/blue)
+Dry erase marker (whiteboard)
+Wet erase marker
+Chalk marker / liquid chalk
+Fabric marker (washable)
+Fabric marker (permanent)
+Paint marker (oil-based)
+Crayon (room temperature)
+Crayon (melted in dryer onto load)
+Crayon on wall (washable)
+Pencil graphite
+Mechanical pencil lead (broken in pocket)
+Colored pencil
+Charcoal pencil
+Oil pastel
+Soft pastel powder
+Watercolor paint (wet)
+Watercolor (dried)
+Acrylic paint (wet)
+Acrylic paint (dried)
+Oil paint (artist)
+Gouache paint
+Tempera paint (kid's)
+Finger paint
+Latex wall paint (wet)
+Latex wall paint (dried)
+Oil-based wall paint (wet)
+Spray paint (fresh, wet)
+Spray paint (dried)
+Fabric paint (set)
+Glow-in-the-dark paint
+Metallic paint
+Enamel paint (model paint)
+White school glue (wet)
+White school glue (dried)
+Super glue (cyanoacrylate)
+Hot glue (cooled)
+Fabric glue
+Wood glue (Titebond)
+Contact cement
+Epoxy (mixed)
+Rubber cement
+Spray adhesive (3M)
+Double-sided tape adhesive
+Duct tape residue
+Masking tape residue
+Electrical tape residue
+Sticker / label adhesive
+Glitter glue (wet)
+Glitter (loose)
+Slime (commercial)
+Slime (homemade with borax)
+Silly Putty / thinking putty
+Play-Doh
+Polymer clay (Sculpey, fresh)
+Polymer clay (baked)
+Modeling clay (oil-based, non-drying)
+Pottery clay / ceramic slip
+Charcoal (art)
+Grass
+Mud (garden soil)
+Mud (clay-heavy)
+Wet leaves stain (chlorophyll)
+Tree sap / pine resin (fresh)
+Tree sap (old / polymerized)
+Pine pitch (heavy)
+Maple sap
+Pollen (yellow)
+Pollen (lily — worst)
+Pollen (sunflower)
+Bird droppings
+Seagull droppings
+Pigeon droppings
+Insect splatter (windshield)
+Mosquito splatter (blood)
+Spider blood (rare)
+Snail / slug trail
+Algae (pond water)
+Lake water marks
+Salt water marks (white tide line)
+Frost / morning dew rings
+Mossy patch
+Lichen (gray-green)
+Soot / fireplace ash
+Bonfire smoke (no visible stain)
+Cigarette smoke residue
+Cigarette tar (yellow ceiling-like)
+Wood smoke (campfire)
+Cooking smoke (kitchen vent)
+Candle soot
+Concrete splash (wet)
+Concrete dust
+Plaster / drywall dust
+Tar / asphalt (road)
+Sand (hidden grit)
+Beach sand + sunscreen combo
+Cilantro / parsley juice
+Basil oil
+Mint juice
+Spinach (raw)
+Lettuce juice (clear)
+Tomato vine / leaf
+Walnut leaf juice (very dark)
+Mulberry (berry + leaf)
+Acorn / oak stain
+Berry leaf (blackberry bramble)
+Fig (fruit + sap)
+Cherry (fruit + pit splatter)
+Wild plum
+Crab apple
+Citrus peel oil (limonene)
+Avocado pit oil (brown)
+Mustard plant (yellow flower)
+Compost / soil
+Fertilizer (granular)
+Manure (animal-based)
+Weed killer (Roundup)
+Pesticide spray
+Pet hair embedded (clothes)
+Pet hair on upholstery
+Cat drool (yellow stain)
+Dog drool (large breed, sticky)
+Cat spray (intact tomcat — strong)
+Cat urine (fresh)
+Cat urine (dried)
+Dog urine (fresh, on carpet)
+Dog urine (set in carpet)
+Pet vomit
+Pet vomit on carpet
+Pet feces
+Cat hairball
+Rabbit / small mammal urine
+Bird droppings (parakeet, parrot)
+Fish tank water spill (algae)
+Reptile shed skin oil
+Flea treatment (topical, spilled)
+Pet shampoo residue
+Cat litter dust
+Motor oil (fresh)
+Motor oil (set / multiple washes)
+Transmission fluid (red)
+Brake fluid (clear, hygroscopic)
+Power steering fluid
+Hydraulic fluid
+Bike chain grease
+Wheel bearing grease (heavy)
+Axle grease (black)
+White lithium grease
+Cutting fluid (machining)
+Machining coolant (clear)
+WD-40 overspray
+Penetrating oil (PB Blaster)
+3-in-1 oil
+Antifreeze (sweet smell — pet danger)
+Gasoline (fresh)
+Diesel fuel
+Kerosene
+Battery acid (sulfuric)
+Battery terminal corrosion (white/green)
+Tire mark on white sneakers
+Brake dust (iron + carbon, red-brown)
+Carbon / exhaust soot
+Roadside asphalt sealer
+Driveway sealer (water-based)
+Driveway sealer (asphalt-based)
+Brake cleaner overspray
+Carburetor cleaner overspray
+Welding flux
+Welding slag (small molten bead)
+Furniture polish (wood)
+Stove polish (black)
+Shoe polish (black)
+Shoe polish (brown)
+Saddle soap residue
+Boot wax / mink oil
+Rubber scuff (black, on white)
+Betadine / iodine (fresh, orange-brown)
+Betadine (set, brown)
+Iodine tincture
+Mercurochrome (red antiseptic, banned in US but still used elsewhere)
+Hydrogen peroxide bubble (no stain)
+Surgical marker (purple/blue)
+EKG / ECG gel
+Ultrasound gel
+Calamine lotion (pink)
+Cough syrup (red/purple)
+Pediatric antibiotic (pink amoxicillin)
+Pill capsule contents
+Vapor rub (Vicks)
+Bandage adhesive residue
+Topical hydrocortisone cream
+Antibiotic ointment (Neosporin)
+Petroleum jelly (Vaseline)
+Bacitracin / triple antibiotic
+Liquid bandage spray
+Compression wrap residue
+Dental fluoride (set)
+Toothpaste (white)
+Toothpaste (with red/blue stripes)
+Mouthwash (blue/green)
+Denture cleaner foam
+Eye drops
+Hemorrhoid cream (white)
+Insulin pen leak (clear)
+Paint thinner / mineral spirits (clear)
+Turpentine
+Lacquer thinner
+Acetone spill
+Rubber cement thinner
+Goo Gone residue (after using)
+Goof Off residue
+Silver nitrate (lab, black)
+Copper sulfate (lab, blue)
+Lab dye (any)
+Tattoo ink (just-tattooed leakage)
+Surgical ink prep (purple)
+Conveyor grease (heavy industrial)
+Printer ink (inkjet)
+Toner powder (laser printer)
+Carbon paper
+Receipt thermal paper smudge
+Embalming fluid
+Prosthetic adhesive (medical)
+Photo developer fluid
+Photo fixer
+Photo stop bath (vinegar)
+Pool chlorine (yellowing)
+Bromine (spa)
+Algaecide (copper-based)
+Pool dye marker (color toy)
+Rust / iron oxide (orange-brown)
+Iron transfer (clothing iron)
+Iron scorch (yellow-brown)
+Iron melted polymer (polyester scorch)
+Curling iron scorch
+Hot pan ring (cooking)
+Bleach spot (yellow on colored fabric)
+Mildew / mold (light)
+Mildew (heavy / black spots)
+Pink mold (Serratia, in bathroom)
+Hard water spots (white minerals)
+Limescale / calcium deposits
+Soap scum residue
+Yellow age stains on stored whites
+Cellulose rust (paper acid burn on cotton)
+Yellowed pit area on white t-shirts (set)
+Ghost stain (invisible until dry)
+Sebum yellowing (collar grime)
+Foxing on stored linens (brown spots)
+Tarnished silver thread (jewelry, embroidery)
+Smoke odor (clothes from smoker's home)
+Cooking grease vapor (kitchen)
+Candle wax (paraffin)
+Candle wax (beeswax)
+Candle wax (soy)
+Candle wax (colored, red/green)
+Lip balm / Chapstick
+Ski wax
+Surfboard wax
+Chewing gum
+Bubble gum (pink) on hair
+Sticker / label adhesive residue
+Tape residue (any)
+Sticker price tag glue
+Color bleed (red shirt bled onto whites)
+Dye transfer (jeans on white shoes)
+Hair gel ring on collar / hat band
+Pillowcase yellowing (sebum + drool)
+Bug spray (DEET) damage to synthetic
+Easter egg dye (food coloring)
+Easter chocolate cream
+Halloween fake blood (corn syrup + dye)
+Halloween face paint (stage makeup)
+Halloween candle wax (orange/black)
+Theatrical fake blood (cherry-syrup formula)
+Theatrical character makeup (greasepaint)
+Latex prosthetic adhesive
+Christmas candle wax (red)
+Christmas tree sap on shirt
+Pine needle pitch
+Tinsel residue
+Birthday cake icing (buttercream)
+Birthday cake icing (fondant)
+Birthday candle wax
+Holi powder (gulal, pink/red/yellow)
+Diwali rangoli powder
+Festival glitter + sunscreen + mud combo
+Body paint (water-based festival)
+Body paint (oil-based theatrical)
+Henna (mehndi, fresh)
+Glow stick fluid
+Glitter (chunky body glitter)
+Glitter (fine, festival fallout)
+Neon highlighter body spray
+Sports drink — red Gatorade
+Sports drink — orange Gatorade
+Sports drink — yellow Gatorade
+Sports drink — blue Gatorade (artificial blue dye)
+Sports drink — green / lime
+Protein shake (chocolate)
+Protein shake (vanilla)
+Pre-workout drink (red, dyed)
+Sports clay (baseball field)
+Sports turf (synthetic, green crumbs)
+Field chalk (white line marker)
+Mouthguard saliva residue
+Sweat + grass + dirt combo (sports jersey)
+Helmet sweat ring
+Bicycle / skateboard road rash blood + dirt
+Bicycle chain grease on pants
+Snow / road salt tide line (boots, pants)
+Ski wax
+Gondola / lift grease
+Camping food spill + smoke + dirt combo
+Tent canvas mildew
+Beach combo (sand + sunscreen + salt water)
+Sandcastle clay (mud-like)
+Pool dye (kid's pool color tab)
+Fireworks gunpowder residue
+Sparkler residue (light metal dust)
+Smoke bomb (colored)
+Incense soot
+Sage smudge stick ash
+Ceremonial powder (color run race)
+Glow stick on carpet (cracked)
+Crayon (washable Crayola)
+Crayon on couch upholstery
+Sidewalk chalk
+Liquid chalk marker
+Finger paint (washable)
+Tempera paint (kid)
+Construction paper bleed (wet)
+Markers (kid's washable)
+Markers (kid's, claimed-washable but set)
+Slime (homemade)
+Floam beads
+Magic Sand (sand that doesn't wet)
+Edible markers / cake decorator
+Stamp ink (red, kid's stamp pad)
+Stamp ink (black)
+Stamp ink (embossing)
+Press-on tattoo / temporary tattoo
+Body paint sticks (kid)
+Soap bubbles solution
+Bath bomb (colored, dye + glitter)
+Chlorine bleach drip on colored fabric
+Chlorine bleach drip on white fabric
+Color-safe bleach (oxygen) overdose
+Ammonia spill
+Toilet bowl cleaner (acidic) spill
+Drain cleaner (caustic) spill
+Oven cleaner spray spillover
+Disinfectant spray (Lysol)
+Multi-surface spray (Windex)
+Furniture polish (Pledge) spray
+Mold remover spray
+Hardwood floor cleaner
+Carpet stain remover residue
+Stain remover overuse (sticky residue)
+Fabric softener stain (greasy yellow)
+Scent booster overdose (sticky beads)
+Laundry detergent splash (concentrate)
+Lipstick (red) on collar transfer
+Foundation transfer on shirt collar (clean)
+Yellow underarm shadow on white linen
+Silly String
+Spray foam (Great Stuff) insulation, cured
+Caulk / silicone (uncured)
+Caulk (cured)
+Wood stain (oil-based)
+Wood stain (water-based)
+Wood varnish / polyurethane
+Polyurethane (spray)
+Latex glove dye (powder-free, set)
+Latex glove powder (cornstarch)
+Air freshener spray residue
+Plug-in air freshener oil leak
+Reed diffuser oil spill
+Hand sanitizer (alcohol gel)
+Insect bite cream (calamine pink)
+Bug bite anti-itch gel (clear)
+Insect repellent (DEET) damage to nylon
+Picaridin repellent
+Permethrin (clothing pretreatment)
+Sticky lint roller residue
+Scotch tape residue (light)
+Pressure washer detergent residue
+Carpet shampoo residue (sticky)
+Mattress protector film residue
+Curtain hem grime (urban dust)
+Tablecloth wine + candle wax combo
+White towel — pool chlorine + sunscreen yellow combo
+Sneaker midsole yellowing (oxidation)
+Mesh sneaker dirt
+Suede water marks
+Leather salt stain (boots)
+Bookbinding glue / paper glue (PVA, dried)
+Diamond paint sealant residue
+3D printer filament fragment
+Embroidery wash-away stabilizer residue
+Iron-on adhesive (set wrong)
+Vinyl HTV (heat transfer vinyl) misapplied
+Iron-on patch residue
+Sewing machine oil drop
+Knitting yarn fluff in pockets
+Mascara on white pillowcase (morning)
+Acne medicine bleach (benzoyl peroxide on dark towel)
+Retinol cream (yellow on pillowcase)
+AHA/BHA chemical exfoliant
+Tongue scraper residue (tongue coating)
+Mouthwash + toothpaste foam (mixed)
+Shaving cream residue (set)
+Beard oil
+Beard balm (wax + oil)
+Mustache wax
+Hair fiber (Toppik powder build-up)
+Tooth-whitening strip residue
+Pore strip residue (Biore)
+Acne patch residue (hydrocolloid)
+Pet flea collar residue
+Pet flea spray
+Pet odor (set in dog bed)
+Litter box urine on bath mat
+Wet wipe residue (alcohol + glycerin)
+Baby wipe residue (oily)
+Diaper rash cream (zinc oxide white)
+Diaper rash cream (set yellow on cloth diaper)
+Baby powder (talc)
+Cornstarch powder (used as baby powder substitute)
+Massage candle wax (low-melt soy)
+Aromatherapy bath salt dye (colored)
+Sea salt body scrub
+Coffee scrub (used)
+Sugar scrub
+Bath bomb fizzy residue (clear)
+Salt scrub residue
+Charcoal face mask (peel-off)
+Mud mask (clay)
+Sheet mask residue (serum)
+Salicylic acid spot treatment
+Adhesive bra residue (silicone)
+Spanx / shapewear lubricant
+Hosiery glue (Hollywood Fashion Tape)
+Nipple cover residue (silicone)
