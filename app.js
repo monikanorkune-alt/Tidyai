@@ -114,7 +114,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
   loadPlaybook();
-  if (state.stainScan) renderStainResult(state.stainScan); else setOriginMode('ask');
+  // On boot the Laundry view shows just the photo upload card. The question
+  // appears after a photo is chosen; the result card after a match is made.
+  if (state.stainScan) renderStainResult(state.stainScan);
   renderStainHistory();
 
   renderFamily();
@@ -133,10 +135,11 @@ function switchTab(name) {
   if (name === 'laundry') {
     loadPlaybook();
     renderStainHistory();
-    // Default to the "Do you know?" question whenever the user lands here,
-    // unless there's already an in-progress result on screen.
-    const hasResult = state.stainTreatment || state.stainScan;
-    if (!hasResult) setOriginMode('ask');
+    // Photo upload card is always visible. The question only appears after
+    // a photo is chosen, and the result/typed cards only after the user picks.
+    if (!state.stainScan && !state.stainTreatment) {
+      hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+    }
   }
 }
 
@@ -953,23 +956,33 @@ PART 5 — TONE RULES (NEVER VIOLATE)
 
 Return JSON only. No prose, no markdown, no preamble.`;
 
-// --- Origin question: known vs photo ---
+// --- Origin question: shown AFTER photo is loaded ---
+// Photo upload card is always visible. Question card appears once a photo
+// is chosen. "Yes" reveals the typed input. "Not sure" runs the AI directly.
+function showOriginQuestion() {
+  hideAll(['stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  const q = document.getElementById('stain-origin-question');
+  if (q) q.style.display = 'block';
+}
+
+function hideOriginQuestion() {
+  const q = document.getElementById('stain-origin-question');
+  if (q) q.style.display = 'none';
+}
+
 function setOriginMode(mode) {
-  // mode: 'ask' (default), 'known' (typed origin), 'photo' (AI vision)
-  const ask = document.getElementById('stain-origin-question');
-  const typed = document.getElementById('stain-typed-card');
-  const photo = document.getElementById('laundry-hero');
-  if (!ask || !typed || !photo) return;
-  ask.style.display = mode === 'ask' ? 'block' : 'none';
-  typed.style.display = mode === 'known' ? 'block' : 'none';
-  photo.style.display = mode === 'photo' ? 'block' : 'none';
-  // Reset any in-progress result so the user sees a clean state
+  // mode: 'known' (typed origin) | 'photo' (AI vision on the loaded photo)
+  hideOriginQuestion();
   hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
   if (mode === 'known') {
-    // Make sure datalist is populated
+    const typed = document.getElementById('stain-typed-card');
+    if (typed) typed.style.display = 'block';
     if (PLAYBOOK) populateStainDatalist(); else loadPlaybook();
     setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
     document.getElementById('stain-typed-hints').innerHTML = '';
+  } else if (mode === 'photo') {
+    // Run the AI analysis straight away on the already-loaded photo
+    analyzeStain();
   }
 }
 
@@ -1060,7 +1073,8 @@ function onStainFileChosen(e) {
     };
     img.onerror = () => console.warn('decode failed, sending original');
     img.src = dataUrl;
-    toast('Photo ready — tap Identify stain');
+    // Photo is loaded — ask the user whether they already know what caused it.
+    showOriginQuestion();
   };
   reader.readAsDataURL(file);
   e.target.value = '';
@@ -1488,11 +1502,16 @@ function resetStainFlow() {
   state.stainTreatment = null;
   state.stainStepIndex = 0;
   state.stainScan = null;
+  state.stainImageDataUrl = null;
   localStorage.removeItem(LS.lastStainScan);
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
-  setOriginMode('ask');
+  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
   const input = document.getElementById('stain-typed-input');
   if (input) input.value = '';
+  // Clear photo preview
+  const preview = document.getElementById('stain-preview-img');
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const placeholder = document.getElementById('stain-upload-placeholder');
+  if (placeholder) placeholder.style.display = 'block';
 }
 
 function hideAll(ids) {
