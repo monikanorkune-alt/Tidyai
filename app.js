@@ -38,6 +38,38 @@ function loadPlaybook() {
     .catch(err => { console.error('Playbook load failed', err); return null; });
 }
 
+// Color per category (22 internal categories in the 802-stain playbook).
+// Used for chips, picker buttons, and the result card. Falls back to muted grey.
+const CATEGORY_COLORS = {
+  food_hot_beverages: '#ffb547', food_soft_drinks: '#ffb547', food_juices: '#ffb547',
+  food_alcohol: '#ffb547', food_sauces: '#ffb547', food_dairy_chocolate: '#ffd166',
+  food_other: '#ffd166',
+  body_fluids: '#ff5d73',
+  cosmetics: '#f78bff', hair_body_care: '#f78bff',
+  office_art: '#5eb8ff', kids_craft: '#5eb8ff',
+  outdoor_nature: '#29d3a3', plant_garden: '#06d6a0',
+  pet_stains: '#ffd166',
+  automotive: '#95a0b8', industrial: '#95a0b8',
+  medical: '#29d3a3',
+  household_mystery: '#7c5cff', cleaning_mishaps: '#7c5cff',
+  seasonal: '#06d6a0', obscure: '#95a0b8',
+};
+function catColor(id) { return CATEGORY_COLORS[id] || '#95a0b8'; }
+function catLabel(id) {
+  const c = PLAYBOOK?.categories.find(x => x.id === id);
+  return c?.label || id;
+}
+// Estimate minutes from a stain's step count + treatment_summary length.
+function estimateMinutes(stain) {
+  const steps = (stain.steps || []).length;
+  const text = (stain.treatment_summary || '').toLowerCase();
+  if (text.includes('overnight') || text.includes('hours')) return 30;
+  if (text.includes('30 min') || text.includes('1 hour')) return 15;
+  if (steps <= 2) return 3;
+  if (steps <= 4) return 5;
+  return 8;
+}
+
 function load(k, fallback) {
   try { return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch { return fallback; }
 }
@@ -1007,8 +1039,13 @@ function findStainInPlaybook(stainName) {
 function getStainTreatment(stainName, fabricHint = null) {
   const stain = findStainInPlaybook(stainName);
   if (!stain) return null;
-  const warnings = (stain.fabric_warnings || []).filter(w => !fabricHint || w.fabric === fabricHint || w.fabric === 'any');
-  return { ...stain, applicable_warnings: warnings };
+  const fc = stain.fabric_compatibility || {};
+  const warnings = [];
+  if (fc.full_note) warnings.push({ fabric: 'general', warning: fc.full_note });
+  if (fabricHint && Array.isArray(fc.avoid) && fc.avoid.some(f => f.toLowerCase().includes(fabricHint.toLowerCase()))) {
+    warnings.unshift({ fabric: fabricHint, warning: `This treatment is risky on ${fabricHint} — test on a hidden seam first.` });
+  }
+  return { ...stain, applicable_warnings: warnings, estimated_minutes: estimateMinutes(stain) };
 }
 
 // --- Render: AI result (confident or category fallback) ---
@@ -1025,11 +1062,14 @@ function renderStainResult(parsed) {
     state.stainTreatment = treatment;
     document.getElementById('stain-confident').style.display = 'block';
     document.getElementById('stain-name').textContent = treatment.name;
-    document.getElementById('stain-summary').textContent = parsed.fabric_observation || '';
-    const cat = PLAYBOOK?.categories.find(c => c.id === treatment.category);
+    // Prefer the observation from the AI; fall back to the playbook's treatment summary.
+    document.getElementById('stain-summary').textContent =
+      parsed.fabric_observation || treatment.treatment_summary || '';
+    const color = catColor(treatment.category);
+    const label = catLabel(treatment.category);
     const urgencyLabel = treatment.urgency === 'act_now' ? 'Act now' : 'Has time';
     document.getElementById('stain-tags').innerHTML = `
-      ${cat ? `<span class="chip" style="color:${cat.color};border-color:${cat.color}66">${escapeHtml(cat.name)}</span>` : ''}
+      <span class="chip" style="color:${color};border-color:${color}66">${escapeHtml(label)}</span>
       <span class="chip urgency-${treatment.urgency}">${urgencyLabel}</span>
       <span class="chip">⏱ ~${treatment.estimated_minutes} min</span>
       ${parsed.freshness ? `<span class="chip">${escapeHtml(parsed.freshness)}</span>` : ''}
@@ -1078,12 +1118,16 @@ function showCategoryPicker(reason, suggestedCats = null, candidateStains = null
     : PLAYBOOK.categories;
   grid.innerHTML = `
     <div style="grid-column:1/-1;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:8px">Or pick a category</div>
-  ` + cats.map(c => `
-    <button class="cat-btn" style="border-color:${c.color}55" data-cat="${c.id}">
-      <span style="color:${c.color}">${escapeHtml(c.name)}</span>
-      <span class="cat-blurb">${escapeHtml(c.blurb || '')}</span>
-    </button>
-  `).join('');
+  ` + cats.map(c => {
+    const color = catColor(c.id);
+    const count = c.stain_count ? `${c.stain_count} stains` : '';
+    return `
+      <button class="cat-btn" style="border-color:${color}55" data-cat="${c.id}">
+        <span style="color:${color}">${escapeHtml(c.label)}</span>
+        <span class="cat-blurb">${escapeHtml(count)}</span>
+      </button>
+    `;
+  }).join('');
   grid.querySelectorAll('.cat-btn').forEach(el => {
     el.addEventListener('click', () => pickCategory(el.dataset.cat));
   });
@@ -1097,7 +1141,7 @@ function pickCategory(catId) {
   const stainsInCat = PLAYBOOK.stains.filter(s => s.category === catId);
   hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
   document.getElementById('stain-needs-category').style.display = 'block';
-  document.getElementById('stain-needs-reason').textContent = `Pick the closest match in ${cat.name}.`;
+  document.getElementById('stain-needs-reason').textContent = `Pick the closest match in ${cat.label}.`;
   document.getElementById('stain-candidates').innerHTML =
     stainsInCat.map(s => `
       <div class="candidate-row" data-stain="${escapeHtml(s.name)}">
@@ -1138,20 +1182,30 @@ function renderStep() {
   const steps = t.steps || [];
   const i = state.stainStepIndex;
   if (i >= steps.length) return finishTreatment();
-  const step = steps[i];
+  // New schema: steps are plain strings. Old schema: { action, seconds }.
+  const raw = steps[i];
+  const actionText = typeof raw === 'string' ? raw : (raw?.action || '');
+  const seconds = typeof raw === 'object' ? (raw?.seconds || 60) : 60;
   document.getElementById('step-counter').textContent = `Step ${i + 1} of ${steps.length}`;
-  document.getElementById('step-action').textContent = step.action;
-  document.getElementById('step-time').textContent = `⏱ ${step.seconds || 60} sec`;
+  document.getElementById('step-action').textContent = actionText;
+  document.getElementById('step-time').textContent = `⏱ ${seconds} sec`;
   document.getElementById('step-back-btn').disabled = i === 0;
   document.getElementById('step-next-btn').textContent = i === steps.length - 1 ? 'Done — finish ▶' : 'Done — next ▶';
 
-  // Show products on first step only
+  // Show products on first step only (role can be "primary", "alternative", or a longer description).
   const prodWrap = document.getElementById('step-products-wrap');
   if (i === 0 && t.products && t.products.length) {
+    const roleNice = r => {
+      if (!r) return '';
+      const s = String(r).toLowerCase();
+      if (s === 'primary') return 'first choice';
+      if (s === 'alternative') return 'alternative';
+      return r;
+    };
     prodWrap.innerHTML = `
       <div class="step-products">
         <strong>You'll need</strong>
-        <ul>${t.products.map(p => `<li>${escapeHtml(p.name)} <span style="color:var(--muted)">— ${escapeHtml(p.role || '')}</span></li>`).join('')}</ul>
+        <ul>${t.products.map(p => `<li>${escapeHtml(p.name)}${p.role ? ` <span style="color:var(--muted)">— ${escapeHtml(roleNice(p.role))}</span>` : ''}</li>`).join('')}</ul>
       </div>
     `;
   } else {
