@@ -8,6 +8,7 @@ const LS = {
   lastScan: 'tidyai_last_scan',
   stainHistory: 'tidyai_stain_history',
   lastStainScan: 'tidyai_last_stain_scan',
+  stainFeedback: 'tidyai_stain_feedback',
 };
 
 // Palette for family avatars (brand-aligned: gold, pink, magenta, sky, cream, muted)
@@ -1010,20 +1011,24 @@ function hideOriginQuestion() {
   if (q) q.style.display = 'none';
 }
 
-function setOriginMode(mode) {
+function setOriginMode(mode, btnEl) {
   // mode: 'known' (typed origin) | 'photo' (AI vision on the loaded photo)
-  hideOriginQuestion();
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
-  if (mode === 'known') {
-    const typed = document.getElementById('stain-typed-card');
-    if (typed) typed.style.display = 'block';
-    if (PLAYBOOK) populateStainDatalist(); else loadPlaybook();
-    setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
-    document.getElementById('stain-typed-hints').innerHTML = '';
-  } else if (mode === 'photo') {
-    // Run the AI analysis straight away on the already-loaded photo
-    analyzeStain();
-  }
+  // Flash the pressed button gold briefly before transitioning.
+  if (btnEl) { btnEl.classList.add('pressed'); setTimeout(() => btnEl.classList.remove('pressed'), 250); }
+  const run = () => {
+    hideOriginQuestion();
+    hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks']);
+    if (mode === 'known') {
+      const typed = document.getElementById('stain-typed-card');
+      if (typed) typed.style.display = 'block';
+      if (PLAYBOOK) populateStainDatalist(); else loadPlaybook();
+      setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
+      document.getElementById('stain-typed-hints').innerHTML = '';
+    } else if (mode === 'photo') {
+      analyzeStain();
+    }
+  };
+  if (btnEl) setTimeout(run, 180); else run();
 }
 
 // --- Find by typed name (no AI call) ---
@@ -1113,7 +1118,9 @@ function onStainFileChosen(e) {
     };
     img.onerror = () => console.warn('decode failed, sending original');
     img.src = dataUrl;
-    // Photo is loaded — ask the user whether they already know what caused it.
+    // Hide the gallery/camera buttons now that we have a photo; the question takes over.
+    const uploadBtns = document.getElementById('stain-upload-buttons');
+    if (uploadBtns) uploadBtns.style.display = 'none';
     showOriginQuestion();
   };
   reader.readAsDataURL(file);
@@ -1564,19 +1571,82 @@ Output JSON only.`;
     const data = await res.json();
     const parsed = JSON.parse(data?.choices?.[0]?.message?.content || '{}');
     const icon = parsed.removed ? '✨' : '🔁';
+    // Render the side-by-side before/after so the user can see the comparison.
+    const beforeAfter = (beforeUrl && afterUrl) ? `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0">
+        <div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Before</div>
+          <img src="${beforeUrl}" alt="before" style="width:100%;border-radius:12px;border:1px solid var(--border)" />
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">After</div>
+          <img src="${afterUrl}" alt="after" style="width:100%;border-radius:12px;border:1px solid var(--border)" />
+        </div>
+      </div>` : '';
     wrap.innerHTML = `
       <div style="text-align:center;font-size:28px">${icon}</div>
       <p style="text-align:center;margin-top:6px">${escapeHtml(parsed.recommendation || 'Take a look — you know best.')}</p>
-      ${!parsed.removed ? `<button class="btn" onclick="startTreatment()" style="margin-top:8px">Run another pass</button>` : ''}
+      ${beforeAfter}
+      <div class="row" style="margin-top:8px">
+        ${!parsed.removed ? `<button class="btn" onclick="startTreatment()">Run another pass</button>` : ''}
+        <button class="btn ${parsed.removed ? '' : 'secondary'} press-gold" onclick="this.classList.add('pressed'); setTimeout(showHappyQuestion, 200)">Finish</button>
+      </div>
     `;
   } catch (err) {
     console.error(err);
-    wrap.innerHTML = `<p style="color:var(--muted);text-align:center">Couldn't compare automatically. Trust your eyes.</p>`;
+    wrap.innerHTML = `
+      <p style="color:var(--muted);text-align:center">Couldn't compare automatically. Trust your eyes.</p>
+      <button class="btn" onclick="showHappyQuestion()" style="margin-top:8px">Finish</button>
+    `;
   }
 }
 
 // --- History list (Recents section was removed from the UI) ---
 function renderStainHistory() { /* no-op: Recents section removed */ }
+
+// --- Happy-question flow (shown after Finish or after verify completes) ---
+function showHappyQuestion() {
+  hideAll([
+    'stain-origin-question', 'stain-typed-card',
+    'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
+    'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
+  ]);
+  const card = document.getElementById('stain-happy-question');
+  if (card) card.style.display = 'block';
+}
+
+function happyAnswer(answer) {
+  hideAll([
+    'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
+    'stain-final',
+  ]);
+  if (answer === 'yes') {
+    const yes = document.getElementById('stain-happy-yes');
+    if (yes) yes.style.display = 'block';
+  } else {
+    const no = document.getElementById('stain-happy-no');
+    if (no) no.style.display = 'block';
+    setTimeout(() => document.getElementById('stain-feedback-text')?.focus(), 60);
+  }
+}
+
+function submitFeedback(skipped) {
+  const fb = document.getElementById('stain-feedback-text');
+  const text = fb ? (fb.value || '').trim() : '';
+  if (!skipped && text) {
+    const list = load(LS.stainFeedback, []);
+    list.unshift({
+      stain: state.stainTreatment?.name || null,
+      category: state.stainTreatment?.category || null,
+      feedback: text,
+      at: Date.now(),
+    });
+    save(LS.stainFeedback, list.slice(0, 100));
+  }
+  hideAll(['stain-happy-no']);
+  const thanks = document.getElementById('stain-happy-thanks');
+  if (thanks) thanks.style.display = 'block';
+}
 
 function resetStainFlow() {
   state.stainTreatment = null;
@@ -1584,14 +1654,23 @@ function resetStainFlow() {
   state.stainScan = null;
   state.stainImageDataUrl = null;
   localStorage.removeItem(LS.lastStainScan);
-  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  hideAll([
+    'stain-origin-question', 'stain-typed-card',
+    'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
+    'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
+  ]);
   const input = document.getElementById('stain-typed-input');
   if (input) input.value = '';
+  const fb = document.getElementById('stain-feedback-text');
+  if (fb) fb.value = '';
   // Clear photo preview
   const preview = document.getElementById('stain-preview-img');
   if (preview) { preview.src = ''; preview.style.display = 'none'; }
   const placeholder = document.getElementById('stain-upload-placeholder');
   if (placeholder) placeholder.style.display = 'block';
+  // Re-show the gallery/camera buttons
+  const uploadBtns = document.getElementById('stain-upload-buttons');
+  if (uploadBtns) uploadBtns.style.display = 'flex';
 }
 
 function hideAll(ids) {

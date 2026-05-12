@@ -98,6 +98,17 @@
     .btn.ghost { background: transparent; border: 1px dashed var(--border); color: var(--muted); }
     .btn.small { padding: 8px 12px; min-height: 36px; font-size: 13px; width: auto; border-radius: 10px; }
     .btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+    /* Press feedback: a neutral secondary button briefly flashes brand gold
+       when tapped, then the screen transitions. Used on equal-color paired choices. */
+    .btn.secondary.press-gold:active,
+    .btn.secondary.press-gold.pressed {
+      background: linear-gradient(135deg, #FFB906, #FFBB1C);
+      color: #121212;
+      border-color: transparent;
+      box-shadow: 0 8px 24px rgba(255,185,6,0.30);
+      transition: background 0.12s ease, color 0.12s ease;
+    }
     .row { display: flex; gap: 10px; }
     .row > * { flex: 1; }
 
@@ -527,7 +538,7 @@
           <input type="file" id="stain-gallery-input" accept="image/*" />
           <input type="file" id="stain-camera-input" accept="image/*" capture="environment" />
 
-          <div class="row">
+          <div class="row" id="stain-upload-buttons">
             <button class="btn secondary" onclick="document.getElementById('stain-gallery-input').click()">From gallery</button>
             <button class="btn secondary" onclick="document.getElementById('stain-camera-input').click()">Take photo</button>
           </div>
@@ -538,8 +549,8 @@
           <h2 style="margin-top:0;margin-bottom:6px">Do you know what caused the stain?</h2>
           <p>If you know, telling me directly is faster and free. Otherwise I'll analyze the photo.</p>
           <div class="row" style="margin-top:8px">
-            <button class="btn" onclick="setOriginMode('known')">Yes</button>
-            <button class="btn secondary" onclick="setOriginMode('photo')">Not sure</button>
+            <button class="btn secondary press-gold" onclick="setOriginMode('known', this)">Yes</button>
+            <button class="btn secondary press-gold" onclick="setOriginMode('photo', this)">Not sure</button>
           </div>
         </div>
 
@@ -604,15 +615,46 @@
         <div id="stain-final" class="stain-result" style="display:none">
           <div style="font-size:32px;text-align:center;margin-bottom:6px">✓</div>
           <h2 style="text-align:center">Treatment done.</h2>
-          <p style="text-align:center;margin-bottom:14px">Take an "after" photo to check it worked?</p>
+          <p style="text-align:center;margin-bottom:14px">Take an "after" photo to compare before vs after?</p>
 
           <input type="file" id="stain-after-input" accept="image/*" capture="environment" />
           <div class="row">
-            <button class="btn" onclick="document.getElementById('stain-after-input').click()">Take photo</button>
-            <button class="btn secondary" onclick="resetStainFlow()">Skip</button>
+            <button class="btn secondary press-gold" onclick="document.getElementById('stain-after-input').click(); this.classList.add('pressed')">Take photo</button>
+            <button class="btn secondary press-gold" onclick="this.classList.add('pressed'); setTimeout(showHappyQuestion, 200)">Finish</button>
           </div>
 
           <div id="stain-verify-result" style="display:none;margin-top:14px"></div>
+        </div>
+
+        <!-- Happy / not-happy survey shown when user taps Finish -->
+        <div id="stain-happy-question" class="stain-result" style="display:none">
+          <h2 style="text-align:center;margin-bottom:14px">Are you happy with your treatment?</h2>
+          <div class="row">
+            <button class="btn secondary press-gold" onclick="this.classList.add('pressed'); setTimeout(() => happyAnswer('yes'), 200)">Yes</button>
+            <button class="btn secondary press-gold" onclick="this.classList.add('pressed'); setTimeout(() => happyAnswer('no'), 200)">No</button>
+          </div>
+        </div>
+
+        <div id="stain-happy-yes" class="stain-result" style="display:none">
+          <div style="font-size:32px;text-align:center;margin-bottom:6px">💛</div>
+          <h2 style="text-align:center">Always happy to help!</h2>
+          <button class="btn" onclick="resetStainFlow()" style="margin-top:14px">Start over</button>
+        </div>
+
+        <div id="stain-happy-no" class="stain-result" style="display:none">
+          <h2 style="margin-bottom:6px">What could have been done better?</h2>
+          <p style="margin-bottom:10px">Your note helps me improve the next match.</p>
+          <textarea id="stain-feedback-text" rows="4" placeholder="e.g. The product I had on hand wasn't listed, or the steps were too long…"></textarea>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" onclick="submitFeedback()">Send</button>
+            <button class="btn secondary" onclick="submitFeedback(true)">Skip</button>
+          </div>
+        </div>
+
+        <div id="stain-happy-thanks" class="stain-result" style="display:none">
+          <div style="font-size:32px;text-align:center;margin-bottom:6px">🙏</div>
+          <h2 style="text-align:center">Thanks — I'll use this to get better.</h2>
+          <button class="btn" onclick="resetStainFlow()" style="margin-top:14px">Start over</button>
         </div>
 
       </section>
