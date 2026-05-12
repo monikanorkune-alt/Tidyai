@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#121212" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="TidyAI" />
@@ -12,17 +12,19 @@
   <title>TidyAI — 3-Minute Clean</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-2: #111a36;
-      --card: rgba(255,255,255,0.06);
-      --card-strong: rgba(255,255,255,0.10);
-      --border: rgba(255,255,255,0.10);
-      --text: #e8ecf4;
-      --muted: #95a0b8;
-      --accent: #7c5cff;
-      --accent-2: #29d3a3;
-      --warn: #ffb547;
-      --danger: #ff5d73;
+      --bg: #121212;
+      --bg-2: #0B1215;
+      --card: rgba(244,244,244,0.04);
+      --card-strong: rgba(244,244,244,0.08);
+      --border: rgba(244,244,244,0.12);
+      --text: #F4F4F4;
+      --muted: #9CA3AF;
+      --accent: #FFB906;
+      --accent-hover: #FFBB1C;
+      --accent-2: #FFB7D5;
+      --accent-2-strong: #FF87B9;
+      --warn: #FFBB1C;
+      --danger: #FF237F;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -32,8 +34,8 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(1200px 600px at 0% -10%, #2a1c5e 0%, transparent 60%),
-        radial-gradient(900px 600px at 100% 0%, #0d3f4f 0%, transparent 55%),
+        radial-gradient(1200px 600px at 0% -10%, rgba(255,185,6,0.06) 0%, transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(255,135,185,0.05) 0%, transparent 55%),
         var(--bg);
       overscroll-behavior-y: contain;
     }
@@ -53,9 +55,9 @@
     }
     .logo-mark {
       width: 30px; height: 30px; border-radius: 9px;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-      display: grid; place-items: center; color: #0b1020; font-weight: 800;
-      box-shadow: 0 6px 20px rgba(124,92,255,0.35);
+      background: linear-gradient(135deg, #FFB906 0%, #FFB7D5 100%);
+      display: grid; place-items: center; color: #121212; font-weight: 800;
+      box-shadow: 0 6px 20px rgba(255,185,6,0.35);
     }
     .logo-name { font-size: 18px; }
     .badge {
@@ -84,9 +86,9 @@
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 12px 16px; min-height: 44px; border-radius: 12px; border: 0;
       font-weight: 600; font-size: 15px; cursor: pointer;
-      background: linear-gradient(135deg, var(--accent), #5e3df0);
-      color: white;
-      box-shadow: 0 8px 24px rgba(124,92,255,0.3);
+      background: linear-gradient(135deg, #FFB906, #FFBB1C);
+      color: #121212;
+      box-shadow: 0 8px 24px rgba(255,185,6,0.30);
       width: 100%;
     }
     .btn.secondary {
@@ -103,8 +105,8 @@
       position: relative;
       border-radius: 18px; overflow: hidden;
       aspect-ratio: 4/3;
-      background: linear-gradient(135deg, rgba(124,92,255,0.15), rgba(41,211,163,0.08));
-      border: 1px dashed rgba(255,255,255,0.18);
+      background: linear-gradient(135deg, rgba(255,185,6,0.10), rgba(255,135,185,0.08));
+      border: 1px dashed rgba(244,244,244,0.18);
       display: grid; place-items: center;
       margin-bottom: 14px;
     }
@@ -125,7 +127,7 @@
     .score-ring {
       width: 84px; height: 84px; flex: none;
       border-radius: 50%;
-      background: conic-gradient(var(--accent-2) calc(var(--p,0) * 1%), rgba(255,255,255,0.08) 0);
+      background: conic-gradient(var(--accent) calc(var(--p,0) * 1%), rgba(244,244,244,0.08) 0);
       display: grid; place-items: center;
       position: relative;
     }
@@ -152,7 +154,7 @@
       display: grid; place-items: center; cursor: pointer; background: transparent;
     }
     .checkbox.checked { background: var(--accent-2); border-color: var(--accent-2); }
-    .checkbox.checked::after { content: "✓"; color: #0b1020; font-weight: 800; font-size: 14px; }
+    .checkbox.checked::after { content: "✓"; color: #121212; font-weight: 800; font-size: 14px; }
     .task-body { flex: 1; min-width: 0; }
     .task-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
     .task-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--muted); }
@@ -161,18 +163,18 @@
       padding: 3px 8px; border-radius: 999px;
       background: rgba(255,255,255,0.07); border: 1px solid var(--border);
     }
-    .chip.priority-high { color: var(--danger); border-color: rgba(255,93,115,0.35); }
-    .chip.priority-medium { color: var(--warn); border-color: rgba(255,181,71,0.35); }
-    .chip.priority-low { color: var(--accent-2); border-color: rgba(41,211,163,0.35); }
+    .chip.priority-high { color: var(--danger); border-color: rgba(255,35,127,0.35); }
+    .chip.priority-medium { color: var(--warn); border-color: rgba(255,187,28,0.35); }
+    .chip.priority-low { color: #FFB7D5; border-color: rgba(255,135,185,0.35); }
     .chip.member { font-weight: 600; }
 
     .quickplan {
-      background: linear-gradient(135deg, rgba(41,211,163,0.18), rgba(124,92,255,0.18));
-      border: 1px solid rgba(41,211,163,0.35);
+      background: linear-gradient(135deg, rgba(255,135,185,0.18), rgba(255,185,6,0.14));
+      border: 1px solid rgba(255,135,185,0.35);
       border-radius: 18px; padding: 16px; margin-bottom: 14px;
     }
     .quickplan h2 { display: flex; align-items: center; gap: 8px; }
-    .quickplan .timer { font-weight: 800; font-size: 13px; color: var(--accent-2); }
+    .quickplan .timer { font-weight: 800; font-size: 13px; color: #FFB906; }
 
     .member-row {
       display: flex; align-items: center; gap: 12px; padding: 12px;
@@ -181,7 +183,7 @@
     }
     .avatar {
       width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
-      color: #0b1020; font-weight: 800;
+      color: #121212; font-weight: 800;
     }
     .empty {
       text-align: center; color: var(--muted); padding: 30px 12px; font-size: 14px;
@@ -206,7 +208,7 @@
       padding: 6px 4px; font-size: 11px; cursor: pointer;
     }
     nav.tabs button.active { color: var(--text); }
-    nav.tabs button .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-2); opacity: 0; }
+    nav.tabs button .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); opacity: 0; }
     nav.tabs button.active .dot { opacity: 1; }
     nav.tabs svg { width: 22px; height: 22px; }
 
@@ -236,33 +238,40 @@
     .pill-tabs button.active { color: var(--text); background: var(--accent); border-color: var(--accent); }
 
     .footer-note { color: var(--muted); font-size: 11px; text-align: center; padding: 16px 8px 0; }
-    a { color: var(--accent-2); }
+    a { color: #FFB906; }
+    a:hover { color: #FFBB1C; }
 
     /* Hero framing for the 3-minute promise */
     .hero-3min {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
       text-transform: uppercase;
-      color: var(--accent-2);
-      background: rgba(41,211,163,0.10);
-      border: 1px solid rgba(41,211,163,0.30);
+      color: #FFB906;
+      background: rgba(255,185,6,0.10);
+      border: 1px solid rgba(255,185,6,0.35);
       padding: 4px 10px; border-radius: 999px;
       margin-bottom: 10px;
     }
     .quickplan {
-      box-shadow: 0 0 0 1px rgba(41,211,163,0.25), 0 12px 40px rgba(41,211,163,0.12);
+      box-shadow: 0 0 0 1px rgba(255,135,185,0.25), 0 12px 40px rgba(255,135,185,0.12);
     }
     @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 0 1px rgba(41,211,163,0.25), 0 12px 40px rgba(41,211,163,0.12); }
-      50%      { box-shadow: 0 0 0 1px rgba(41,211,163,0.45), 0 12px 50px rgba(41,211,163,0.25); }
+      0%, 100% { box-shadow: 0 0 0 1px rgba(255,135,185,0.25), 0 12px 40px rgba(255,135,185,0.12); }
+      50%      { box-shadow: 0 0 0 1px rgba(255,135,185,0.45), 0 12px 50px rgba(255,135,185,0.25); }
     }
     .quickplan { animation: pulse-glow 3.5s ease-in-out infinite; }
 
     /* Laundry Hacks */
     .stain-hero {
-      background: linear-gradient(135deg, rgba(94,184,255,0.18), rgba(124,92,255,0.18));
-      border: 1px solid rgba(94,184,255,0.35);
+      background: linear-gradient(135deg, rgba(255,135,185,0.20), rgba(255,250,240,0.06));
+      border: 1px solid rgba(255,135,185,0.35);
       border-radius: 18px; padding: 16px; margin-bottom: 14px;
+    }
+    /* Force the gold pill regardless of any inline overrides on .hero-3min inside .stain-hero */
+    .stain-hero .hero-3min {
+      color: #FFB906 !important;
+      background: rgba(255,185,6,0.10) !important;
+      border-color: rgba(255,185,6,0.35) !important;
     }
     .stain-result {
       background: var(--card-strong); border: 1px solid var(--border);
@@ -270,12 +279,12 @@
     }
     .stain-result h2 { font-size: 20px; margin-bottom: 6px; }
     .stain-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
-    .urgency-act_now { color: var(--danger); border-color: rgba(255,93,115,0.45) !important; background: rgba(255,93,115,0.10); }
-    .urgency-has_time { color: var(--accent-2); border-color: rgba(41,211,163,0.45) !important; background: rgba(41,211,163,0.10); }
-    .urgency-set { color: var(--warn); border-color: rgba(255,181,71,0.45) !important; background: rgba(255,181,71,0.10); }
+    .urgency-act_now { color: #FF237F; border-color: rgba(255,35,127,0.45) !important; background: rgba(255,35,127,0.10); }
+    .urgency-has_time { color: #FFB7D5; border-color: rgba(255,135,185,0.45) !important; background: rgba(255,135,185,0.10); }
+    .urgency-set { color: #FFB906; border-color: rgba(255,185,6,0.45) !important; background: rgba(255,185,6,0.10); }
     .fabric-warning {
-      background: rgba(255,93,115,0.10); border: 1px solid rgba(255,93,115,0.30);
-      color: #ffb6c1; padding: 10px 12px; border-radius: 12px; font-size: 13px;
+      background: rgba(255,35,127,0.10); border: 1px solid rgba(255,35,127,0.30);
+      color: #FFB7D5; padding: 10px 12px; border-radius: 12px; font-size: 13px;
       margin: 8px 0; line-height: 1.45;
     }
     .fabric-warning strong { color: var(--danger); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
@@ -296,18 +305,18 @@
     .candidate-row:hover { border-color: var(--accent); }
 
     .step-card {
-      background: linear-gradient(135deg, rgba(124,92,255,0.12), rgba(41,211,163,0.08));
+      background: linear-gradient(135deg, rgba(255,135,185,0.14), rgba(255,250,240,0.04));
       border: 1px solid var(--border); border-radius: 18px;
       padding: 20px; margin-bottom: 14px;
     }
     .step-counter {
       font-size: 11px; font-weight: 700; letter-spacing: 1px;
-      color: var(--accent-2); text-transform: uppercase; margin-bottom: 8px;
+      color: #FFB7D5; text-transform: uppercase; margin-bottom: 8px;
     }
     .step-action { font-size: 17px; line-height: 1.4; margin-bottom: 14px; font-weight: 500; }
     .step-time {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(41,211,163,0.15); color: var(--accent-2);
+      background: rgba(255,185,6,0.15); color: #FFB906;
       padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
       margin-bottom: 14px;
     }
@@ -320,14 +329,54 @@
     .step-nav { display: flex; gap: 8px; }
     .step-nav .btn { flex: 1; }
 
+    /* Loading bar + countdown (shown while AI analyzes a stain) */
+    .loading-bar {
+      width: 100%; height: 6px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+      margin-top: 4px;
+    }
+    .loading-bar-fill {
+      height: 100%; width: 30%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      animation: loading-slide 1.2s ease-in-out infinite;
+    }
+    @keyframes loading-slide {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+    .loading-text { font-size: 14px; color: var(--muted); }
+    .loading-countdown {
+      font-size: 56px; font-weight: 800; line-height: 1;
+      color: var(--accent-2); margin-top: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Wash-temperature chip — sky blue is the brand's decorative water color */
+    .wash-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 13px; font-weight: 600;
+      background: rgba(165,222,244,0.12);
+      color: #A5DEF4;
+      border: 1px solid rgba(165,222,244,0.35);
+    }
+    .wash-chip.hot {
+      background: rgba(255,35,127,0.10); color: var(--danger);
+      border-color: rgba(255,35,127,0.35);
+    }
+    .wash-chip.warm {
+      background: rgba(255,187,28,0.10); color: var(--warn);
+      border-color: rgba(255,187,28,0.35);
+    }
+
     /* Micro-steps (ADHD breakdown) */
     .breakdown-btn {
       margin-top: 10px; padding: 8px 12px; border-radius: 10px;
-      background: rgba(124,92,255,0.12); border: 1px solid rgba(124,92,255,0.30);
+      background: rgba(255,185,6,0.12); border: 1px solid rgba(255,185,6,0.30);
       color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer;
       display: inline-flex; align-items: center; gap: 6px;
     }
-    .breakdown-btn:hover { background: rgba(124,92,255,0.20); }
+    .breakdown-btn:hover { background: rgba(255,185,6,0.20); }
     .micro-steps {
       list-style: none; padding: 10px 0 0; margin: 8px 0 0;
       border-top: 1px dashed var(--border);
@@ -339,7 +388,7 @@
     .micro-step.done .micro-title { text-decoration: line-through; opacity: 0.55; }
     .micro-num {
       width: 20px; height: 20px; flex: none;
-      border-radius: 50%; background: rgba(124,92,255,0.18);
+      border-radius: 50%; background: rgba(255,185,6,0.20);
       color: var(--text); font-weight: 700; font-size: 11px;
       display: grid; place-items: center;
     }
@@ -461,7 +510,7 @@
       <section id="view-laundry" class="view active">
         <!-- STEP 1: photo upload (always shown first) -->
         <div class="stain-hero" id="laundry-hero">
-          <span class="hero-3min" style="color:#5eb8ff;background:rgba(94,184,255,0.10);border-color:rgba(94,184,255,0.30)">💧 Laundry Hacks</span>
+          <span class="hero-3min">💧 Laundry Hacks</span>
           <h1 style="margin-top:4px">Got a stain? I'll tell you exactly what to do.</h1>
           <p>Snap the stain or pick from your gallery. I'll match it against 800+ treatments.</p>
 
@@ -492,6 +541,13 @@
             <button class="btn" onclick="setOriginMode('known')">Yes</button>
             <button class="btn secondary" onclick="setOriginMode('photo')">Not sure</button>
           </div>
+        </div>
+
+        <!-- Loading card: shown while OpenAI is analyzing the photo -->
+        <div id="stain-loading" class="stain-hero" style="display:none;text-align:center">
+          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+          <div class="loading-text" style="margin-top:14px">Analyzing the stain</div>
+          <div class="loading-countdown" id="stain-loading-countdown">3</div>
         </div>
 
         <!-- STEP 3a: typed origin (when user clicked "Yes") -->
@@ -534,7 +590,7 @@
           <div class="step-card">
             <div class="step-counter" id="step-counter">Step 1 of 5</div>
             <div class="step-action" id="step-action">—</div>
-            <div class="step-time" id="step-time">⏱ 60 sec</div>
+            <div id="step-time" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px"></div>
             <div id="step-products-wrap"></div>
             <div class="step-nav">
               <button class="btn secondary" id="step-back-btn" onclick="prevStep()">◀ Back</button>
@@ -559,8 +615,6 @@
           <div id="stain-verify-result" style="display:none;margin-top:14px"></div>
         </div>
 
-        <!-- History -->
-        <div id="stain-history-wrap" style="margin-top:18px"></div>
       </section>
 
       <!-- SETTINGS VIEW -->

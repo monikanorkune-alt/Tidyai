@@ -10,8 +10,8 @@ const LS = {
   lastStainScan: 'tidyai_last_stain_scan',
 };
 
-// Palette for family avatars
-const PALETTE = ['#7c5cff', '#29d3a3', '#ffb547', '#ff5d73', '#5eb8ff', '#f78bff', '#ffd166', '#06d6a0'];
+// Palette for family avatars (brand-aligned: gold, pink, magenta, sky, cream, muted)
+const PALETTE = ['#FFB906', '#FFB7D5', '#FFBB1C', '#FF237F', '#A5DEF4', '#FF87B9', '#FFD166', '#FFFAF0'];
 
 // --- State ---
 const state = {
@@ -47,21 +47,22 @@ function populateStainDatalist() {
 
 // Color per category (22 internal categories in the 802-stain playbook).
 // Used for chips, picker buttons, and the result card. Falls back to muted grey.
+// Brand-aligned per-category chip colors (gold, pink, magenta, sky, muted)
 const CATEGORY_COLORS = {
-  food_hot_beverages: '#ffb547', food_soft_drinks: '#ffb547', food_juices: '#ffb547',
-  food_alcohol: '#ffb547', food_sauces: '#ffb547', food_dairy_chocolate: '#ffd166',
-  food_other: '#ffd166',
-  body_fluids: '#ff5d73',
-  cosmetics: '#f78bff', hair_body_care: '#f78bff',
-  office_art: '#5eb8ff', kids_craft: '#5eb8ff',
-  outdoor_nature: '#29d3a3', plant_garden: '#06d6a0',
-  pet_stains: '#ffd166',
-  automotive: '#95a0b8', industrial: '#95a0b8',
-  medical: '#29d3a3',
-  household_mystery: '#7c5cff', cleaning_mishaps: '#7c5cff',
-  seasonal: '#06d6a0', obscure: '#95a0b8',
+  food_hot_beverages: '#FFB906', food_soft_drinks: '#FFB906', food_juices: '#FFB906',
+  food_alcohol: '#FFB906', food_sauces: '#FFB906', food_dairy_chocolate: '#FFD166',
+  food_other: '#FFD166',
+  body_fluids: '#FF237F',
+  cosmetics: '#FFB7D5', hair_body_care: '#FF87B9',
+  office_art: '#A5DEF4', kids_craft: '#A5DEF4',
+  outdoor_nature: '#A5DEF4', plant_garden: '#A5DEF4',
+  pet_stains: '#FFD166',
+  automotive: '#9CA3AF', industrial: '#9CA3AF',
+  medical: '#FFB7D5',
+  household_mystery: '#FFB906', cleaning_mishaps: '#FFBB1C',
+  seasonal: '#FFFAF0', obscure: '#9CA3AF',
 };
-function catColor(id) { return CATEGORY_COLORS[id] || '#95a0b8'; }
+function catColor(id) { return CATEGORY_COLORS[id] || '#9CA3AF'; }
 function catLabel(id) {
   const c = PLAYBOOK?.categories.find(x => x.id === id);
   return c?.label || id;
@@ -75,6 +76,45 @@ function estimateMinutes(stain) {
   if (steps <= 2) return 3;
   if (steps <= 4) return 5;
   return 8;
+}
+
+// Realistic per-step time in seconds, scanning text for explicit cues.
+function estimateStepSeconds(text) {
+  const t = (text || '').toLowerCase();
+  const m = t.match(/(\d+)\s*(?:to\s*\d+\s*)?(seconds?|secs?|s\b|minutes?|mins?|min\b|hour|hr|hours)/);
+  if (m) {
+    const n = parseInt(m[1], 10);
+    const unit = m[2];
+    if (unit.startsWith('h')) return n * 3600;
+    if (unit.startsWith('min')) return n * 60;
+    return n;
+  }
+  if (t.includes('overnight')) return 8 * 3600;
+  if (t.includes('soak')) return 30 * 60;
+  if (t.includes('rinse')) return 30;
+  if (t.includes('blot')) return 30;
+  if (t.includes('wash')) return 45 * 60;
+  return 60;
+}
+
+// Parse wash temperature from text. Returns { label, fahrenheit, kind }
+// kind: 'cold' | 'warm' | 'hot' | 'boiling' | 'none' — drives chip color.
+function parseWashTemp(text) {
+  const t = (text || '').toLowerCase();
+  if (t.includes('boiling') || t.includes('140°f') || t.includes('140f') || t.includes('140 f')) {
+    return { label: 'Boiling water', fahrenheit: '~200°F', kind: 'hot' };
+  }
+  if (t.includes('hot water') || t.includes('hot wash') || (t.includes(' hot ') && !t.includes('hot sauce'))) {
+    return { label: 'Hot water', fahrenheit: '130–140°F', kind: 'hot' };
+  }
+  if (t.includes('warm water') || t.includes('warm wash') || t.includes('lukewarm') || (t.includes(' warm ') && !t.includes('warm tone'))) {
+    return { label: 'Warm water', fahrenheit: '90–110°F', kind: 'warm' };
+  }
+  if (t.includes('cold water') || t.includes('cold wash') || t.includes('cool water') || t.includes(' ice ') ||
+      t.includes('cold rinse') || t.includes('cold flush')) {
+    return { label: 'Cold water', fahrenheit: '50–65°F', kind: 'cold' };
+  }
+  return null; // no water mention
 }
 
 function load(k, fallback) {
@@ -158,8 +198,8 @@ function updateApiBadge() {
   const b = document.getElementById('api-badge');
   const has = !!localStorage.getItem(LS.key);
   b.textContent = has ? 'API connected' : 'No API key';
-  b.style.color = has ? '#29d3a3' : '';
-  b.style.borderColor = has ? 'rgba(41,211,163,0.4)' : '';
+  b.style.color = has ? '#FFB906' : '';
+  b.style.borderColor = has ? 'rgba(255,185,6,0.45)' : '';
 }
 
 // --- File handling ---
@@ -1080,6 +1120,28 @@ function onStainFileChosen(e) {
   e.target.value = '';
 }
 
+// --- Loading card with 3..2..1 countdown ---
+let _stainLoadingTimer = null;
+function showStainLoading() {
+  const card = document.getElementById('stain-loading');
+  if (!card) return;
+  card.style.display = 'block';
+  const num = document.getElementById('stain-loading-countdown');
+  let n = 3;
+  if (num) num.textContent = String(n);
+  if (_stainLoadingTimer) clearInterval(_stainLoadingTimer);
+  _stainLoadingTimer = setInterval(() => {
+    n = n - 1;
+    if (n <= 0) n = 3;  // loop until the API responds
+    if (num) num.textContent = String(n);
+  }, 1000);
+}
+function hideStainLoading() {
+  const card = document.getElementById('stain-loading');
+  if (card) card.style.display = 'none';
+  if (_stainLoadingTimer) { clearInterval(_stainLoadingTimer); _stainLoadingTimer = null; }
+}
+
 // --- AI call: identifyStain ---
 async function analyzeStain(optionalCategory = null) {
   if (!state.stainImageDataUrl) return toast('Add a photo first');
@@ -1088,6 +1150,9 @@ async function analyzeStain(optionalCategory = null) {
   const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
   await loadPlaybook();
 
+  // Show the loading card with the looping countdown
+  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  showStainLoading();
   const btn = document.getElementById('stain-analyze-btn');
   const label = document.getElementById('stain-analyze-label');
   if (btn && label) { btn.disabled = true; label.innerHTML = '<span class="spinner"></span> Identifying…'; }
@@ -1127,6 +1192,7 @@ async function analyzeStain(optionalCategory = null) {
     console.error(err);
     toast(err.message.length < 80 ? err.message : 'Identification failed — see console');
   } finally {
+    hideStainLoading();
     if (btn && label) { btn.disabled = false; label.textContent = 'Identify stain'; }
   }
 }
@@ -1222,12 +1288,15 @@ function renderStainResult(parsed) {
       parsed.fabric_observation || treatment.treatment_summary || '';
     const color = catColor(treatment.category);
     const label = catLabel(treatment.category);
-    const urgencyLabel = treatment.urgency === 'act_now' ? 'Act now' : 'Has time';
+    // Wash temperature is parsed from the playbook's treatment text.
+    const wash = parseWashTemp(treatment.treatment_summary || (treatment.steps || []).join(' '));
+    const washChip = wash
+      ? `<span class="wash-chip ${wash.kind}">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>`
+      : '';
     document.getElementById('stain-tags').innerHTML = `
       <span class="chip" style="color:${color};border-color:${color}66">${escapeHtml(label)}</span>
-      <span class="chip urgency-${treatment.urgency}">${urgencyLabel}</span>
-      <span class="chip">⏱ ~${treatment.estimated_minutes} min</span>
-      ${parsed.freshness ? `<span class="chip">${escapeHtml(parsed.freshness)}</span>` : ''}
+      ${washChip}
+      <span class="chip">⏱ ~${treatment.estimated_minutes} min total</span>
     `;
     const warningsEl = document.getElementById('stain-warnings');
     const allWarnings = [
@@ -1359,19 +1428,35 @@ function renderStep() {
   const steps = t.steps || [];
   const i = state.stainStepIndex;
   if (i >= steps.length) return finishTreatment();
+  const isLast = i === steps.length - 1;
   // New schema: steps are plain strings. Old schema: { action, seconds }.
   const raw = steps[i];
   const actionText = typeof raw === 'string' ? raw : (raw?.action || '');
-  const seconds = typeof raw === 'object' ? (raw?.seconds || 60) : 60;
-  document.getElementById('step-counter').textContent = `Step ${i + 1} of ${steps.length}`;
-  document.getElementById('step-action').textContent = actionText;
-  document.getElementById('step-time').textContent = `⏱ ${seconds} sec`;
-  document.getElementById('step-back-btn').disabled = i === 0;
-  document.getElementById('step-next-btn').textContent = i === steps.length - 1 ? 'Done — finish ▶' : 'Done — next ▶';
+  const seconds = typeof raw === 'object' && raw?.seconds ? raw.seconds : estimateStepSeconds(actionText);
+  const wash = parseWashTemp(actionText);
 
-  // Show products on first step only (role can be "primary", "alternative", or a longer description).
+  document.getElementById('step-counter').textContent = `Step ${i + 1} of ${steps.length}`;
+  // Append the "rinse and dry if needed" hint on the final step
+  const finalHint = isLast ? '<div style="font-size:13px;color:var(--muted);margin-top:10px">When you’re done, rinse with cold water and air-dry. Skip the dryer until the stain is fully gone — heat sets any residue.</div>' : '';
+  document.getElementById('step-action').innerHTML = escapeHtml(actionText) + finalHint;
+
+  // Time + temperature row (both visible per step)
+  document.getElementById('step-time').innerHTML = `
+    <span class="step-time">⏱ ${formatSeconds(seconds)}</span>
+    ${wash ? `<span class="wash-chip ${wash.kind}" style="margin-left:6px">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>` : ''}
+  `;
+
+  // Back button always alive — on step 1 it returns to the result card.
+  const back = document.getElementById('step-back-btn');
+  back.disabled = false;
+  back.textContent = i === 0 ? '◀ Back' : '◀ Back';
+
+  // Next vs Done — finish
+  document.getElementById('step-next-btn').textContent = isLast ? 'Done — finish ▶' : 'Next ▶';
+
+  // Products + role list shown on EVERY step (so the user doesn't have to scroll back)
   const prodWrap = document.getElementById('step-products-wrap');
-  if (i === 0 && t.products && t.products.length) {
+  if (t.products && t.products.length) {
     const roleNice = r => {
       if (!r) return '';
       const s = String(r).toLowerCase();
@@ -1397,7 +1482,14 @@ function nextStep() {
   else renderStep();
 }
 function prevStep() {
-  if (state.stainStepIndex > 0) { state.stainStepIndex--; renderStep(); }
+  if (state.stainStepIndex > 0) {
+    state.stainStepIndex--;
+    renderStep();
+  } else {
+    // Already on step 1 — return to the "Stain found" result card.
+    hideAll(['stain-treatment']);
+    if (state.stainScan) renderStainResult(state.stainScan);
+  }
 }
 
 function finishTreatment() {
@@ -1483,20 +1575,8 @@ Output JSON only.`;
   }
 }
 
-// --- History list ---
-function renderStainHistory() {
-  const wrap = document.getElementById('stain-history-wrap');
-  if (!wrap) return;
-  if (!state.stainHistory.length) { wrap.innerHTML = ''; return; }
-  wrap.innerHTML = `
-    <h2 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:0 0 8px">Recent</h2>
-    ${state.stainHistory.slice(0, 5).map(h => {
-      const days = Math.max(0, Math.round((Date.now() - h.finishedAt) / (1000 * 60 * 60 * 24)));
-      const when = days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`;
-      return `<div class="member-row"><div style="flex:1">${escapeHtml(h.stainName)}</div><div style="font-size:11px;color:var(--muted)">${when}</div></div>`;
-    }).join('')}
-  `;
-}
+// --- History list (Recents section was removed from the UI) ---
+function renderStainHistory() { /* no-op: Recents section removed */ }
 
 function resetStainFlow() {
   state.stainTreatment = null;
@@ -1527,4 +1607,18 @@ function formatMinutes(total) {
   if (total < 60) return total + ' min';
   const m = Math.floor(total / 60), s = total % 60;
   return `${m}:${s.toString().padStart(2,'0')}`;
+}
+// Friendly seconds → "30 sec" / "5 min" / "1 hr" / "overnight"
+function formatSeconds(sec) {
+  if (!sec || sec < 1) return '—';
+  if (sec >= 6 * 3600) return 'overnight';
+  if (sec >= 3600) {
+    const h = Math.round(sec / 3600);
+    return `${h} hr${h > 1 ? 's' : ''}`;
+  }
+  if (sec >= 60) {
+    const m = Math.round(sec / 60);
+    return `${m} min`;
+  }
+  return `${Math.round(sec)} sec`;
 }
