@@ -1,0 +1,4793 @@
+{
+  "version": 1,
+  "source": "The Reddit Stain Playbook (137 entries)",
+  "categories": [
+    {
+      "id": "food_drink",
+      "name": "Food & drink",
+      "color": "#ffb547",
+      "blurb": "Many work even after they dry. Treat fast for best results."
+    },
+    {
+      "id": "body_fluids",
+      "name": "Body fluids",
+      "color": "#ff5d73",
+      "blurb": "Always cold water first. Heat sets protein permanently."
+    },
+    {
+      "id": "cosmetics",
+      "name": "Cosmetics & personal care",
+      "color": "#f78bff",
+      "blurb": "Often grease-based. Dawn is your friend."
+    },
+    {
+      "id": "office_craft",
+      "name": "Office, art & craft",
+      "color": "#5eb8ff",
+      "blurb": "Alcohol and acetone are the workhorses here."
+    },
+    {
+      "id": "outdoor_nature",
+      "name": "Outdoor & nature",
+      "color": "#29d3a3",
+      "blurb": "Mud, grass, sap, soot — let them dry, scrape, then treat."
+    },
+    {
+      "id": "pet",
+      "name": "Pet stains",
+      "color": "#ffd166",
+      "blurb": "Enzyme cleaners only — they actually digest the protein."
+    },
+    {
+      "id": "mechanical",
+      "name": "Mechanical & shop",
+      "color": "#95a0b8",
+      "blurb": "Industrial-strength stains. Lestoil and Dawn earn their keep here."
+    },
+    {
+      "id": "household",
+      "name": "Household & mystery",
+      "color": "#7c5cff",
+      "blurb": "Rust, mildew, set yellow — needs targeted chemistry."
+    },
+    {
+      "id": "seasonal",
+      "name": "Seasonal & specialty",
+      "color": "#06d6a0",
+      "blurb": "One-off stains the internet has solved so you don't have to."
+    }
+  ],
+  "stains": [
+    {
+      "id": "coffee",
+      "name": "Coffee",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot, then flush with cold water from the back.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak in 1 part white vinegar to 2 parts cold water for 30 min. Launder warm.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Sun-bleach if residue.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean MaxForce spray",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Carbona Stain Devils #3 (coffee/tea)",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "tea",
+      "name": "Tea",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as coffee — blot, cold rinse, vinegar soak.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Heavy stains: OxiClean overnight soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean liquid",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "red_wine",
+      "name": "Red wine",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot don't rub.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sprinkle baking soda or salt to absorb.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Then dab with cold water + dish soap.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Old stain: Wine-Away or hydrogen peroxide + Dawn paste.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Wine Away",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "The Laundress Wine & Coffee Stain Bar",
+          "role": "Alternative"
+        },
+        {
+          "name": "Dawn (blue) + 3% hydrogen peroxide",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "white_wine",
+      "name": "White wine",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Often disappears once dried, but residual sugar yellows over time.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash promptly with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil ProClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "beer",
+      "name": "Beer",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot, cold water flush, dish soap, normal wash.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Set stains: OxiClean soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn dish soap",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "champagne_sparkling_wine",
+      "name": "Champagne / sparkling wine",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Treat as white wine — cold rinse, enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sugar residue is the long-term threat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil ProClean",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "cola_dark_soda",
+      "name": "Cola / dark soda",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water flush.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sponge with 1:1 vinegar + water. Wash warm.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Old stain: OxiClean overnight.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Shout",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "fruit_juice_clear",
+      "name": "Fruit juice (clear)",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water rinse, dish soap, normal wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean MaxForce",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "berries_blueberry_blackberry",
+      "name": "Berries (blueberry, blackberry)",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Boiling water poured from height through the fabric onto a basin.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then dish soap and cold rinse.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Carbona Stain Devils #5",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "strawberry_raspberry",
+      "name": "Strawberry / raspberry",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold flush, lemon juice on whites, wash with enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sun-bleach residue.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "tomato_sauce_pasta_sauce",
+      "name": "Tomato sauce / pasta sauce",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape excess.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold water from the back. Rub with Dawn.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Soak in OxiClean if set.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn (blue)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "ketchup",
+      "name": "Ketchup",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as tomato sauce.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Stubborn: a baking-soda paste before the OxiClean soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "mustard",
+      "name": "Mustard",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Avoid heat. Dawn + cold water.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Treat the yellow turmeric tinge with oxygen bleach + sun.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "hydrogen peroxide 3%",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "bbq_sauce",
+      "name": "BBQ sauce",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn for the grease layer, then OxiClean soak for the tomato/sugar layer.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Two-step treatment.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn (blue)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "soy_sauce",
+      "name": "Soy sauce",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water flush immediately. Dish soap.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then enzyme detergent wash.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Salt can pre-blot a fresh spill.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil ProClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "curry_turmeric",
+      "name": "Curry / turmeric",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Hot soak in oxygen bleach (140°F+) for 30–60 min or overnight.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Air-dry in direct sunlight — curcumin breaks down under UV.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Repeat 2–3 cycles for set stains.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Vanish (UK)",
+          "role": "Alternative"
+        },
+        {
+          "name": "3% hydrogen peroxide + sunlight",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "chocolate",
+      "name": "Chocolate",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape off solids.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold rinse from the back. Dawn dish soap.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Wash with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "ice_cream",
+      "name": "Ice cream",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse (protein + sugar + fat — never hot).",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn for the fat, enzyme detergent for the protein.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "milk_baby_formula",
+      "name": "Milk / baby formula",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water only.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme detergent or pre-treater.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Hot water cooks the protein into the fabric.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean Baby Stain Remover",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dreft",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "butter_margarine",
+      "name": "Butter / margarine",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape excess.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sprinkle baking soda or cornstarch to absorb the oil.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Brush off after 15 min.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Dawn dish soap on the residue.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn (blue)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Lestoil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "cooking_oil_grease_splatter",
+      "name": "Cooking oil / grease splatter",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot, baking soda or cornstarch absorber, Dawn applied directly, wash in the warmest water the fabric tolerates.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn (blue)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Lestoil",
+          "role": "Alternative"
+        },
+        {
+          "name": "Krud Kutter",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "salad_dressing_oil_based",
+      "name": "Salad dressing (oil-based)",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Treat as cooking oil.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "absorbent powder.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Dawn.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Lestoil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "salad_dressing_creamy",
+      "name": "Salad dressing (creamy)",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Combine oil + protein steps.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "cold rinse, Dawn.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "mayonnaise",
+      "name": "Mayonnaise",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, cold water, Dawn for the oil, OxiClean for any residual yellowing.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "egg_yolk_scrambled_egg",
+      "name": "Egg yolk / scrambled egg",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water only (protein).",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme pre-treater.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Never hot — sets the protein.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil ProClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "jam_jelly",
+      "name": "Jam / jelly",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape solids. Cold rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "White vinegar dab on whites.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Enzyme detergent wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Carbona Stain Devils #5",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "honey",
+      "name": "Honey",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rinse with warm water (honey is water-soluble).",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Tide",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "maple_syrup",
+      "name": "Maple syrup",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse, dish soap, enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sugar residue can attract more dirt if left.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "gravy_sauce_drips",
+      "name": "Gravy / sauce drips",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Two-step like BBQ: Dawn for fat, OxiClean for the rest.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "hot_sauce_oil_based",
+      "name": "Hot sauce (oil-based)",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn for the oil, oxygen bleach for the chili-pigment residue.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Capsaicin tints yellow-orange on whites.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "vinegar_pickle_juice",
+      "name": "Vinegar / pickle juice",
+      "category": "food_drink",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Usually rinses out.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "If acidic discoloration, neutralize with baking soda + cold water.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Baking soda",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "tomato_seeds_pulp_on_linen",
+      "name": "Tomato seeds / pulp on linen",
+      "category": "food_drink",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, cold flush, vinegar dab, enzyme wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Food & drink"
+    },
+    {
+      "id": "blood_fresh",
+      "name": "Blood (fresh)",
+      "category": "body_fluids",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "color",
+          "warning": "Hydrogen peroxide / bleach is for whites only — will lift dye on colors."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water rinse immediately from the back of the fabric.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Apply hydrogen peroxide (whites) or dish soap (colors).",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Never use hot water.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide 3%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        },
+        {
+          "name": "OxiClean",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "blood_dried_set",
+      "name": "Blood (dried / set)",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soak in cold salt water 30 min.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Hydrogen peroxide for whites, enzyme pre-treater for colors. Repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Carbona Stain Devils #4 (blood/dairy)",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "menstrual_blood",
+      "name": "Menstrual blood",
+      "category": "body_fluids",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as blood — cold water, enzyme pre-treater, oxygen bleach for whites.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Don't tumble dry until gone.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide 3%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "sweat_yellow_pit_stains",
+      "name": "Sweat / yellow pit stains",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Pre-treat with Dawn or enzyme spray.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak in hot water + 1 scoop OxiClean for 1–6 hours. Repeat as needed.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "Carbona Stain Devils #1",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "vomit",
+      "name": "Vomit",
+      "category": "body_fluids",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape solids. Cold rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme pre-treater.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Bleach-safe whites can soak in oxygen bleach.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle (yes, on fabric)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "pet_urine_on_fabric",
+      "name": "Pet urine on fabric",
+      "category": "body_fluids",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Enzyme cleaner specifically — household stain removers can't break uric acid crystals.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak fully, let air dry, repeat if smell returns.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Rocco & Roxie Stain & Odor Eliminator",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "human_urine_mattress_sheets",
+      "name": "Human urine (mattress, sheets)",
+      "category": "body_fluids",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse, enzyme cleaner, baking soda overnight on mattress, vacuum.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Final wash with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "Branch Basics oxygen boost",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "feces",
+      "name": "Feces",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, cold water flush, enzyme pre-treater soak.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash hot if fabric allows.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Disinfecting cycle for cloth diapers.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Carbona Stain Devils #4",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "saliva_drool",
+      "name": "Saliva / drool",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse, enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Stubborn yellow on pillowcases: OxiClean overnight soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "semen",
+      "name": "Semen",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "color",
+          "warning": "Hydrogen peroxide / bleach is for whites only — will lift dye on colors."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water (protein). Enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Hydrogen peroxide for whites only.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "breast_milk_baby_spit_up",
+      "name": "Breast milk / baby spit-up",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse immediately.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Pre-treat with enzyme spray.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Sun-bleach for residual yellowing.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean Baby",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dreft Stain Remover",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "nasal_mucus",
+      "name": "Nasal mucus",
+      "category": "body_fluids",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse, enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Usually washes out without special treatment.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Body fluids"
+    },
+    {
+      "id": "lipstick_matte",
+      "name": "Lipstick (matte)",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn dish soap rubbed in for 5 min.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash warm with enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Stubborn dye: hydrogen peroxide for whites.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "The Laundress Wash & Stain Bar",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "lipstick_glossy_waxy",
+      "name": "Lipstick (glossy / waxy)",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Place fabric stain-down on paper towel.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Spray with hairspray or dab rubbing alcohol from the back. Then Dawn.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rubbing alcohol 70%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "foundation_liquid",
+      "name": "Foundation (liquid)",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Shaving cream rubbed in, blot, cold rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Or Dawn + a soft brush.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Carbona Stain Devils #9 (cosmetics)",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "mascara",
+      "name": "Mascara",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn for the oil base.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then enzyme detergent for any waterproof polymer residue.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Shout Advanced",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "eyeliner_liquid_pencil",
+      "name": "Eyeliner (liquid / pencil)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rubbing alcohol for liquid eyeliner.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn + cool water for pencil.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Don't scrub — blot.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rubbing alcohol",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "eyeshadow_powder",
+      "name": "Eyeshadow powder",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Brush off excess. Don't rub.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Tape lift to remove residue.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Then Dawn + cold rinse.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Shout",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "nail_polish_wet",
+      "name": "Nail polish (wet)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "synthetic",
+          "warning": "Acetone dissolves acetate and modacrylic. Test first — if it melts, stop."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot, don't rub.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Acetone or pure nail polish remover on a cotton ball from the back.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Test colorfastness first.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Acetone (pure)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "non-acetone for acetate fabrics",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "nail_polish_dried",
+      "name": "Nail polish (dried)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "synthetic",
+          "warning": "Acetone dissolves acetate and modacrylic. Test first — if it melts, stop."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Carefully chip off solids.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Acetone application as above.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Always test on hidden seam — acetone destroys acetate, rayon, modacrylic.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Acetone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Goof Off (test first)",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "hair_dye_fresh",
+      "name": "Hair dye (fresh)",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Blot immediately with paper towel.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cool rinse from the back. Dawn + cold water.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Repeat with hydrogen peroxide for whites.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide 3%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "hair_dye_set",
+      "name": "Hair dye (set)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Often permanent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Try hairspray (older formulas) or rubbing alcohol.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Last resort: Iron Out (color-safe oxygen) overnight.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Iron Out",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "rubbing alcohol",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "henna",
+      "name": "Henna",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Hard to remove.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold rinse, soak in hydrogen peroxide for whites, enzyme detergent wash.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Often won't fully come out.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "fake_tan_self_tanner",
+      "name": "Fake tan / self-tanner",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Lemon juice on whites, baking soda paste, or oxygen bleach soak.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sun-dry if possible.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "lemon + salt for whites",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "sunscreen_white_residue_fresh",
+      "name": "Sunscreen (white residue, fresh)",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Brush off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash with enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Old sunscreen on whites turns yellow — pre-treat with Dawn + OxiClean soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "sunscreen_yellow_stains_set",
+      "name": "Sunscreen yellow stains (set)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "The avobenzone-iron reaction.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Pre-treat with Whink Iron-Out (color-safe).",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Then OxiClean overnight soak. Sun-bleach.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Whink Color-Safe Iron Out",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "body_lotion",
+      "name": "Body lotion",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn dish soap for the oil base.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash warm with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "perfume_cologne",
+      "name": "Perfume / cologne",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "silk",
+          "warning": "Silk and wool are delicate — test on a hidden seam first."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Often a colorless yellowing on silk and pale fabrics.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Treat with cool water + glycerin.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Test for colorfastness.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Glycerin solution",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "The Laundress Stain Solution",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "deodorant_white_marks_fresh",
+      "name": "Deodorant white marks (fresh)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rub with a dryer sheet, a piece of pantyhose, or a Hollywood Fashion Tape product. Marks lift dry.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hollywood Fashion Tape Stain Remover Stick",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "dryer sheet",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "hair_gel_pomade_hair_wax",
+      "name": "Hair gel / pomade / hair wax",
+      "category": "cosmetics",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Dawn dish soap rubbed in for 10 min.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme detergent wash.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Repeat for set stains.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "hair_mousse",
+      "name": "Hair mousse",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Often dissolves in water.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cool rinse + enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "liquid_hand_soap_residue_yellow_on_towels",
+      "name": "Liquid hand soap residue (yellow on towels)",
+      "category": "cosmetics",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "OxiClean soak; rinse twice.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Cosmetics & personal care"
+    },
+    {
+      "id": "ballpoint_pen_ink",
+      "name": "Ballpoint pen ink",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Place stain face-down on paper towel.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Drip rubbing alcohol (70–91%) from the back.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Replace paper towel as ink lifts. Repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rubbing alcohol 91%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Amodex Ink & Stain Remover",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "permanent_marker_sharpie",
+      "name": "Permanent marker / Sharpie",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as ballpoint — rubbing alcohol from the back onto paper towels.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Hand sanitizer also works in a pinch.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Old cheap hairspray works on synthetics.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Amodex",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "rubbing alcohol 91%",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "highlighter",
+      "name": "Highlighter",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rubbing alcohol on the back through paper towel. Then dish soap.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sun-bleach residue on whites.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rubbing alcohol",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Amodex",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "pencil_graphite",
+      "name": "Pencil graphite",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soft eraser first.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Stubborn smudges: Dawn + soft brush.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "crayon_on_fabric_room_temperature",
+      "name": "Crayon (on fabric, room temperature)",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Apply WD-40 or Dawn.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Wash hot if fabric tolerates.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "WD-40 (test first)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "crayon_melted_in_dryer_onto_a_full_load",
+      "name": "Crayon (melted in dryer onto a full load)",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Stains everywhere.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Re-wash entire load with Dawn + OxiClean in hot water.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "May need 2–3 cycles.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Lestoil is the cult favorite for this disaster.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lestoil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        },
+        {
+          "name": "OxiClean",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "watercolor_paint",
+      "name": "Watercolor paint",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cool water rinse. Dish soap.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Usually comes out easily on fresh.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "acrylic_paint_wet",
+      "name": "Acrylic paint (wet)",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rinse immediately under cold water — acrylic is water-soluble until it dries.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Once dry, removal is hard.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "warm water",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "acrylic_paint_dried",
+      "name": "Acrylic paint (dried)",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "synthetic",
+          "warning": "Acetone dissolves acetate and modacrylic. Test first — if it melts, stop."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape off, then acetone (test fabric) or rubbing alcohol from the back.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Often permanent on porous fabrics.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Acetone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Goof Off",
+          "role": "Alternative"
+        },
+        {
+          "name": "rubbing alcohol",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "oil_paint",
+      "name": "Oil paint",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, blot with turpentine or paint thinner (well-ventilated).",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then Dawn + warm wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Mineral spirits / turpentine",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "latex_wall_paint_wet",
+      "name": "Latex wall paint (wet)",
+      "category": "office_craft",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold water flush immediately. Dish soap. Wash.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Once dry: nearly impossible.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "warm water",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "white_school_glue_wet",
+      "name": "White school glue (wet)",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse — glue is water-soluble.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak in warm soapy water 15 min.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "warm water",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "super_glue",
+      "name": "Super glue",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "synthetic",
+          "warning": "Acetone dissolves acetate and modacrylic. Test first — if it melts, stop."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Acetone is the only solvent.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Apply carefully to the back of the fabric.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Will damage acetate, modacrylic, rayon.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Acetone (pure)",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "glitter",
+      "name": "Glitter",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Tape-lift (lint roller) before laundering.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Once washed, glitter spreads through the whole load.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lint roller",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "packing tape",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "slime",
+      "name": "Slime",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soak in white vinegar 10 min. Scrape off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then Dawn + warm wash.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Hot water sets the polymer.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "White vinegar",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "play_doh",
+      "name": "Play-Doh",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Let dry fully, then crumble off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold rinse residue. Dawn + warm wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "adhesive_sticker_residue",
+      "name": "Adhesive / sticker residue",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Goo Gone or peanut butter for the adhesive.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then Dawn + warm wash to remove the oil.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Goo Gone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "peanut butter",
+          "role": "Alternative"
+        },
+        {
+          "name": "Dawn",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "tape_glue_packing_duct",
+      "name": "Tape glue (packing/duct)",
+      "category": "office_craft",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Rubbing alcohol or Goo Gone from the back. Then Dawn.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Goo Gone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "rubbing alcohol",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Office, art & craft"
+    },
+    {
+      "id": "grass",
+      "name": "Grass",
+      "category": "outdoor_nature",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Enzyme pre-treater rubbed in for 10 min. OxiClean soak. Wash warm.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "For whites: a few drops of hydrogen peroxide after pre-treat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil ProClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "Shout Advanced",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "mud_dirt",
+      "name": "Mud / dirt",
+      "category": "outdoor_nature",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "LET IT DRY FIRST. Brush off solids.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then cold rinse + enzyme detergent. Wet mud spreads.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Persil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "clay_red_yellow",
+      "name": "Clay (red / yellow)",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as mud.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "let dry, brush off, treat residual color with rust-style approach (lemon + salt on whites).",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "lemon + salt",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "tree_sap_pine_resin_fresh",
+      "name": "Tree sap / pine resin (fresh)",
+      "category": "outdoor_nature",
+      "urgency": "act_now",
+      "estimated_minutes": 15,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Freeze the garment 1 hour.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Snap or scrape off sap.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Then rubbing alcohol on the back. Wash warm.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rubbing alcohol 91%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Goo Gone",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "tree_sap_old_polymerized",
+      "name": "Tree sap (old/polymerized)",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Harder.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Try Goo Gone, mineral spirits, or turpentine. Test fabric first.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "May not come out fully.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Goo Gone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "mineral spirits",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "pollen_especially_lily",
+      "name": "Pollen (especially lily)",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Do NOT rub.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Lift loose pollen with sticky tape or shake out.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Direct sunlight + a dry-cleaning sponge.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Water spreads pollen oil.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Sticky tape",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "dry-cleaning sponge",
+          "role": "Alternative"
+        },
+        {
+          "name": "OxiClean as last step",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "bird_droppings",
+      "name": "Bird droppings",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape carefully. Cold flush.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme pre-treater for the protein.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Wash warm with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "plant_chlorophyll_leaves",
+      "name": "Plant chlorophyll / leaves",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Treat like grass.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "enzyme pre-treater, OxiClean soak, hydrogen peroxide for whites.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "insect_splatter_windshield_style",
+      "name": "Insect splatter (windshield-style)",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Enzyme pre-treater.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Some bugs leave protein stains, others leave dye.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Krud Kutter",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "tar_asphalt",
+      "name": "Tar / asphalt",
+      "category": "outdoor_nature",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Apply Goo Gone or eucalyptus oil to break it down. Scrape carefully.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then Dawn + hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Goo Gone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "eucalyptus oil",
+          "role": "Alternative"
+        },
+        {
+          "name": "Dawn",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "soot_fireplace_ash",
+      "name": "Soot / fireplace ash",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Vacuum off dry.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Don't rub — drives it deeper.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Cool wash with enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "May need OxiClean soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "smoke_odor_no_visible_stain",
+      "name": "Smoke odor (no visible stain)",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 15,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soak in 1 cup white vinegar + cool water 1 hour.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash with enzyme detergent.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Air dry outside if possible.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "White vinegar",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean Odor Blasters",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "concrete_splash_cement",
+      "name": "Concrete splash / cement",
+      "category": "outdoor_nature",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Brush dried concrete off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Pre-treat with vinegar (mild acid).",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Then enzyme detergent wash.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Cured cement is often permanent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "White vinegar",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Outdoor & nature"
+    },
+    {
+      "id": "pet_hair_embedded_in_fabric",
+      "name": "Pet hair embedded in fabric",
+      "category": "pet",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [
+        {
+          "fabric": "silk",
+          "warning": "Silk and wool are delicate — test on a hidden seam first."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Wool dryer balls in dryer.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "10 min pre-tumble dry before washing.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "lint roller or rubber pet brush before laundering.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Add 1/4 cup vinegar to rinse.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Wool dryer balls",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "FurZapper",
+          "role": "Alternative"
+        },
+        {
+          "name": "ChomChom Roller",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "cat_dog_drool_yellow_stain",
+      "name": "Cat / dog drool (yellow stain)",
+      "category": "pet",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Enzyme cleaner for the protein.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn for the oil layer.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "cat_spray_urine_intense_odor",
+      "name": "Cat spray (urine, intense odor)",
+      "category": "pet",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Enzyme cleaner only — multiple applications. Soak fully.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Avoid ammonia-based cleaners (smells like more urine to the cat, will re-mark).",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Anti-Icky-Poo",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Nature's Miracle Advanced",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "pet_vomit",
+      "name": "Pet vomit",
+      "category": "pet",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape solids.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme pre-treater. Cool rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Wash with enzyme detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "pet_feces",
+      "name": "Pet feces",
+      "category": "pet",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, enzyme pre-treater, hot wash if fabric allows.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Disinfecting cycle for blankets.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Rocco & Roxie",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "cat_poop_on_carpet",
+      "name": "Cat poop on carpet",
+      "category": "pet",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Solids first.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Enzyme cleaner spray. Blot don't rub. Repeat.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Final pass with carpet shampooer if possible.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Nature's Miracle",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Folex Carpet Cleaner",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "dog_mud_paw_prints",
+      "name": "Dog mud paw prints",
+      "category": "pet",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Let dry. Vacuum or brush.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Spot-clean with Folex if visible after.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Folex",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Pet stains"
+    },
+    {
+      "id": "motor_oil_engine_grease",
+      "name": "Motor oil / engine grease",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Apply Dawn straight, work in 10 min.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Lestoil for stubborn.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Hot wash with heavy-duty detergent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lestoil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        },
+        {
+          "name": "Persil",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "bike_chain_grease",
+      "name": "Bike chain grease",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as motor oil.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn or Lestoil pre-treat, hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lestoil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "axle_grease_black_grease",
+      "name": "Axle grease / black grease",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Krud Kutter or Lestoil pre-treat. Hot wash. Repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Krud Kutter",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Lestoil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "cooking_grease_splatter_on_apron",
+      "name": "Cooking grease splatter on apron",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Baking soda or cornstarch absorber, Dawn, hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "wd_40_penetrating_oil_overspray",
+      "name": "WD-40 / penetrating oil overspray",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Apply more dish soap. Wash hot. Repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Lestoil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "shoe_polish_black",
+      "name": "Shoe polish (black)",
+      "category": "mechanical",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Apply Dawn or Lestoil, work in.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak in OxiClean if set. Hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lestoil",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        },
+        {
+          "name": "OxiClean",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "black_rubber_scuff_e_g_shoes_on_white_pants",
+      "name": "Black rubber scuff (e.g. shoes on white pants)",
+      "category": "mechanical",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Apply Dawn + a soft brush.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Magic Eraser CAREFULLY on resistant marks. Hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Mr. Clean Magic Eraser",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "tar_road_tar",
+      "name": "Tar (road tar)",
+      "category": "mechanical",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Goo Gone or eucalyptus oil.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Scrape, treat from back, Dawn, hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Goo Gone",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "diesel_gasoline_smell",
+      "name": "Diesel / gasoline smell",
+      "category": "mechanical",
+      "urgency": "has_time",
+      "estimated_minutes": 15,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soak in baking soda paste for 1 hour.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then wash with enzyme detergent in hot water.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Air dry — never dryer (fume risk).",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean Odor Blasters",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "baking soda",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Mechanical & shop"
+    },
+    {
+      "id": "rust_iron_stain",
+      "name": "Rust / iron stain",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 15,
+      "fabric_warnings": [
+        {
+          "fabric": "any",
+          "warning": "Caustic chemistry — wear gloves, ventilate, test on a hidden seam."
+        }
+      ],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Lemon juice + salt rubbed in, set in direct sun for 1 hour, rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "For tough: Whink Rust Stain Remover (test first — caustic).",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Whink Rust Stain Remover",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "lemon + salt",
+          "role": "Alternative"
+        },
+        {
+          "name": "Iron Out",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "iron_scorch_mark_light",
+      "name": "Iron scorch mark (light)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Hydrogen peroxide on whites + sun.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Severe scorch is permanent (heat-damaged fibers).",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide 3%",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "bleach_spot_white_spot_on_colored_fabric",
+      "name": "Bleach spot (white spot on colored fabric)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Color is gone — can't be restored.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Options: dye the garment darker, or use a fabric marker.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Rit Color Remover (whole-garment)",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Rit Fabric Dye",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "mildew_mold_on_fabric",
+      "name": "Mildew / mold on fabric",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 15,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Brush off dry.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Soak in 1 cup white vinegar + warm water 1 hour.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Wash hot with enzyme detergent + 1/2 cup oxygen bleach. Sun-dry.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "white vinegar",
+          "role": "Alternative"
+        },
+        {
+          "name": "Persil ProClean",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "hard_water_spots_white_mineral_residue",
+      "name": "Hard water spots (white mineral residue)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Soak in 1 cup white vinegar + warm water.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Or use a citric-acid powder soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "White vinegar",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "citric acid powder",
+          "role": "Alternative"
+        },
+        {
+          "name": "CLR (test first)",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "yellow_age_stains_on_stored_whites",
+      "name": "Yellow age stains on stored whites",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "OxiClean overnight soak.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Boil if fabric allows (cotton/linen). Sun-bleach. Repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "lemon + sun",
+          "role": "Alternative"
+        },
+        {
+          "name": "Persil powder",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "ghost_stain_invisible_until_dry",
+      "name": "'Ghost' stain (invisible until dry)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Often sugar or sweat residue.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Re-treat with enzyme pre-treater + OxiClean soak.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Don't dryer-dry until gone.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "brown_spots_from_storage_cellulose_rust",
+      "name": "Brown spots from storage (cellulose rust)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Lemon + salt + sun first. Then OxiClean.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Stubborn: Whink Color-Safe Iron Out.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Whink Color-Safe Iron Out",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "yellowed_pit_area_on_white_t_shirts",
+      "name": "Yellowed pit area on white t-shirts",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "The spa day specialty.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Pre-treat with Dawn + Whink Iron-Out, then long hot OxiClean soak. Sun-dry.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Whink Color-Safe Iron Out",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "Persil powder",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "chlorine_pool_damage_faded_spots_on_swimwear",
+      "name": "Chlorine pool damage (faded spots on swimwear)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Permanent — chlorine destroyed the dye.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Rinse swimwear in cold tap water immediately after every swim to prevent.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "No fix",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "prevent with rinse",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "bug_spray_deet_damage",
+      "name": "Bug spray (DEET damage)",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "DEET dissolves synthetic fabrics — can cause holes.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Wash promptly in cool water to prevent ongoing damage.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Cool water rinse",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "sunscreen_iron_yellowing_avobenzone_hard_water",
+      "name": "Sunscreen-iron yellowing (avobenzone + hard water)",
+      "category": "household",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Whink Color-Safe Iron Out + OxiClean soak. Sun-bleach.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Whink Color-Safe Iron Out",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "candle_wax_paraffin",
+      "name": "Candle wax (paraffin)",
+      "category": "household",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Freeze, snap off, then iron through brown paper bag or paper towel to absorb residue.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Final Dawn + warm wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Brown paper bag + iron",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "beeswax",
+      "name": "Beeswax",
+      "category": "household",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Same as candle wax but more stubborn.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "May need a second pass with Dawn + hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Brown paper bag + iron",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "chewing_gum",
+      "name": "Chewing gum",
+      "category": "household",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Freeze (ice bag or freezer) until brittle. Scrape off.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Then dab residue with rubbing alcohol or peanut butter.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Ice",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "rubbing alcohol",
+          "role": "Alternative"
+        },
+        {
+          "name": "peanut butter",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "lip_balm_chapstick_wax_oil",
+      "name": "Lip balm / Chapstick (wax + oil)",
+      "category": "household",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Scrape, brown paper + iron method for the wax.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn for the oil. Hot wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Brown paper bag + iron",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "window_cleaner_overspray",
+      "name": "Window cleaner overspray",
+      "category": "household",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Usually washes out.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "enzyme detergent, normal wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Household & mystery"
+    },
+    {
+      "id": "easter_egg_dye",
+      "name": "Easter egg dye",
+      "category": "seasonal",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse, hydrogen peroxide on whites, OxiClean soak for colors.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Often comes out fully.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide 3%",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "halloween_fake_blood_corn_syrup_dye",
+      "name": "Halloween fake blood (corn syrup + dye)",
+      "category": "seasonal",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Cold rinse.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn for the sugar.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "OxiClean overnight soak for the red dye.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Dawn",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        },
+        {
+          "name": "Carbona Stain Devils #5",
+          "role": "DIY backup"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "glow_stick_fluid",
+      "name": "Glow stick fluid",
+      "category": "seasonal",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Skin-safe but stains fabric.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold rinse, hydrogen peroxide for whites, OxiClean soak.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Hydrogen peroxide",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "OxiClean",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "holi_powder_gulal",
+      "name": "Holi powder (gulal)",
+      "category": "seasonal",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Brush off dry.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Cold rinse from the back.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Enzyme detergent wash.",
+          "seconds": 60
+        },
+        {
+          "order": 4,
+          "action": "Hard pigments may stain permanently on light fabrics.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "spray_tan",
+      "name": "Spray tan",
+      "category": "seasonal",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Lemon juice + sun on whites.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Oxygen bleach soak.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "Often fades after 2–3 washes.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "lemon + sun",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "glitter_eye_makeup",
+      "name": "Glitter eye makeup",
+      "category": "seasonal",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Tape-lift the glitter.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Dawn + warm rinse for the residue.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Lint roller",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "festival_mud_glitter_sunscreen_combo",
+      "name": "Festival mud + glitter + sunscreen combo",
+      "category": "seasonal",
+      "urgency": "act_now",
+      "estimated_minutes": 30,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Let dry, brush off mud, lint-roll glitter.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "full OxiClean overnight soak.",
+          "seconds": 60
+        },
+        {
+          "order": 3,
+          "action": "enzyme wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "OxiClean",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Persil",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "ski_wax",
+      "name": "Ski wax",
+      "category": "seasonal",
+      "urgency": "act_now",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Freeze and scrape.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "iron through brown paper to absorb. Final Dawn wash.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "Brown paper bag + iron",
+          "role": "Primary recommendation"
+        },
+        {
+          "name": "Dawn",
+          "role": "Alternative"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    },
+    {
+      "id": "snow_salt_road_salt_white_tide_line_on_boots_and_pants",
+      "name": "Snow salt / road salt (white tide line on boots and pants)",
+      "category": "seasonal",
+      "urgency": "has_time",
+      "estimated_minutes": 5,
+      "fabric_warnings": [],
+      "steps": [
+        {
+          "order": 1,
+          "action": "Mix 1 tbsp white vinegar + 1 cup warm water.",
+          "seconds": 60
+        },
+        {
+          "order": 2,
+          "action": "Sponge on, blot, repeat.",
+          "seconds": 60
+        }
+      ],
+      "products": [
+        {
+          "name": "White vinegar",
+          "role": "Primary recommendation"
+        }
+      ],
+      "final_step": "Inspect before drying with heat — heat sets any leftover residue permanently.",
+      "source": "Seasonal & specialty"
+    }
+  ]
+}

@@ -6,6 +6,8 @@ const LS = {
   family: 'tidyai_family',
   tasks: 'tidyai_tasks',
   lastScan: 'tidyai_last_scan',
+  stainHistory: 'tidyai_stain_history',
+  lastStainScan: 'tidyai_last_stain_scan',
 };
 
 // Palette for family avatars
@@ -18,7 +20,23 @@ const state = {
   family: load(LS.family, []),
   tasks: load(LS.tasks, []),
   filter: 'all',        // 'all' | memberId | 'quickwin' | 'done'
+  // Laundry state
+  stainImageDataUrl: null,
+  stainScan: load(LS.lastStainScan, null),
+  stainTreatment: null,       // current treatment record from playbook
+  stainStepIndex: 0,
+  stainHistory: load(LS.stainHistory, []),
 };
+
+// Playbook (loaded lazily)
+let PLAYBOOK = null;
+function loadPlaybook() {
+  if (PLAYBOOK) return Promise.resolve(PLAYBOOK);
+  return fetch('laundry_playbook.json')
+    .then(r => r.json())
+    .then(d => { PLAYBOOK = d; return d; })
+    .catch(err => { console.error('Playbook load failed', err); return null; });
+}
 
 function load(k, fallback) {
   try { return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch { return fallback; }
@@ -41,6 +59,18 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', onFileChosen);
   const cam = document.getElementById('camera-input');
   if (cam) cam.addEventListener('change', onFileChosen);
+
+  // Laundry inputs
+  const sg = document.getElementById('stain-gallery-input');
+  if (sg) sg.addEventListener('change', onStainFileChosen);
+  const sc = document.getElementById('stain-camera-input');
+  if (sc) sc.addEventListener('change', onStainFileChosen);
+  const sa = document.getElementById('stain-after-input');
+  if (sa) sa.addEventListener('change', onStainAfterChosen);
+  loadPlaybook();
+  if (state.stainScan) renderStainResult(state.stainScan);
+  renderStainHistory();
+
   renderFamily();
   renderTasks();
 });
@@ -54,6 +84,7 @@ function switchTab(name) {
   });
   if (name === 'tasks') renderTasks();
   if (name === 'family') renderFamily();
+  if (name === 'laundry') { loadPlaybook(); renderStainHistory(); }
 }
 
 // --- Toast ---
@@ -627,12 +658,455 @@ function clearData() {
   if (!confirm('Clear all tasks, family, and the API key on this device?')) return;
   Object.values(LS).forEach(k => localStorage.removeItem(k));
   state.family = []; state.tasks = []; state.scan = null;
+  state.stainScan = null; state.stainHistory = []; state.stainTreatment = null;
   document.getElementById('api-key-input').value = '';
   document.getElementById('scan-results').style.display = 'none';
+  resetStainFlow();
   updateApiBadge();
   renderFamily();
   renderTasks();
+  renderStainHistory();
   toast('Cleared');
+}
+
+// =====================================================================
+// LAUNDRY HACKS
+// =====================================================================
+
+const STAIN_SYSTEM_PROMPT = `You are TidyAI's stain identification assistant. The user took a photo of a stain on fabric or another surface and wants to know what it is so the app can prescribe the right treatment from a curated playbook.
+
+Your ONLY job is to identify the stain. You DO NOT prescribe treatments — a separate playbook lookup handles that. Never invent or describe a treatment in your response.
+
+Use signals from the photo:
+- Color of the stain (red, brown, yellow, oily-clear, black)
+- Color of the fabric underneath
+- Texture (fresh-wet, dried, crusty, oily, powdery)
+- Location on the garment (collar, pit, lap, knee hint at the source)
+- Surrounding context (food crumbs, smudge marks, blood smear pattern)
+
+You may consider these 137 known stain types across 9 categories:
+
+FOOD & DRINK: Coffee, Tea, Red wine, White wine, Beer, Champagne / sparkling wine, Cola / dark soda, Fruit juice (clear), Berries (blueberry, blackberry), Strawberry / raspberry, Tomato sauce / pasta sauce, Ketchup, Mustard, BBQ sauce, Soy sauce, Curry / turmeric, Chocolate, Ice cream, Milk / formula, Butter, Cooking oil, Salad dressing (oil), Salad dressing (creamy), Mayonnaise, Egg, Jam / preserves, Honey, Maple syrup, Gravy, Hot sauce (oil-based), Vinegar / pickle juice, Tomato seeds / pulp on linen.
+
+BODY FLUIDS: Blood (fresh), Blood (dried / set), Menstrual blood, Sweat / yellow pit stains, Vomit, Pet urine on fabric, Human urine, Feces / fecal smear, Saliva / drool, Semen, Breast milk / baby spit-up, Nasal mucus.
+
+COSMETICS & PERSONAL CARE: Lipstick (matte), Lipstick (glossy), Foundation, Mascara, Eyeliner, Eyeshadow, Nail polish (wet), Nail polish (dried), Hair dye (fresh), Hair dye (set), Henna, Fake tan / spray tan, Sunscreen (fresh), Sunscreen yellow stains (set), Body lotion, Perfume / cologne, Deodorant white marks, Hair gel / pomade, Hair mousse, Liquid hand soap residue.
+
+OFFICE, ART, CRAFT: Ballpoint pen ink, Permanent marker / Sharpie, Highlighter, Pencil graphite, Crayon (room temperature), Crayon (melted in dryer), Watercolor, Acrylic paint (wet), Acrylic paint (dried), Oil paint, Latex wall paint, White school glue, Super glue, Glitter, Slime, Play-Doh, Sticker / adhesive residue, Packing tape glue.
+
+OUTDOOR & NATURE: Grass, Mud, Clay, Tree sap (fresh), Tree sap (old), Pollen, Bird droppings, Plant chlorophyll, Insect splatter, Tar / asphalt, Soot, Smoke odor, Concrete splash / cement.
+
+PET STAINS: Pet hair embedded, Cat / dog drool, Cat spray, Pet vomit, Pet feces, Cat poop on carpet, Dog mud paw prints.
+
+MECHANICAL & SHOP: Motor oil, Bike chain grease, Axle grease, Cooking grease, WD-40 overspray, Shoe polish, Black rubber scuff, Tar (road tar), Diesel / gasoline smell.
+
+HOUSEHOLD & MYSTERY: Rust / iron stain, Iron scorch mark (light), Bleach spot, Mildew / mold spots on fabric, Hard water spots, Yellow age stains on whites, Ghost stain, Brown storage spots, Yellowed pit area, Chlorine pool damage, DEET damage, Sunscreen-iron yellowing, Candle wax, Beeswax, Chewing gum, Lip balm, Window cleaner overspray.
+
+SEASONAL & SPECIALTY: Easter egg dye, Fake blood, Glow stick fluid, Holi powder, Spray tan, Glitter eye makeup, Festival mud-glitter-sunscreen combo, Ski wax, Snow salt / road salt.
+
+Return STRICT JSON in one of two shapes.
+
+Shape A — confident (>= 70% likely):
+{
+  "confident": true,
+  "stain_name": "<EXACT name from the lists above>",
+  "category": "<food_drink | body_fluids | cosmetics | office_craft | outdoor_nature | pet | mechanical | household | seasonal>",
+  "confidence": 0.85,
+  "fabric_observation": "<one short sentence on the fabric you think this is — cotton, denim, silk, carpet, upholstery, etc.>",
+  "freshness": "fresh" | "set" | "unknown",
+  "warning_if_any": "<one sentence about heat/bleach/fabric risk, or null>"
+}
+
+Shape B — not sure:
+{
+  "confident": false,
+  "needs_category": true,
+  "reason": "<one warm sentence explaining what's ambiguous — never blame the photo or the user>",
+  "suggested_categories": ["<2-4 category ids from the list above>"],
+  "candidate_stains": ["<3-6 EXACT stain names from the lists above>"]
+}
+
+If the photo shows a stain on something other than fabric or upholstery (e.g. skin, wood, plastic), return Shape B with reason explaining and suggested_categories listing the most likely 2-3 anyway.
+
+NEVER make assumptions about how the stain got there. NEVER moralize. NEVER reference what activity caused it. NEVER use shame or urgency language.
+
+Return JSON only. No markdown, no commentary, no preamble.`;
+
+// --- Stain photo input ---
+function onStainFileChosen(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  toast('Loading photo…');
+  const reader = new FileReader();
+  reader.onerror = () => toast('Could not read that file');
+  reader.onload = () => {
+    const dataUrl = reader.result;
+    state.stainImageDataUrl = dataUrl;
+    const preview = document.getElementById('stain-preview-img');
+    preview.onerror = () => { preview.style.display = 'none'; };
+    preview.onload = () => { preview.style.display = 'block'; };
+    preview.src = dataUrl;
+    document.getElementById('stain-upload-placeholder').style.display = 'none';
+
+    // Downscale in background
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const maxDim = 1024;
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        state.stainImageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      } catch (err) { console.warn('downscale failed', err); }
+    };
+    img.onerror = () => console.warn('decode failed, sending original');
+    img.src = dataUrl;
+    toast('Photo ready — tap Identify stain');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+// --- AI call: identifyStain ---
+async function analyzeStain(optionalCategory = null) {
+  if (!state.stainImageDataUrl) return toast('Add a photo first');
+  const key = localStorage.getItem(LS.key);
+  if (!key) { switchTab('settings'); return toast('Add your OpenAI API key in Settings'); }
+  const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
+  await loadPlaybook();
+
+  const btn = document.getElementById('stain-analyze-btn');
+  const label = document.getElementById('stain-analyze-label');
+  if (btn && label) { btn.disabled = true; label.innerHTML = '<span class="spinner"></span> Identifying…'; }
+
+  const userText = optionalCategory
+    ? `The user confirmed this stain falls in the category: ${optionalCategory}. Narrow within that category and return either Shape A (a confident pick) or Shape B with up to 5 candidate_stains from that category.`
+    : "Identify this stain. If you're not confident, ask for a category.";
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: STAIN_SYSTEM_PROMPT },
+          { role: 'user', content: [
+            { type: 'text', text: userText },
+            { type: 'image_url', image_url: { url: state.stainImageDataUrl, detail: 'low' } },
+          ]},
+        ],
+        max_tokens: 500,
+        temperature: 0.2,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error('OpenAI error: ' + res.status + ' — ' + errText.slice(0, 200));
+    }
+    const data = await res.json();
+    const parsed = JSON.parse(data?.choices?.[0]?.message?.content || '{}');
+    state.stainScan = parsed;
+    save(LS.lastStainScan, parsed);
+    renderStainResult(parsed);
+  } catch (err) {
+    console.error(err);
+    toast(err.message.length < 80 ? err.message : 'Identification failed — see console');
+  } finally {
+    if (btn && label) { btn.disabled = false; label.textContent = 'Identify stain'; }
+  }
+}
+
+// --- Pure playbook lookup ---
+function findStainInPlaybook(stainName) {
+  if (!PLAYBOOK || !stainName) return null;
+  const want = stainName.toLowerCase().trim();
+  // Exact match first
+  let hit = PLAYBOOK.stains.find(s => s.name.toLowerCase() === want);
+  if (hit) return hit;
+  // Substring match (handle "Red wine" vs "Red wine — fresh")
+  hit = PLAYBOOK.stains.find(s => s.name.toLowerCase().includes(want) || want.includes(s.name.toLowerCase()));
+  return hit || null;
+}
+
+function getStainTreatment(stainName, fabricHint = null) {
+  const stain = findStainInPlaybook(stainName);
+  if (!stain) return null;
+  const warnings = (stain.fabric_warnings || []).filter(w => !fabricHint || w.fabric === fabricHint || w.fabric === 'any');
+  return { ...stain, applicable_warnings: warnings };
+}
+
+// --- Render: AI result (confident or category fallback) ---
+function renderStainResult(parsed) {
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+
+  if (parsed && parsed.confident && parsed.stain_name) {
+    const treatment = getStainTreatment(parsed.stain_name);
+    if (!treatment) {
+      // AI confident but playbook missed — fall through to category picker
+      showCategoryPicker(`I matched it to "${parsed.stain_name}" but don't have a treatment on file. Pick the closest category.`);
+      return;
+    }
+    state.stainTreatment = treatment;
+    document.getElementById('stain-confident').style.display = 'block';
+    document.getElementById('stain-name').textContent = treatment.name;
+    document.getElementById('stain-summary').textContent = parsed.fabric_observation || '';
+    const cat = PLAYBOOK?.categories.find(c => c.id === treatment.category);
+    const urgencyLabel = treatment.urgency === 'act_now' ? 'Act now' : 'Has time';
+    document.getElementById('stain-tags').innerHTML = `
+      ${cat ? `<span class="chip" style="color:${cat.color};border-color:${cat.color}66">${escapeHtml(cat.name)}</span>` : ''}
+      <span class="chip urgency-${treatment.urgency}">${urgencyLabel}</span>
+      <span class="chip">⏱ ~${treatment.estimated_minutes} min</span>
+      ${parsed.freshness ? `<span class="chip">${escapeHtml(parsed.freshness)}</span>` : ''}
+    `;
+    const warningsEl = document.getElementById('stain-warnings');
+    const allWarnings = [
+      ...(parsed.warning_if_any ? [{ fabric: 'general', warning: parsed.warning_if_any }] : []),
+      ...(treatment.applicable_warnings || []),
+    ];
+    warningsEl.innerHTML = allWarnings.map(w => `
+      <div class="fabric-warning"><strong>⚠ Heads up</strong><br>${escapeHtml(w.warning)}</div>
+    `).join('');
+  } else if (parsed && parsed.needs_category) {
+    showCategoryPicker(parsed.reason, parsed.suggested_categories, parsed.candidate_stains);
+  }
+}
+
+function showCategoryPicker(reason, suggestedCats = null, candidateStains = null) {
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  document.getElementById('stain-needs-category').style.display = 'block';
+  document.getElementById('stain-needs-reason').textContent =
+    reason || "I want to make sure I get this right. Pick the closest category and I'll narrow it down.";
+
+  // Candidates first (faster path)
+  const candEl = document.getElementById('stain-candidates');
+  if (candidateStains && candidateStains.length && PLAYBOOK) {
+    candEl.innerHTML = '<div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:8px 0 6px">Looks like one of these?</div>' +
+      candidateStains.map(name => `
+        <div class="candidate-row" data-stain="${escapeHtml(name)}">
+          <span>${escapeHtml(name)}</span>
+          <span style="color:var(--muted);font-size:18px">›</span>
+        </div>
+      `).join('');
+    candEl.querySelectorAll('.candidate-row').forEach(el => {
+      el.addEventListener('click', () => pickCandidate(el.dataset.stain));
+    });
+  } else {
+    candEl.innerHTML = '';
+  }
+
+  // Category grid
+  const grid = document.getElementById('stain-category-grid');
+  if (!PLAYBOOK) { grid.innerHTML = '<p>Loading categories…</p>'; return; }
+  const cats = suggestedCats && suggestedCats.length
+    ? PLAYBOOK.categories.filter(c => suggestedCats.includes(c.id))
+    : PLAYBOOK.categories;
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:8px">Or pick a category</div>
+  ` + cats.map(c => `
+    <button class="cat-btn" style="border-color:${c.color}55" data-cat="${c.id}">
+      <span style="color:${c.color}">${escapeHtml(c.name)}</span>
+      <span class="cat-blurb">${escapeHtml(c.blurb || '')}</span>
+    </button>
+  `).join('');
+  grid.querySelectorAll('.cat-btn').forEach(el => {
+    el.addEventListener('click', () => pickCategory(el.dataset.cat));
+  });
+}
+
+function pickCategory(catId) {
+  if (!PLAYBOOK) return;
+  const cat = PLAYBOOK.categories.find(c => c.id === catId);
+  if (!cat) return;
+  // Show all stains in that category as candidate list
+  const stainsInCat = PLAYBOOK.stains.filter(s => s.category === catId);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  document.getElementById('stain-needs-category').style.display = 'block';
+  document.getElementById('stain-needs-reason').textContent = `Pick the closest match in ${cat.name}.`;
+  document.getElementById('stain-candidates').innerHTML =
+    stainsInCat.map(s => `
+      <div class="candidate-row" data-stain="${escapeHtml(s.name)}">
+        <span>${escapeHtml(s.name)}</span>
+        <span style="color:var(--muted);font-size:18px">›</span>
+      </div>
+    `).join('');
+  document.getElementById('stain-candidates').querySelectorAll('.candidate-row').forEach(el => {
+    el.addEventListener('click', () => pickCandidate(el.dataset.stain));
+  });
+  document.getElementById('stain-category-grid').innerHTML = '';
+}
+
+function pickCandidate(stainName) {
+  const treatment = getStainTreatment(stainName);
+  if (!treatment) return toast('Couldn\'t find that one — try another');
+  state.stainTreatment = treatment;
+  state.stainScan = {
+    confident: true, stain_name: stainName, category: treatment.category,
+    confidence: 1.0, fabric_observation: '', freshness: 'unknown',
+  };
+  save(LS.lastStainScan, state.stainScan);
+  renderStainResult(state.stainScan);
+}
+
+// --- Treatment step flow ---
+function startTreatment() {
+  if (!state.stainTreatment) return toast('Identify the stain first');
+  state.stainStepIndex = 0;
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-final']);
+  document.getElementById('stain-treatment').style.display = 'block';
+  renderStep();
+}
+
+function renderStep() {
+  const t = state.stainTreatment;
+  if (!t) return;
+  const steps = t.steps || [];
+  const i = state.stainStepIndex;
+  if (i >= steps.length) return finishTreatment();
+  const step = steps[i];
+  document.getElementById('step-counter').textContent = `Step ${i + 1} of ${steps.length}`;
+  document.getElementById('step-action').textContent = step.action;
+  document.getElementById('step-time').textContent = `⏱ ${step.seconds || 60} sec`;
+  document.getElementById('step-back-btn').disabled = i === 0;
+  document.getElementById('step-next-btn').textContent = i === steps.length - 1 ? 'Done — finish ▶' : 'Done — next ▶';
+
+  // Show products on first step only
+  const prodWrap = document.getElementById('step-products-wrap');
+  if (i === 0 && t.products && t.products.length) {
+    prodWrap.innerHTML = `
+      <div class="step-products">
+        <strong>You'll need</strong>
+        <ul>${t.products.map(p => `<li>${escapeHtml(p.name)} <span style="color:var(--muted)">— ${escapeHtml(p.role || '')}</span></li>`).join('')}</ul>
+      </div>
+    `;
+  } else {
+    prodWrap.innerHTML = '';
+  }
+}
+
+function nextStep() {
+  if (!state.stainTreatment) return;
+  state.stainStepIndex++;
+  if (state.stainStepIndex >= state.stainTreatment.steps.length) finishTreatment();
+  else renderStep();
+}
+function prevStep() {
+  if (state.stainStepIndex > 0) { state.stainStepIndex--; renderStep(); }
+}
+
+function finishTreatment() {
+  const t = state.stainTreatment;
+  // Save to history
+  if (t) {
+    state.stainHistory.unshift({
+      id: 'sh_' + Math.random().toString(36).slice(2, 9),
+      stainName: t.name,
+      category: t.category,
+      finishedAt: Date.now(),
+    });
+    state.stainHistory = state.stainHistory.slice(0, 20);
+    save(LS.stainHistory, state.stainHistory);
+  }
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment']);
+  document.getElementById('stain-final').style.display = 'block';
+  document.getElementById('stain-verify-result').style.display = 'none';
+  document.getElementById('stain-verify-result').innerHTML = '';
+  renderStainHistory();
+}
+
+// --- After photo + verification ---
+function onStainAfterChosen(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = reader.result;
+    verifyStainRemoved(state.stainImageDataUrl, dataUrl, state.stainTreatment?.name || 'the stain');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+async function verifyStainRemoved(beforeUrl, afterUrl, stainName) {
+  const key = localStorage.getItem(LS.key);
+  if (!key) return toast('Add your OpenAI API key first');
+  const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
+  const wrap = document.getElementById('stain-verify-result');
+  wrap.style.display = 'block';
+  wrap.innerHTML = '<div style="text-align:center;padding:14px"><span class="spinner"></span> Comparing photos…</div>';
+
+  const sys = `You compare two photos of the same fabric. The user attempted to remove a "${stainName}" stain. Return STRICT JSON:
+{
+  "removed": true | false,
+  "residue_visible": true | false,
+  "recommendation": "<one warm, encouraging sentence. If residue is visible, suggest a gentle next pass — never imply failure. If gone, celebrate briefly without gushing. Never compare to ideal homes.>"
+}
+Output JSON only.`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: sys },
+          { role: 'user', content: [
+            { type: 'text', text: 'Before photo first, then after photo. Did the treatment work?' },
+            { type: 'image_url', image_url: { url: beforeUrl, detail: 'low' } },
+            { type: 'image_url', image_url: { url: afterUrl, detail: 'low' } },
+          ]},
+        ],
+        max_tokens: 200,
+        temperature: 0.3,
+      }),
+    });
+    if (!res.ok) throw new Error('OpenAI error ' + res.status);
+    const data = await res.json();
+    const parsed = JSON.parse(data?.choices?.[0]?.message?.content || '{}');
+    const icon = parsed.removed ? '✨' : '🔁';
+    wrap.innerHTML = `
+      <div style="text-align:center;font-size:28px">${icon}</div>
+      <p style="text-align:center;margin-top:6px">${escapeHtml(parsed.recommendation || 'Take a look — you know best.')}</p>
+      ${!parsed.removed ? `<button class="btn" onclick="startTreatment()" style="margin-top:8px">Run another pass</button>` : ''}
+    `;
+  } catch (err) {
+    console.error(err);
+    wrap.innerHTML = `<p style="color:var(--muted);text-align:center">Couldn't compare automatically. Trust your eyes.</p>`;
+  }
+}
+
+// --- History list ---
+function renderStainHistory() {
+  const wrap = document.getElementById('stain-history-wrap');
+  if (!wrap) return;
+  if (!state.stainHistory.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <h2 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:0 0 8px">Recent</h2>
+    ${state.stainHistory.slice(0, 5).map(h => {
+      const days = Math.max(0, Math.round((Date.now() - h.finishedAt) / (1000 * 60 * 60 * 24)));
+      const when = days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`;
+      return `<div class="member-row"><div style="flex:1">${escapeHtml(h.stainName)}</div><div style="font-size:11px;color:var(--muted)">${when}</div></div>`;
+    }).join('')}
+  `;
+}
+
+function resetStainFlow() {
+  state.stainTreatment = null;
+  state.stainStepIndex = 0;
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+}
+
+function hideAll(ids) {
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
 }
 
 // --- Utils ---
