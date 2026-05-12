@@ -459,10 +459,34 @@
 
       <!-- LAUNDRY VIEW -->
       <section id="view-laundry" class="view">
-        <div class="stain-hero" id="laundry-hero">
+        <!-- STEP 0: ask whether the user knows the stain -->
+        <div id="stain-origin-question" class="stain-hero">
           <span class="hero-3min" style="color:#5eb8ff;background:rgba(94,184,255,0.10);border-color:rgba(94,184,255,0.30)">💧 Laundry Hacks</span>
-          <h1 style="margin-top:4px">Got a stain? I'll tell you exactly what to do.</h1>
-          <p>Snap the stain. I'll match it against 800+ treatments from r/laundry, the spa day community, and lifestyle deep-dives — then walk you through it.</p>
+          <h1 style="margin-top:4px">Do you know what caused the stain?</h1>
+          <p>Telling me directly is faster than the AI. If you don't know, I'll analyze a photo instead.</p>
+          <div class="row" style="margin-top:8px">
+            <button class="btn" onclick="setOriginMode('known')">✍️ Yes, I'll tell you</button>
+            <button class="btn secondary" onclick="setOriginMode('photo')">📷 Not sure — use AI</button>
+          </div>
+        </div>
+
+        <!-- STEP 1a: typed origin (when user clicked "I know") -->
+        <div id="stain-typed-card" class="stain-hero" style="display:none">
+          <h2 style="margin-bottom:6px">What is the stain?</h2>
+          <p style="margin-bottom:10px">Type what caused it. The playbook covers 800+ stains.</p>
+          <input type="text" id="stain-typed-input" list="stain-names-list" placeholder="e.g. red wine, bacon grease, motor oil" autocomplete="off" autocapitalize="none" />
+          <datalist id="stain-names-list"></datalist>
+          <div id="stain-typed-hints" style="margin-top:8px"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn" onclick="findByTypedName()">Find treatment</button>
+            <button class="btn secondary" onclick="setOriginMode('ask')">◀ Back</button>
+          </div>
+        </div>
+
+        <!-- STEP 1b: photo upload (when user clicked "Use AI") -->
+        <div class="stain-hero" id="laundry-hero" style="display:none">
+          <h2 style="margin-bottom:6px">Snap the stain</h2>
+          <p>I'll match it against 800+ treatments from r/laundry, the spa day community, and lifestyle deep-dives.</p>
 
           <div class="upload-zone" id="stain-upload-zone" style="aspect-ratio:1/1;max-height:280px">
             <img id="stain-preview-img" alt="Stain preview" style="display:none" />
@@ -484,6 +508,7 @@
           <button class="btn" id="stain-analyze-btn" onclick="analyzeStain()" style="margin-top:10px">
             <span id="stain-analyze-label">Identify stain</span>
           </button>
+          <button class="btn ghost" onclick="setOriginMode('ask')" style="margin-top:6px">◀ I do know what it is</button>
         </div>
 
         <!-- Result: confident match -->

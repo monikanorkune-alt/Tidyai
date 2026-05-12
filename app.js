@@ -34,8 +34,15 @@ function loadPlaybook() {
   if (PLAYBOOK) return Promise.resolve(PLAYBOOK);
   return fetch('laundry_playbook.json')
     .then(r => r.json())
-    .then(d => { PLAYBOOK = d; return d; })
+    .then(d => { PLAYBOOK = d; populateStainDatalist(); return d; })
     .catch(err => { console.error('Playbook load failed', err); return null; });
+}
+
+// Populate the <datalist> with all 802 stain names for the typed-origin autocomplete.
+function populateStainDatalist() {
+  const dl = document.getElementById('stain-names-list');
+  if (!dl || !PLAYBOOK) return;
+  dl.innerHTML = PLAYBOOK.stains.map(s => `<option value="${s.name.replace(/"/g, '&quot;')}"></option>`).join('');
 }
 
 // Color per category (22 internal categories in the 802-stain playbook).
@@ -99,8 +106,15 @@ window.addEventListener('DOMContentLoaded', () => {
   if (sc) sc.addEventListener('change', onStainFileChosen);
   const sa = document.getElementById('stain-after-input');
   if (sa) sa.addEventListener('change', onStainAfterChosen);
+  // Enter on the typed-origin input triggers the search
+  const typedInput = document.getElementById('stain-typed-input');
+  if (typedInput) {
+    typedInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); findByTypedName(); }
+    });
+  }
   loadPlaybook();
-  if (state.stainScan) renderStainResult(state.stainScan);
+  if (state.stainScan) renderStainResult(state.stainScan); else setOriginMode('ask');
   renderStainHistory();
 
   renderFamily();
@@ -116,7 +130,14 @@ function switchTab(name) {
   });
   if (name === 'tasks') renderTasks();
   if (name === 'family') renderFamily();
-  if (name === 'laundry') { loadPlaybook(); renderStainHistory(); }
+  if (name === 'laundry') {
+    loadPlaybook();
+    renderStainHistory();
+    // Default to the "Do you know?" question whenever the user lands here,
+    // unless there's already an in-progress result on screen.
+    const hasResult = state.stainTreatment || state.stainScan;
+    if (!hasResult) setOriginMode('ask');
+  }
 }
 
 // --- Toast ---
@@ -932,6 +953,78 @@ PART 5 — TONE RULES (NEVER VIOLATE)
 
 Return JSON only. No prose, no markdown, no preamble.`;
 
+// --- Origin question: known vs photo ---
+function setOriginMode(mode) {
+  // mode: 'ask' (default), 'known' (typed origin), 'photo' (AI vision)
+  const ask = document.getElementById('stain-origin-question');
+  const typed = document.getElementById('stain-typed-card');
+  const photo = document.getElementById('laundry-hero');
+  if (!ask || !typed || !photo) return;
+  ask.style.display = mode === 'ask' ? 'block' : 'none';
+  typed.style.display = mode === 'known' ? 'block' : 'none';
+  photo.style.display = mode === 'photo' ? 'block' : 'none';
+  // Reset any in-progress result so the user sees a clean state
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  if (mode === 'known') {
+    // Make sure datalist is populated
+    if (PLAYBOOK) populateStainDatalist(); else loadPlaybook();
+    setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
+    document.getElementById('stain-typed-hints').innerHTML = '';
+  }
+}
+
+// --- Find by typed name (no AI call) ---
+function findByTypedName() {
+  const input = document.getElementById('stain-typed-input');
+  if (!input) return;
+  const text = (input.value || '').trim();
+  if (!text) return toast('Type what the stain is first');
+  if (!PLAYBOOK) { toast('Playbook still loading…'); return; }
+  const treatment = getStainTreatment(text);
+  if (treatment) {
+    state.stainTreatment = treatment;
+    state.stainScan = {
+      confident: true, stain_name: treatment.name, category: treatment.category,
+      confidence: 1.0, fabric_observation: '', freshness: 'unknown',
+    };
+    save(LS.lastStainScan, state.stainScan);
+    renderStainResult(state.stainScan);
+    return;
+  }
+  // No match — show the 6 closest entries inline as quick picks.
+  const wantTokens = stainTokens(text);
+  const ranked = (PLAYBOOK.stains || [])
+    .map(s => {
+      const set = new Set(stainTokens(s.name));
+      let shared = 0;
+      for (const t of wantTokens) if (set.has(t)) shared++;
+      return { s, score: shared };
+    })
+    .filter(r => r.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6);
+  const hints = document.getElementById('stain-typed-hints');
+  if (ranked.length) {
+    hints.innerHTML = `
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:8px 0 6px">Did you mean</div>
+      ${ranked.map(r => `
+        <div class="candidate-row" data-stain="${escapeHtml(r.s.name)}">
+          <span>${escapeHtml(r.s.name)}</span>
+          <span style="color:var(--muted);font-size:18px">›</span>
+        </div>
+      `).join('')}
+    `;
+    hints.querySelectorAll('.candidate-row').forEach(el => {
+      el.addEventListener('click', () => {
+        input.value = el.dataset.stain;
+        findByTypedName();
+      });
+    });
+  } else {
+    hints.innerHTML = `<p style="color:var(--muted);font-size:13px;margin-top:8px">Nothing in the playbook matched. Try a simpler word like "coffee" or "blood", or switch to the photo mode.</p>`;
+  }
+}
+
 // --- Stain photo input ---
 function onStainFileChosen(e) {
   const file = e.target.files && e.target.files[0];
@@ -1025,15 +1118,63 @@ async function analyzeStain(optionalCategory = null) {
 }
 
 // --- Pure playbook lookup ---
+// Stopwords ignored during token overlap matching
+const STAIN_STOPWORDS = new Set([
+  'a', 'an', 'the', 'on', 'in', 'of', 'and', 'or', 'with',
+  'stain', 'stains', 'mark', 'spot', 'spots', 'residue',
+  'fresh', 'set', 'dried', 'old', 'wet', 'food', 'liquid', 'general',
+]);
+
+function stainTokens(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(t => t && t.length > 1 && !STAIN_STOPWORDS.has(t));
+}
+
 function findStainInPlaybook(stainName) {
   if (!PLAYBOOK || !stainName) return null;
   const want = stainName.toLowerCase().trim();
-  // Exact match first
+
+  // 1) Exact match
   let hit = PLAYBOOK.stains.find(s => s.name.toLowerCase() === want);
   if (hit) return hit;
-  // Substring match (handle "Red wine" vs "Red wine — fresh")
-  hit = PLAYBOOK.stains.find(s => s.name.toLowerCase().includes(want) || want.includes(s.name.toLowerCase()));
-  return hit || null;
+
+  // 2) Substring containment in either direction
+  hit = PLAYBOOK.stains.find(s => {
+    const n = s.name.toLowerCase();
+    return n.includes(want) || want.includes(n);
+  });
+  if (hit) return hit;
+
+  // 3) Token-overlap score — find the playbook entry that shares the most
+  //    meaningful tokens with the AI's candidate. Threshold: at least one
+  //    non-stopword token in common AND that token covers >= 50% of the
+  //    candidate's tokens. This catches "food grease" -> "Bacon grease",
+  //    "wine spill" -> "Red wine", "ink mark" -> "Ballpoint pen ink", etc.
+  const wantTokens = stainTokens(stainName);
+  if (!wantTokens.length) return null;
+
+  let best = null;
+  let bestScore = 0;
+  for (const s of PLAYBOOK.stains) {
+    const stainToks = stainTokens(s.name);
+    if (!stainToks.length) continue;
+    const stainSet = new Set(stainToks);
+    let shared = 0;
+    for (const t of wantTokens) if (stainSet.has(t)) shared++;
+    if (shared === 0) continue;
+    // Score = shared / total candidate tokens (i.e. how much of what the AI
+    // said is reflected in this playbook entry). Tiebreak: shorter name wins
+    // (more specific match).
+    const score = shared / wantTokens.length;
+    if (score > bestScore || (score === bestScore && best && s.name.length < best.name.length)) {
+      best = s;
+      bestScore = score;
+    }
+  }
+  return bestScore >= 0.5 ? best : null;
 }
 
 function getStainTreatment(stainName, fabricHint = null) {
@@ -1157,10 +1298,32 @@ function pickCategory(catId) {
 
 function pickCandidate(stainName) {
   const treatment = getStainTreatment(stainName);
-  if (!treatment) return toast('Couldn\'t find that one — try another');
+  if (!treatment) {
+    // Last-resort: show the user the 6 closest playbook entries by token overlap.
+    const wantTokens = stainTokens(stainName);
+    const ranked = (PLAYBOOK?.stains || [])
+      .map(s => {
+        const toks = stainTokens(s.name);
+        const set = new Set(toks);
+        let shared = 0;
+        for (const t of wantTokens) if (set.has(t)) shared++;
+        return { s, score: shared };
+      })
+      .filter(r => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map(r => r.s.name);
+    if (ranked.length) {
+      showCategoryPicker(`I couldn't find "${stainName}" exactly. Did you mean one of these?`, null, ranked);
+    } else {
+      toast("Couldn't find that one — pick a category instead");
+    }
+    return;
+  }
+  // Use the playbook's canonical name (in case the AI candidate was a near-match)
   state.stainTreatment = treatment;
   state.stainScan = {
-    confident: true, stain_name: stainName, category: treatment.category,
+    confident: true, stain_name: treatment.name, category: treatment.category,
     confidence: 1.0, fabric_observation: '', freshness: 'unknown',
   };
   save(LS.lastStainScan, state.stainScan);
@@ -1324,7 +1487,12 @@ function renderStainHistory() {
 function resetStainFlow() {
   state.stainTreatment = null;
   state.stainStepIndex = 0;
+  state.stainScan = null;
+  localStorage.removeItem(LS.lastStainScan);
   hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  setOriginMode('ask');
+  const input = document.getElementById('stain-typed-input');
+  if (input) input.value = '';
 }
 
 function hideAll(ids) {
