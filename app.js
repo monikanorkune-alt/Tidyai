@@ -141,16 +141,17 @@ async function analyzePhoto() {
   btn.disabled = true;
   label.innerHTML = '<span class="spinner"></span> Analyzing…';
 
-  const systemPrompt = `You are TidyAI, a friendly home-cleaning coach. The user uploads a photo of a room.
+  const systemPrompt = `You are TidyAI, a warm and encouraging home-tidying coach. The user uploads a photo of a room.
 Return STRICT JSON with this shape:
 {
   "cleanliness_score": <0-100 integer, where 100 is spotless>,
-  "summary": "<one warm, encouraging sentence about the room>",
+  "summary": "<one warm, encouraging sentence — never shaming, never comparing to ideal homes>",
   "room_type": "<e.g. living room, bedroom, kitchen>",
   "items": [
     {
       "id": "<short slug>",
-      "title": "<imperative task, max 8 words>",
+      "title": "<imperative task, max 8 words, names the actual object>",
+      "object": "<the specific visible thing the user can see, e.g. 'blue mug on desk', 'laundry pile by closet', 'cables under TV'>",
       "why": "<one short sentence on visible impact>",
       "minutes": <integer 1-15>,
       "priority": "high" | "medium" | "low",
@@ -158,11 +159,14 @@ Return STRICT JSON with this shape:
     }
   ]
 }
-Rules:
+HARD RULES:
 - 4 to 8 items total.
 - Include 2-4 quick_win items whose minutes sum to ~3.
-- Prioritize visible clutter, surfaces, and floor.
-- Be specific to what's visible in the photo. No generic advice.
+- The "object" field MUST name a specific item you can actually see in this photo (color, location, or descriptor). NEVER use generic phrases like "surfaces", "clutter", "items", "things". If you can't name a specific object, omit the item.
+- The "title" should reference the object: "Move the blue mug to the kitchen", not "Tidy surfaces".
+- Prioritize visible clutter, surfaces, and floor over deep cleaning.
+- Tone: encouraging and matter-of-fact. Never shame ("you really should"), never urgency ("ASAP", "overdue"), never compare to other homes.
+- Never make assumptions about the user's living situation, mental state, or finances based on what you see.
 - Output ONLY the JSON object, no markdown, no commentary.`;
 
   try {
@@ -210,6 +214,100 @@ Rules:
   }
 }
 
+// --- Breakdown into micro-steps (ADHD-friendly) ---
+async function breakdownTask(taskId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  // If already broken down, just toggle expansion
+  if (task.microSteps && task.microSteps.length) {
+    task.microStepsExpanded = !task.microStepsExpanded;
+    save(LS.tasks, state.tasks);
+    renderTasks();
+    return;
+  }
+  const key = localStorage.getItem(LS.key);
+  if (!key) {
+    toast('Add your OpenAI API key in Settings');
+    switchTab('settings');
+    return;
+  }
+  const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
+
+  task._breakingDown = true;
+  renderTasks();
+
+  const systemPrompt = `You break a single home-tidying task into concrete physical micro-steps the user can start right now.
+Return STRICT JSON with this shape:
+{
+  "steps": [
+    { "id": "<short slug>", "title": "<imperative, max 12 words>", "seconds": <integer 15-90> }
+  ]
+}
+HARD RULES:
+- Between 3 and 7 steps. Past 7, cognitive load goes back up — never exceed.
+- Each step seconds <= 90.
+- Order so the most visually-impactful step is FIRST (user gets dopamine early).
+- Use concrete physical actions ("Put loose items on desk into a basket"), never vague verbs ("tidy", "organize").
+- No shame language, no urgency, no comparisons.
+- Output ONLY the JSON object, no markdown.`;
+
+  const userText = `Task: "${task.title}"${task.object ? ` (about: ${task.object})` : ''}${task.why ? `. Why: ${task.why}` : ''}. Break this into micro-steps.`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userText },
+        ],
+        max_tokens: 400,
+        temperature: 0.3,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error('OpenAI error: ' + res.status + ' — ' + errText.slice(0, 200));
+    }
+    const data = await res.json();
+    const parsed = JSON.parse(data?.choices?.[0]?.message?.content || '{}');
+    const steps = (parsed.steps || []).slice(0, 7).map(s => ({
+      id: s.id || 's_' + Math.random().toString(36).slice(2, 6),
+      title: s.title || '',
+      seconds: Math.max(15, Math.min(90, parseInt(s.seconds) || 60)),
+      done: false,
+    }));
+    task.microSteps = steps;
+    task.microStepsExpanded = true;
+    save(LS.tasks, state.tasks);
+  } catch (err) {
+    console.error(err);
+    toast(err.message.length < 80 ? err.message : 'Could not break it down — see console');
+  } finally {
+    delete task._breakingDown;
+    renderTasks();
+  }
+}
+
+function toggleMicroStep(taskId, stepId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task || !task.microSteps) return;
+  const step = task.microSteps.find(s => s.id === stepId);
+  if (!step) return;
+  step.done = !step.done;
+  // If every step is done, auto-complete the parent task
+  if (task.microSteps.every(s => s.done) && !task.done) {
+    task.done = true;
+    toast('Nice — task done!');
+  }
+  save(LS.tasks, state.tasks);
+  renderTasks();
+  renderFamily();
+}
+
 // --- Render scan results ---
 function renderScanResults() {
   if (!state.scan) return;
@@ -248,7 +346,8 @@ function renderItemRow(item, isQuickWin) {
   li.innerHTML = `
     <div class="task-body">
       <div class="task-title">${escapeHtml(item.title)}</div>
-      <div class="task-meta">
+      ${item.object ? `<div style="font-size:12px;color:var(--accent-2);margin-top:2px">👁 ${escapeHtml(item.object)}</div>` : ''}
+      <div class="task-meta" style="margin-top:6px">
         <span class="chip priority-${item.priority || 'low'}">${item.priority || 'low'}</span>
         <span class="chip">⏱ ${item.minutes || 1} min</span>
         ${isQuickWin ? '<span class="chip" style="color:var(--accent-2)">quick win</span>' : ''}
@@ -289,12 +388,15 @@ function addTaskFromItem(item, isQuickWin) {
     id: 't_' + Math.random().toString(36).slice(2, 9),
     sourceId: item.id,
     title: item.title,
+    object: item.object || '',
     why: item.why || '',
     minutes: item.minutes || 1,
     priority: item.priority || 'low',
     quickWin: !!isQuickWin,
     assignedTo: null,
     done: false,
+    microSteps: null,
+    microStepsExpanded: false,
     createdAt: Date.now(),
   };
   state.tasks.push(task);
@@ -429,26 +531,62 @@ function renderTaskRow(t) {
     ...state.family.map(m => `<option value="${m.id}" ${m.id === t.assignedTo ? 'selected' : ''}>${escapeHtml(m.name)}</option>`)
   ].join('');
 
+  const hasSteps = t.microSteps && t.microSteps.length;
+  const breakdownLabel = t._breakingDown
+    ? '<span class="spinner"></span> Breaking down…'
+    : hasSteps
+      ? (t.microStepsExpanded ? 'Hide steps' : `Show ${t.microSteps.length} steps`)
+      : '✨ Break it down';
+
+  const stepsHtml = (hasSteps && t.microStepsExpanded) ? `
+    <ol class="micro-steps">
+      ${t.microSteps.map((s, i) => `
+        <li class="micro-step ${s.done ? 'done' : ''}" data-step-id="${s.id}">
+          <button class="checkbox small ${s.done ? 'checked' : ''}" aria-label="Toggle step"></button>
+          <span class="micro-num">${i + 1}</span>
+          <span class="micro-title">${escapeHtml(s.title)}</span>
+          <span class="micro-time">${s.seconds}s</span>
+        </li>
+      `).join('')}
+    </ol>
+  ` : '';
+
   li.innerHTML = `
-    <button class="checkbox ${t.done ? 'checked' : ''}" aria-label="Toggle done"></button>
+    <button class="checkbox" aria-label="Toggle done"></button>
     <div class="task-body">
       <div class="task-title">${escapeHtml(t.title)}</div>
-      <div class="task-meta">
+      ${t.object ? `<div style="font-size:12px;color:var(--accent-2);margin-top:2px">👁 ${escapeHtml(t.object)}</div>` : ''}
+      <div class="task-meta" style="margin-top:6px">
         <span class="chip priority-${t.priority}">${t.priority}</span>
         <span class="chip">⏱ ${t.minutes} min</span>
         ${t.quickWin ? '<span class="chip" style="color:var(--accent-2)">quick win</span>' : ''}
         ${member ? `<span class="chip member" style="background:${member.color}22;border-color:${member.color}66;color:${member.color}">👤 ${escapeHtml(member.name)}</span>` : ''}
       </div>
+      ${!t.done ? `<button class="breakdown-btn">${breakdownLabel}</button>` : ''}
+      ${stepsHtml}
       ${state.family.length ? `
         <select style="margin-top:8px;font-size:12px;padding:6px 10px">${assignOptions}</select>
       ` : ''}
     </div>
-    <button class="btn small ghost" aria-label="Delete">✕</button>
+    <button class="btn small ghost del-btn" aria-label="Delete">✕</button>
   `;
-  li.querySelector('.checkbox').addEventListener('click', () => toggleDone(t.id));
+  // Parent-task checkbox is the FIRST .checkbox (not the step checkboxes inside the body)
+  li.children[0].classList.toggle('checked', t.done);
+  li.children[0].addEventListener('click', () => toggleDone(t.id));
+
+  const breakBtn = li.querySelector('.breakdown-btn');
+  if (breakBtn && !t._breakingDown) {
+    breakBtn.addEventListener('click', () => breakdownTask(t.id));
+  }
+
+  li.querySelectorAll('.micro-step').forEach(el => {
+    const stepId = el.dataset.stepId;
+    el.querySelector('.checkbox').addEventListener('click', () => toggleMicroStep(t.id, stepId));
+  });
+
   const select = li.querySelector('select');
   if (select) select.addEventListener('change', e => assignTo(t.id, e.target.value || null));
-  li.querySelectorAll('button')[1].addEventListener('click', () => deleteTask(t.id));
+  li.querySelector('.del-btn').addEventListener('click', () => deleteTask(t.id));
   return li;
 }
 

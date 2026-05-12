@@ -237,6 +237,57 @@
 
     .footer-note { color: var(--muted); font-size: 11px; text-align: center; padding: 16px 8px 0; }
     a { color: var(--accent-2); }
+
+    /* Hero framing for the 3-minute promise */
+    .hero-3min {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      background: rgba(41,211,163,0.10);
+      border: 1px solid rgba(41,211,163,0.30);
+      padding: 4px 10px; border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .quickplan {
+      box-shadow: 0 0 0 1px rgba(41,211,163,0.25), 0 12px 40px rgba(41,211,163,0.12);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(41,211,163,0.25), 0 12px 40px rgba(41,211,163,0.12); }
+      50%      { box-shadow: 0 0 0 1px rgba(41,211,163,0.45), 0 12px 50px rgba(41,211,163,0.25); }
+    }
+    .quickplan { animation: pulse-glow 3.5s ease-in-out infinite; }
+
+    /* Micro-steps (ADHD breakdown) */
+    .breakdown-btn {
+      margin-top: 10px; padding: 8px 12px; border-radius: 10px;
+      background: rgba(124,92,255,0.12); border: 1px solid rgba(124,92,255,0.30);
+      color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .breakdown-btn:hover { background: rgba(124,92,255,0.20); }
+    .micro-steps {
+      list-style: none; padding: 10px 0 0; margin: 8px 0 0;
+      border-top: 1px dashed var(--border);
+    }
+    .micro-step {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 4px; font-size: 13px;
+    }
+    .micro-step.done .micro-title { text-decoration: line-through; opacity: 0.55; }
+    .micro-num {
+      width: 20px; height: 20px; flex: none;
+      border-radius: 50%; background: rgba(124,92,255,0.18);
+      color: var(--text); font-weight: 700; font-size: 11px;
+      display: grid; place-items: center;
+    }
+    .micro-title { flex: 1; line-height: 1.35; }
+    .micro-time {
+      font-size: 11px; color: var(--muted);
+      background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 999px;
+    }
+    .checkbox.small { width: 20px; height: 20px; border-radius: 6px; margin-top: 0; }
+    .checkbox.small.checked::after { font-size: 12px; }
   </style>
 </head>
 <body>
@@ -256,8 +307,9 @@
       <!-- SCAN VIEW -->
       <section id="view-scan" class="view active">
         <div class="card">
-          <h1>Scan a room</h1>
-          <p>Take or upload a photo. TidyAI will spot what's messy and build a 3-minute quick-clean plan.</p>
+          <span class="hero-3min">⚡ 3-Minute Reset</span>
+          <h1 style="margin-top:4px">Make this room look better in 3 minutes</h1>
+          <p>Snap a photo. TidyAI names what it actually sees and gives you a tiny, doable plan — no full-house deep-clean guilt.</p>
 
           <div class="upload-zone" id="upload-zone">
             <img id="preview-img" alt="Room preview" style="display:none" />
