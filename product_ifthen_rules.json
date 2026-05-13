@@ -1,0 +1,441 @@
+{
+  "version": "1.0.0",
+  "description": "If-then product recommendation rules for the TidyAI Laundry Hacks feature. The AI matches a stain context (stain class, fabric type, user preference) against the rules below to surface the right product set. Compiled from US-market research across Reddit, Amazon, Trustpilot, manufacturer pages, Wirecutter, Good Housekeeping, and ingredient analysis.",
+  "rules": {
+    "stain_chemistry": [
+      {
+        "if": "protein_based",
+        "match_stains": ["blood", "menstrual blood", "milk", "dairy", "egg", "sweat", "vomit", "semen", "breast milk", "baby spit-up", "mucus", "saliva", "drool"],
+        "why_it_works": "Protease enzymes break the peptide bonds in proteins. Cold water keeps proteins soluble; hot cooks them in permanently.",
+        "products": {
+          "primary": "Persil ProClean Original Liquid (5 enzymes: protease, amylase, cellulase, mannanase, pectate lyase)",
+          "pre_treater_spray": "OxiClean MaxForce Spray",
+          "powder_booster": "OxiClean Versatile Powder (sodium percarbonate)",
+          "specialty": "Carbona Stain Devils #4 (Blood, Dairy, Ice Cream, Glue)",
+          "baby_variant": "OxiClean Baby Stain Remover; Dreft Stain Remover",
+          "sheet_eco": "Kind Laundry (enzymes); White Hack sheets (light wear only)",
+          "diy_fallback": "Cold rinse → Dawn blue + 3% hydrogen peroxide paste (whites only)"
+        },
+        "avoid": ["hot water", "chlorine bleach on wool/silk", "fabric softener", "tumble dryer until gone"],
+        "white_hack_fit": "good for light/everyday traces; NOT for set protein stains"
+      },
+      {
+        "if": "pet_related",
+        "match_stains": ["cat urine", "cat spray", "dog urine", "pet vomit", "pet feces", "dog drool", "hairball", "fur drool combo"],
+        "why_it_works": "Pet urine contains uric acid crystals that re-activate with humidity. Only enzyme cleaners with uricase break them down.",
+        "products": {
+          "primary": "Rocco & Roxie Stain & Odor Eliminator",
+          "cult_favorite": "Nature's Miracle Advanced Stain & Odor Remover",
+          "cat_spray_specific": "Anti-Icky-Poo (Mister Max)",
+          "carpet_specific": "Folex Instant Carpet Spot Remover (after enzyme soak)",
+          "plant_based_alt": "Skout's Honor Stain & Odor Solution",
+          "sheet_eco": null,
+          "diy_fallback": null
+        },
+        "avoid": ["ammonia-based cleaners (cat re-marks)", "steam cleaning (heat sets uric acid)", "bleach", "vinegar alone (masks only)"],
+        "white_hack_fit": "NOT suitable — needs pet-specific enzyme cleaner"
+      },
+      {
+        "if": "food_grease_or_body_oil",
+        "match_stains": ["cooking oil", "butter", "salad dressing", "mayo", "peanut butter", "lipstick", "mascara", "BBQ sauce", "sebum", "lotion", "sunscreen", "body oil", "hair oil", "lip balm", "Nutella", "olive oil", "bacon grease"],
+        "why_it_works": "Lipase enzymes break down fats. Dawn dish soap emulsifies cooking grease. Hot water helps oil release.",
+        "products": {
+          "primary": "Dawn Ultra Blue dish soap (~$3)",
+          "enzyme_detergent": "Persil ProClean Powder OR Tide Original Powder (powder has more lipase)",
+          "industrial": "Lestoil; Krud Kutter Original Cleaner/Degreaser",
+          "workwear": "Tide Plus Febreze Sport Odor Defense",
+          "set_sebum_collar": "Whink Color-Safe Iron Out + OxiClean overnight soak + sun-bleach",
+          "sheet_eco": "Kind Laundry sheets (with lipase activity)",
+          "diy_fallback": "Baking soda or cornstarch absorber, then Dawn pre-treat"
+        },
+        "avoid": ["cold water for cooking oil", "fabric softener on greasy areas"],
+        "white_hack_fit": "good for light food grease; switch to Persil Powder or Lestoil for heavy grease"
+      },
+      {
+        "if": "tannin_based",
+        "match_stains": ["coffee", "tea", "red wine", "white wine", "cola", "soda", "fruit juice", "berries", "hot chocolate", "soy sauce", "gravy", "tomato sauce", "espresso", "cranberry juice"],
+        "why_it_works": "Oxygen bleach (sodium percarbonate) attacks the chromophore. Cold rinse first; vinegar acidifies the stain to lift dye.",
+        "products": {
+          "primary": "OxiClean Versatile Stain Remover powder (cold soak 30 min–overnight)",
+          "wine_specific": "Wine Away (~$8)",
+          "coffee_tea_specific": "Carbona Stain Devils #8 (Coffee, Tea, Wine & Juice)",
+          "premium_delicate": "The Laundress Wine & Coffee Stain Bar (~$16)",
+          "enzyme_backup": "Persil ProClean (breaks tannin + sugar residue)",
+          "sheet_eco": "White Hack sheets (light everyday tannin); Kind Laundry",
+          "diy_fallback": "Cold rinse → Dawn + 3% hydrogen peroxide paste (whites only); club soda for fresh"
+        },
+        "avoid": ["hot water on fresh tannin", "bleach on coffee+cream (protein sets)"],
+        "white_hack_fit": "good for light everyday tannin on shirts/cuffs; heavy or 24h+ tannin needs OxiClean soak"
+      },
+      {
+        "if": "dye_based",
+        "match_stains": ["ballpoint pen", "Sharpie", "permanent marker", "highlighter", "hair dye", "food coloring", "color bleed", "fountain pen ink", "India ink", "stamp ink"],
+        "why_it_works": "Alcohol dissolves ink carriers. Amodex has specialized surfactants. Carbona Color Run Remover rebinds free dye.",
+        "products": {
+          "primary": "Amodex Ink & Stain Remover (gentler than alcohol, more fabric-safe)",
+          "backup": "91% isopropyl rubbing alcohol (drugstore)",
+          "hair_dye": "OxiClean overnight + hydrogen peroxide on whites; Iron Out for last-resort",
+          "color_bleed_recovery": "Carbona Color Run Remover",
+          "color_catcher_prevention": "Shout Color Catcher Sheets (one per mixed-color load)",
+          "sheet_eco": "Kind Laundry; White Hack (dye-free, won't compound the problem)",
+          "diy_fallback": "Old-formula hairspray with high alcohol content"
+        },
+        "avoid": ["hot water until ink is gone", "bleach on colored garments"]
+      },
+      {
+        "if": "mineral_based",
+        "match_stains": ["rust", "iron oxide", "hard water spots", "limescale", "calcium deposits", "iron transfer"],
+        "why_it_works": "Oxalic acid (Whink) dissolves iron oxide. Citric acid (lemon) works gently. Vinegar descales calcium.",
+        "products": {
+          "primary": "Whink Rust Stain Remover (hydrofluoric acid — wear gloves)",
+          "color_safe": "Whink Color-Safe Iron Out; Iron Out spray gel",
+          "hard_water_descaler": "White vinegar (1 cup in rinse); CLR Calcium Lime Rust (test fabric)",
+          "in_wash_softener": "Calgon Water Softener Powder; Charlie's Soap Booster",
+          "diy_fallback": "Lemon juice + salt + direct sun, 1–2 hours"
+        },
+        "avoid": ["chlorine bleach (locks iron stain permanently)", "tumble dry before stain is gone"],
+        "white_hack_fit": "won't dissolve rust — pre-treat with Whink, then any detergent including White Hack"
+      },
+      {
+        "if": "mold_or_mildew",
+        "match_stains": ["black mold", "pink mold", "Serratia", "mildew spots", "musty smell on fabric"],
+        "why_it_works": "Vinegar's acidity kills mildew organisms. Oxygen bleach lifts the stain. Sun-drying destroys remaining spores.",
+        "products": {
+          "primary": "1 cup white vinegar + warm water 1-hour soak → hot wash with Persil ProClean + 1/2 cup OxiClean → sun-dry",
+          "heavy_mildew": "OxiClean Tough Stain Remover Powder + hot wash; repeat",
+          "towel_specific": "OdorKlenz Laundry Additive (mineral, fragrance-free)",
+          "athletic_specific": "HEX Performance Laundry Detergent",
+          "washer_machine": "Affresh Washing Machine Cleaner; Tide Washing Machine Cleaner",
+          "sheet_eco": null,
+          "diy_fallback": "Vinegar + sun"
+        },
+        "avoid": ["mixing chlorine bleach with vinegar (toxic gas)", "tumble drying without sun (spores re-grow)"]
+      },
+      {
+        "if": "sweat_aluminum_yellow_pit",
+        "match_stains": ["yellow pit stain", "set armpit stain", "antiperspirant yellow halo"],
+        "why_it_works": "Avobenzone-iron oxidation or aluminum-protein bonding. Standard detergent doesn't touch it.",
+        "products": {
+          "primary_3_step": "(1) Dawn 10 min; (2) Whink Color-Safe Iron Out + OxiClean hot overnight soak; (3) Persil Powder hot wash + sun-bleach",
+          "spa_day_method": "KismaiAesthetics approach: lipase detergent + oxygen bleach in hot water 4–12 hours",
+          "single_step_backup": "OxiClean MaxForce Spray + hot wash",
+          "commercial_specialty": "Carbona Stain Devils #1 (Cosmetics, Deodorant) + OxiClean",
+          "sheet_eco": "Not for set stains — use multi-step then White Hack going forward to prevent recurrence"
+        },
+        "avoid": ["chlorine bleach (yellows aluminum further)", "tumble drying before treatment"]
+      },
+      {
+        "if": "sugar_or_sticky",
+        "match_stains": ["gum", "tree sap", "pine resin", "glue", "syrup", "candy", "jam", "slime", "honey"],
+        "why_it_works": "Sugar dissolves in water. Freezing makes gum brittle. Rubbing alcohol dissolves polymer adhesives.",
+        "products": {
+          "gum": "Freeze 15 min with ice → scrape → 91% rubbing alcohol → Dawn",
+          "tree_sap": "Freeze → scrape → 91% rubbing alcohol or Goo Gone → Dawn + warm wash",
+          "school_glue": "Warm water soak 30 min → Dawn + warm wash",
+          "super_glue": "Acetone only (test fabric first — destroys acetate/rayon/modacrylic)",
+          "adhesive_residue": "Goo Gone (or peanut butter DIY) → Dawn + warm wash",
+          "sheet_eco": "Any detergent after physical removal; White Hack works for final wash"
+        },
+        "avoid": ["hot water on slime", "tumble drying gum"]
+      },
+      {
+        "if": "wax_based",
+        "match_stains": ["candle wax", "lip balm", "ski wax", "surfboard wax", "beeswax"],
+        "why_it_works": "Heat melts wax into a paper-bag absorber. Dawn handles the residual oil.",
+        "products": {
+          "primary_method": "Freeze 30 min → scrape solid → brown paper bag + warm iron (no steam) → Dawn → Persil warm wash",
+          "set_residue": "Goo Gone → Dawn → warm wash",
+          "crayon_in_dryer": "Re-wash whole load with Lestoil + Dawn + OxiClean hot, 2–3 cycles",
+          "sheet_eco": "Any detergent after wax removed; White Hack works"
+        },
+        "avoid": ["tumble drying wax onto a full load", "water before scraping"]
+      },
+      {
+        "if": "iodine_or_betadine",
+        "match_stains": ["betadine", "iodine tincture", "povidone-iodine", "surgical antiseptic"],
+        "why_it_works": "Vitamin C (ascorbic acid) and sodium thiosulfate reduce iodine to colorless iodide. Bleach creates a PERMANENT brown oxidized mark.",
+        "products": {
+          "primary": "2 × 500mg Vitamin C tablets crushed in 1/2 cup warm water, dab and repeat",
+          "commercial": "Betadine Stain Remover (Bruce Medical); Spartan Clothesline Fresh Iodine & Betadine Remover S5",
+          "lab_grade": "Sodium thiosulfate (1 tbsp in 1 cup water)",
+          "whites_backup": "Hydrogen peroxide 3%"
+        },
+        "avoid_critical": "CHLORINE BLEACH — creates a permanent brown oxidized mark"
+      }
+    ],
+    "fabric_specific": [
+      {
+        "if": "silk_wool_cashmere",
+        "match_fabrics": ["silk", "wool", "cashmere", "merino", "alpaca", "angora"],
+        "why_it_works": "Protein fibers are damaged by alkalinity, chlorine, hot water. Need pH-neutral detergent with no enzymes that attack keratin.",
+        "products": {
+          "primary": "The Laundress Wool & Cashmere Shampoo",
+          "hand_wash_favorite": "Eucalan Delicate Wash (no-rinse, lanolin-rich)",
+          "stain_spot_treat": "The Laundress Wash & Stain Bar",
+          "alt": "Soak Wash (no-rinse)",
+          "diy_backup": "Cool water + a few drops of baby shampoo"
+        },
+        "avoid": ["chlorine bleach", "enzyme detergent on wool", "tumble dryer", "agitation in machine"],
+        "white_hack_fit": "milder than name brands but not optimal for true silk/cashmere; use for silky synthetic blends only"
+      },
+      {
+        "if": "athletic_performance",
+        "match_fabrics": ["polyester", "nylon", "spandex", "lycra", "gym clothes", "moisture-wicking", "performance"],
+        "why_it_works": "Synthetic fibers trap bacteria differently. Sport detergents strip standard-detergent residue and target the lipid layer.",
+        "products": {
+          "primary": "WIN Sports Detergent",
+          "top_alt": "HEX Performance Laundry Detergent",
+          "brand_name": "Tide Plus Febreze Sport Odor Defense",
+          "stubborn_odor": "Sweat X",
+          "non_toxic": "EnviroKlenz Laundry Enhancer",
+          "sheet_eco": "White Hack for everyday; switch to WIN or HEX for set gym funk"
+        },
+        "avoid": ["fabric softener (kills wicking)", "hot water on spandex", "chlorine bleach"]
+      },
+      {
+        "if": "dark_or_black",
+        "match_fabrics": ["black", "dark blue", "dark jeans", "dark dress shirt", "black t-shirt"],
+        "why_it_works": "Dye-magnets absorb free dye particles. Fewer brightening agents means less dye oxidation.",
+        "products": {
+          "primary": "Woolite Darks Defense Liquid",
+          "budget": "Cheer Liquid",
+          "vintage_favorite": "Perwoll Black (European)",
+          "all_in_one": "Tide Studio Darks & Colors",
+          "color_catcher_in_mixed": "Shout Color Catcher Sheets",
+          "sheet_eco": "White Hack (dye-free, no brightening agents)"
+        },
+        "avoid": ["hot water", "chlorine bleach", "high tumble dry"]
+      },
+      {
+        "if": "acetate_rayon_modacrylic",
+        "match_fabrics": ["acetate", "rayon", "modacrylic", "triacetate"],
+        "why_it_matters": "Acetone DISSOLVES these fibers. Many stain removers can destroy them.",
+        "products": {
+          "primary": "Persil ProClean Sensitive; Tide Free & Gentle; White Hack",
+          "stain_spot_treat": "The Laundress Stain Solution"
+        },
+        "never_use": "acetone, pure nail polish remover, lacquer thinner",
+        "white_hack_fit": "excellent — mild plant surfactants are safe for these fibers"
+      },
+      {
+        "if": "towels_terry_cloth",
+        "match_fabrics": ["bath towel", "kitchen towel", "terry cloth", "washcloth"],
+        "why_it_works": "Strip buildup + skip softener prevents bacterial buildup that causes sour smell.",
+        "products": {
+          "primary": "Persil ProClean OR Tide Original Powder",
+          "strip_buildup": "Bathtub soak: 1/4 cup borax + 1/4 cup washing soda + 1/2 cup powdered detergent, 4–5 hours",
+          "rinse_helper": "1/4 cup white vinegar in rinse cycle every wash",
+          "odor_specific": "OdorKlenz Laundry Additive",
+          "sheet_eco": "White Hack; Kind Laundry (no residue softener-heavy detergents leave)"
+        },
+        "avoid_critical": "Fabric softener — #1 cause of musty towels"
+      },
+      {
+        "if": "denim",
+        "match_fabrics": ["denim", "jeans", "raw denim", "selvedge"],
+        "why_it_works": "Indigo dye washes out under high pH or hot water. Cold + gentle + dye-magnet preserves color.",
+        "products": {
+          "primary": "Woolite Darks Defense; Cheer",
+          "specialty": "Tide Studio Darks & Colors",
+          "premium": "The Laundress Denim Wash",
+          "sheet_eco": "White Hack (dye-free, no brightening agents)"
+        },
+        "avoid": ["hot water", "frequent washing", "fabric softener"],
+        "vintage_tip": "Wash denim inside out, cold water, every 5–10 wears (per Levi's)"
+      }
+    ],
+    "use_case_situational": [
+      {
+        "if": "sensitive_skin_eczema",
+        "products": {
+          "primary": "All Free Clear (#1 dermatologist-recommended; NEA Seal)",
+          "strong_alt": "Tide Free & Gentle (NEA Seal + NPF Seal)",
+          "premium_eco": "Seventh Generation Free & Clear Liquid",
+          "powerful_sensitive": "Persil ProClean Sensitive Skin",
+          "cleanest_ingredients": "Branch Basics All-Purpose Concentrate (MADE SAFE certified)",
+          "sheet_eco": "White Hack Fragrance Free; Kind Laundry Fragrance Free",
+          "budget": "Up & Up Free + Clear & Gentle (Target)"
+        },
+        "avoid": ["fragrance", "dyes", "optical brighteners", "phthalates", "parabens", "unverified 'hypoallergenic' claims"],
+        "white_hack_fit": "strong — fragrance-free SKU explicitly designed for this"
+      },
+      {
+        "if": "baby_clothes",
+        "products": {
+          "primary": "Seventh Generation Free & Clear Liquid (Parents magazine top pick)",
+          "brand_trusted": "Dreft Stage 1 Newborn",
+          "stain_fighting_baby": "OxiClean Baby Stain Remover",
+          "sensitive": "Tide Free & Gentle (NEA endorsed)",
+          "premium_clean": "All Free Clear",
+          "sheet_eco": "White Hack Fragrance Free; Kind Laundry Fragrance Free (EWG verified, Mom's Choice)",
+          "spot_treater": "Dreft Stain Remover spray"
+        },
+        "avoid": ["strong fragrances on infants under 6 months", "fabric softener", "brightening agents"]
+      },
+      {
+        "if": "cloth_diapers",
+        "products": {
+          "primary": "Tide Original Powder (workhorse, all water types)",
+          "sensitive_variant": "Tide Free & Gentle Powder",
+          "cult_favorite": "Rockin' Green Platinum (hard water champion)",
+          "eco_workhorse": "Charlie's Soap Powder (test small first)",
+          "minimalist": "Country Save Detergent",
+          "eco_enzymatic": "ECOS with Enzymes"
+        },
+        "avoid": ["fabric softener (causes repelling)", "optical brighteners (irritation)", "detergent sheets (not strong enough)"],
+        "white_hack_fit": "NOT recommended — needs heavier workhorse like Tide Powder"
+      },
+      {
+        "if": "hard_water",
+        "products": {
+          "primary_detergent": "Persil ProClean (more surfactant)",
+          "powder": "Tide Original Powder (washing soda content)",
+          "hard_water_specific": "Charlie's Soap Powder + Charlie's Soap Booster",
+          "add_in_softener": "Calgon Water Softener Powder; 1 cup white vinegar in rinse; 2 tbsp citric acid",
+          "sheets": "White Hack (dissolves cleanly in hard water) + Calgon",
+          "cult_eco": "Rockin' Green (designed for hard water)"
+        },
+        "avoid": ["soft mild detergent alone", "liquid detergent with no booster in very hard water"]
+      },
+      {
+        "if": "eco_conscious_zero_waste",
+        "products": {
+          "sheets": "White Hack; Kind Laundry; Earth Breeze; Tru Earth; HeySunday; Blueland",
+          "concentrate": "Branch Basics (MADE SAFE certified)",
+          "liquid_eco": "Seventh Generation Free & Clear; Mrs. Meyer's Clean Day; Method; Ecos",
+          "non_toxic_odor": "EnviroKlenz; OdorKlenz",
+          "refillable": "Dropps Pods; Blueland Tablets"
+        },
+        "avoid": ["plastic jugs", "single-use PVA pods", "unverified 'hypoallergenic' claims"],
+        "white_hack_fit": "among the cleanest sheet options on US market"
+      },
+      {
+        "if": "travel_limited_space",
+        "products": {
+          "primary": "White Hack sheets; Kind Laundry travel-size packs (6 loads each); Earth Breeze travel samples",
+          "hand_wash": "Soak Wash (no-rinse)",
+          "single_use_packets": "Tide Travel Sink Packets; Persil Pods",
+          "diy_backup": "Single detergent sheet in a hotel sink",
+          "eco_light": "Kind Laundry Travel Soap Sheets"
+        },
+        "avoid": ["liquid bottles", "powder", "PVA pods in cool sink water"],
+        "white_hack_fit": "strong — the sheet format was designed exactly for travel"
+      },
+      {
+        "if": "white_brightening",
+        "products": {
+          "primary": "OxiClean White Revive (40% better than chlorine bleach per OxiClean)",
+          "hot_soak": "OxiClean Versatile + hot water + sun-dry",
+          "set_yellow": "Whink Color-Safe Iron Out + OxiClean",
+          "detergent_with_brightening": "Persil ProClean; Tide Plus Bleach Alternative",
+          "heavy_duty": "Carbona Stain Wizard White"
+        },
+        "avoid": ["chlorine bleach on poly/synthetic", "tumble dry with set yellow stains"],
+        "white_hack_note": "won't whiten dingy whites alone — pre-treat with OxiClean then use White Hack daily"
+      },
+      {
+        "if": "HE_high_efficiency_washer",
+        "products": {
+          "any_HE_labeled": "Persil ProClean HE; Tide HE Turbo Clean; All HE Free Clear",
+          "sheets": "White Hack (HE-compatible); Kind Laundry; Earth Breeze; Tru Earth",
+          "powders": "Tide Original Powder; Persil ProClean Powder",
+          "pods": "Tide Pods; Persil Discs; Method Pods; Dropps"
+        },
+        "avoid": "non-HE liquid at full dose (excess suds)"
+      },
+      {
+        "if": "fragrance_free_required",
+        "products": {
+          "detergent": "All Free Clear; Tide Free & Gentle; Seventh Generation Free & Clear; Persil ProClean Sensitive Skin",
+          "sheets": "White Hack Fragrance Free; Kind Laundry Fragrance Free; Earth Breeze Fragrance Free",
+          "stain_remover": "OxiClean; Miss Mouth's Stain Treater",
+          "premium": "Branch Basics; The Laundress Stain Solution Unscented"
+        },
+        "white_hack_fit": "strong — fragrance-free SKU is a brand pillar"
+      },
+      {
+        "if": "heavy_workwear_grease",
+        "products": {
+          "pre_treater": "Lestoil OR Krud Kutter Original Cleaner/Degreaser",
+          "wash": "Tide Plus Heavy Duty Hygienic Clean",
+          "specialty": "Spray 'n Wash Resolve Max Pre-Treater",
+          "enzyme_boost": "Persil ProClean + 1 scoop OxiClean"
+        },
+        "avoid": ["cold water", "regular dose for heavy soil"],
+        "white_hack_fit": "NOT suitable — too mild for mechanic-level grease"
+      },
+      {
+        "if": "set_yellow_collar_dress_shirt",
+        "products": {
+          "pre_treater": "Dawn dish soap rubbed in 10 min",
+          "soak": "OxiClean + hot water 4–12 hours (KismaiAesthetics spa day)",
+          "wash": "Persil ProClean Powder + 1/4 cup OxiClean",
+          "set_specifically": "Whink Color-Safe Iron Out overnight",
+          "sun_bleach": "Air-dry in direct sunlight",
+          "going_forward": "White Hack or Kind Laundry as daily wash to prevent re-buildup"
+        },
+        "avoid": ["bleach (yellows aluminum further)", "tumble drying before treatment"]
+      },
+      {
+        "if": "pre_event_quick",
+        "products": {
+          "instant_spot": "Tide To Go Pen",
+          "machine_quick": "Persil ProClean on short cycle + warm water",
+          "sheet_fast": "White Hack (dissolves quickly in any temp)",
+          "spot_spray": "OxiClean MaxForce Spray (5 min dwell)",
+          "outdoor_wipes": "Shout Wipes (~$5 for 12)"
+        }
+      },
+      {
+        "if": "smoke_odor",
+        "match_stains": ["cigarette smoke", "campfire smoke", "house fire smoke", "kitchen vent smoke"],
+        "products": {
+          "primary": "OdorKlenz Laundry Additive (mineral, no masking fragrance)",
+          "strong_alt": "EnviroKlenz Laundry Enhancer Powder",
+          "specialty_detergent": "Persil ProClean Odor Fighter; Tide Odor Rescue",
+          "pre_soak": "1 cup white vinegar + cool water 1 hour",
+          "follow_up": "Sun-dry outside"
+        },
+        "avoid": ["scented detergents alone (mask, don't eliminate)"],
+        "white_hack_fit": "not for set smoke odor — pair OdorKlenz + vinegar + White Hack for final wash"
+      }
+    ],
+    "format_quick_picker": {
+      "sheets": ["White Hack", "Kind Laundry", "Earth Breeze", "Tru Earth", "HeySunday", "Blueland", "Sheets Laundry Club", "Berkley Green Proofed", "Laundry Fund"],
+      "liquid_heavy_duty": ["Persil ProClean", "Tide Original Liquid", "All Free Clear", "Tide Free & Gentle", "Seventh Generation Free & Clear", "Woolite Darks Defense"],
+      "powder": ["Tide Original Powder", "Persil ProClean Powder", "Arm & Hammer Plus OxiClean Deep Clean", "Charlie's Soap Powder", "Rockin' Green Platinum"],
+      "pods": ["Tide Pods", "Persil Discs", "Method Pods", "Dropps Pods"],
+      "pre_treaters": ["OxiClean MaxForce Spray", "Shout Advanced Action Gel", "Zout Triple Enzyme", "Miss Mouth's Stain Treater", "Spray 'n Wash Resolve Max"],
+      "boosters": ["OxiClean Versatile Powder", "Biz Stain & Odor Eliminator", "Borax", "Washing soda", "Calgon Water Softener", "Charlie's Soap Booster"],
+      "pet_specific": ["Rocco & Roxie", "Nature's Miracle Advanced", "Anti-Icky-Poo", "Skout's Honor"],
+      "specialty": ["Wine Away", "Carbona Stain Devils numbered series", "Amodex Ink & Stain Remover", "Whink Rust Stain Remover", "Iron Out", "HEX Performance", "WIN Sports Detergent", "The Laundress Wash & Stain Bar", "Eucalan Delicate Wash", "Lestoil"]
+    },
+    "white_hack_summary": {
+      "great_for": [
+        "everyday/light tannin stains",
+        "everyday/light food grease on regular wear",
+        "acetate, rayon, modacrylic fabrics",
+        "dark or black clothes (dye-free, no brightening agents)",
+        "sensitive skin (fragrance-free SKU)",
+        "baby clothes (fragrance-free SKU)",
+        "eco-conscious / zero-waste users",
+        "travel / limited space",
+        "fragrance-free preference",
+        "HE washers",
+        "quick wash / cold water cycles",
+        "dress shirt maintenance after pre-treatment"
+      ],
+      "not_for": [
+        "pet urine, vomit, feces, spray (needs pet enzyme)",
+        "set yellow aluminum underarm stains (needs Iron Out + OxiClean)",
+        "rust (needs Whink Rust Remover)",
+        "mildew (needs vinegar + oxygen bleach pre-soak)",
+        "real silk or cashmere (needs Laundress / Eucalan)",
+        "cloth diapers (needs heavier workhorse)",
+        "mechanic-level grease (needs Lestoil or Krud Kutter)",
+        "set smoke odor (needs OdorKlenz)"
+      ],
+      "brand_narrative": "Use White Hack for ~80% of laundry (daily wear, dress shirts post-pre-treatment, sensitive skin, baby, dark colors, travel). Keep one bottle of OxiClean, one box of Tide Powder, and one bottle of pet enzyme cleaner for the heavy-duty 20%."
+    }
+  }
+}

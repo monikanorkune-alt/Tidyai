@@ -9,6 +9,7 @@ const LS = {
   stainHistory: 'tidyai_stain_history',
   lastStainScan: 'tidyai_last_stain_scan',
   stainFeedback: 'tidyai_stain_feedback',
+  prefs: 'tidyai_prefs',
 };
 
 // Palette for family avatars (brand-aligned: gold, pink, magenta, sky, cream, muted)
@@ -27,6 +28,7 @@ const state = {
   stainTreatment: null,       // current treatment record from playbook
   stainStepIndex: 0,
   stainHistory: load(LS.stainHistory, []),
+  prefs: load(LS.prefs, {}),  // sensitive_skin, eco_only, has_pet, hard_water, baby_household, fragrance_free, has_white_hack, has_oxiclean
 };
 
 // Playbook (loaded lazily)
@@ -37,6 +39,174 @@ function loadPlaybook() {
     .then(r => r.json())
     .then(d => { PLAYBOOK = d; populateStainDatalist(); return d; })
     .catch(err => { console.error('Playbook load failed', err); return null; });
+}
+
+// If-then product recommendation rules (loaded lazily, optional).
+// If the file fails to load, pickProductsForStain returns null and the UI
+// falls back to the playbook's static products silently.
+let RULES = null;
+function loadRules() {
+  if (RULES) return Promise.resolve(RULES);
+  return fetch('product_ifthen_rules.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { RULES = d; return d; })
+    .catch(err => { console.warn('Product rules load failed (using playbook fallback)', err); return null; });
+}
+
+// Map a playbook stain to one of the chemistry classes in the rules file.
+// Returns the rule's `if` key (e.g. "tannin_based") or null.
+function stainChemistryClass(stain) {
+  if (!RULES || !stain) return null;
+  const haystack = `${(stain.name || '')} ${(stain.treatment_summary || '')}`.toLowerCase();
+  let bestClass = null;
+  let bestLen = 0;
+  for (const rule of (RULES.rules?.stain_chemistry || [])) {
+    for (const kw of (rule.match_stains || [])) {
+      const k = kw.toLowerCase();
+      if (haystack.includes(k) && k.length > bestLen) {
+        bestClass = rule.if;
+        bestLen = k.length;
+      }
+    }
+  }
+  return bestClass;
+}
+
+// Map a fabric hint (free text) to a fabric_specific rule key.
+function fabricClass(fabricHint) {
+  if (!RULES || !fabricHint) return null;
+  const f = fabricHint.toLowerCase();
+  for (const rule of (RULES.rules?.fabric_specific || [])) {
+    for (const fab of (rule.match_fabrics || [])) {
+      if (f.includes(fab.toLowerCase())) return rule.if;
+    }
+  }
+  return null;
+}
+
+// Pref toggle -> use_case_situational rule id
+const PREF_TO_USECASE = {
+  sensitive_skin: 'sensitive_skin_eczema',
+  eco_only: 'eco_conscious_zero_waste',
+  hard_water: 'hard_water',
+  baby_household: 'baby_clothes',
+  fragrance_free: 'fragrance_free_required',
+};
+
+// "Product A; Product B" -> ["Product A", "Product B"]
+// Skips semicolons that appear inside parentheses (e.g. "X (foo; bar)" stays whole).
+function splitProductString(s) {
+  if (!s) return [];
+  const str = String(s);
+  const parts = [];
+  let depth = 0;
+  let buf = '';
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (c === '(') { depth++; buf += c; continue; }
+    if (c === ')') { depth = Math.max(0, depth - 1); buf += c; continue; }
+    if (c === ';' && depth === 0) {
+      if (buf.trim()) parts.push(buf.trim());
+      buf = '';
+      continue;
+    }
+    buf += c;
+  }
+  if (buf.trim()) parts.push(buf.trim());
+  return parts;
+}
+
+// Given the identified stain, optional fabric hint, and user prefs,
+// return a ranked structured recommendation. Null if rules unavailable.
+function pickProductsForStain(stain, fabricHint, prefsArg) {
+  if (!RULES) return null;
+  const prefs = prefsArg || state.prefs || {};
+  const chemClass = stainChemistryClass(stain);
+  const fabClass = fabricClass(fabricHint);
+  const chemRule = chemClass ? RULES.rules.stain_chemistry.find(r => r.if === chemClass) : null;
+  const fabRule = fabClass ? RULES.rules.fabric_specific.find(r => r.if === fabClass) : null;
+  const useCaseRules = (RULES.rules.use_case_situational || []).filter(r => {
+    return Object.entries(PREF_TO_USECASE).some(([prefKey, ruleId]) => prefs[prefKey] && ruleId === r.if);
+  });
+
+  // Aggregate products, deduping on a normalized name; track which rules each came from.
+  const accum = new Map();
+  const accumulate = (rule, source) => {
+    if (!rule?.products) return;
+    for (const [role, value] of Object.entries(rule.products)) {
+      for (const name of splitProductString(value)) {
+        const key = name.toLowerCase().replace(/[^\w]+/g, '');
+        const existing = accum.get(key);
+        if (existing) {
+          existing.roles.add(role);
+          existing.sources.add(source);
+        } else {
+          accum.set(key, { name, roles: new Set([role]), sources: new Set([source]) });
+        }
+      }
+    }
+  };
+  accumulate(chemRule, 'chemistry');
+  accumulate(fabRule, 'fabric');
+  useCaseRules.forEach(r => accumulate(r, 'use_case'));
+
+  // Score
+  const products = Array.from(accum.values()).map(p => {
+    let score = 0;
+    score += p.sources.size * 2; // multi-rule match is a good signal
+    const roles = Array.from(p.roles);
+    if (roles.some(r => r === 'primary')) score += 4;
+    if (roles.some(r => /specific|specialty/.test(r))) score += 3;
+    if (roles.some(r => r === 'brand_name')) score += 2;
+    if (roles.some(r => r === 'pre_treater' || r === 'pre_treater_spray')) score += 2;
+    if (roles.some(r => /diy/.test(r))) score -= 1;
+    if (roles.some(r => r === 'sheet_eco') && prefs.eco_only) score += 3;
+    if (roles.some(r => r === 'baby_variant') && prefs.baby_household) score += 4;
+    // Ownership: user already has this — biggest boost
+    if (prefs.has_white_hack && /white hack/i.test(p.name)) score += 6;
+    if (prefs.has_oxiclean && /oxiclean/i.test(p.name)) score += 6;
+    // Fragrance-free preference: boost SKUs known to be fragrance-free
+    if (prefs.fragrance_free) {
+      if (/free.{0,5}clear|fragrance.{0,5}free|free.{0,5}gentle/i.test(p.name)) score += 3;
+    }
+    // Eco preference
+    if (prefs.eco_only) {
+      if (/seventh generation|earth breeze|tru earth|blueland|branch basics|kind laundry|white hack|biokleen|charlie/i.test(p.name)) score += 2;
+      if (/whink|chlorine bleach|krud kutter/i.test(p.name)) score -= 2;
+    }
+    p.score = score;
+    return p;
+  });
+
+  products.sort((a, b) => b.score - a.score);
+
+  const avoid = new Set();
+  [chemRule, fabRule, ...useCaseRules].forEach(r => {
+    if (r?.avoid) r.avoid.forEach(a => avoid.add(a));
+  });
+
+  const whyParts = [];
+  if (chemRule?.why_it_works) whyParts.push(chemRule.why_it_works);
+  if (fabRule?.why_it_works) whyParts.push(fabRule.why_it_works);
+
+  return {
+    chemistry_class: chemClass,
+    fabric_class: fabClass,
+    matched_use_cases: useCaseRules.map(r => r.if),
+    why_it_works: whyParts.join(' ') || null,
+    top_picks: products.slice(0, 5).map(p => ({
+      name: p.name,
+      roles: Array.from(p.roles),
+      sources: Array.from(p.sources),
+      score: p.score,
+    })),
+    avoid: Array.from(avoid),
+    user_owned: products.filter(p => {
+      const n = p.name.toLowerCase();
+      return (prefs.has_white_hack && n.includes('white hack')) ||
+             (prefs.has_oxiclean && n.includes('oxiclean'));
+    }).map(p => p.name),
+  };
 }
 
 // Populate the <datalist> with all 802 stain names for the typed-origin autocomplete.
@@ -155,6 +325,8 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
   loadPlaybook();
+  loadRules();
+  restorePrefsUI();
   // On boot the Laundry view shows just the photo upload card. The question
   // appears after a photo is chosen; the result card after a match is made.
   if (state.stainScan) renderStainResult(state.stainScan);
@@ -751,15 +923,46 @@ function saveSettings() {
   toast('Settings saved');
 }
 
+// --- Preferences (8 toggles that personalize the product recommender) ---
+const PREF_KEYS = [
+  'sensitive_skin', 'eco_only', 'has_pet', 'hard_water',
+  'baby_household', 'fragrance_free', 'has_white_hack', 'has_oxiclean',
+];
+
+function restorePrefsUI() {
+  const prefs = state.prefs || {};
+  PREF_KEYS.forEach(k => {
+    const el = document.getElementById('pref-' + k);
+    if (el) el.checked = !!prefs[k];
+  });
+}
+
+function savePrefs() {
+  const next = {};
+  PREF_KEYS.forEach(k => {
+    const el = document.getElementById('pref-' + k);
+    if (el) next[k] = !!el.checked;
+  });
+  state.prefs = next;
+  save(LS.prefs, next);
+  // If a treatment is in progress, re-render so the new prefs flow through immediately.
+  if (state.stainTreatment && document.getElementById('stain-treatment')?.style.display === 'block') {
+    renderStep();
+  }
+  toast('Preferences saved');
+}
+
 function clearData() {
   if (!confirm('Clear all tasks, family, and the API key on this device?')) return;
   Object.values(LS).forEach(k => localStorage.removeItem(k));
   state.family = []; state.tasks = []; state.scan = null;
   state.stainScan = null; state.stainHistory = []; state.stainTreatment = null;
+  state.prefs = {};
   document.getElementById('api-key-input').value = '';
   document.getElementById('scan-results').style.display = 'none';
   resetStainFlow();
   updateApiBadge();
+  restorePrefsUI();
   renderFamily();
   renderTasks();
   renderStainHistory();
@@ -1461,25 +1664,59 @@ function renderStep() {
   // Next vs Done — finish
   document.getElementById('step-next-btn').textContent = isLast ? 'Done — finish ▶' : 'Next ▶';
 
-  // Products + role list shown on EVERY step (so the user doesn't have to scroll back)
+  // Products section — try the if-then rule engine first (personalized to user
+  // prefs and chemistry class). If RULES failed to load or no match is found,
+  // fall back silently to the playbook's static products.
   const prodWrap = document.getElementById('step-products-wrap');
+  const rec = pickProductsForStain(t, null, state.prefs);
+  const roleNice = r => {
+    if (!r) return '';
+    const s = String(r).toLowerCase();
+    if (s === 'primary') return 'first choice';
+    if (s === 'alternative' || s === 'alt') return 'alternative';
+    if (s === 'pre_treater' || s === 'pre_treater_spray') return 'pre-treater';
+    if (s === 'sheet_eco') return 'eco sheet';
+    if (s === 'baby_variant') return 'baby variant';
+    if (s === 'brand_name') return 'brand-name option';
+    if (s === 'diy_fallback' || s === 'diy_backup') return 'DIY fallback';
+    if (s.includes('specific')) return 'best for this stain';
+    return s.replace(/_/g, ' ');
+  };
+  let html = '';
+  if (rec && rec.top_picks && rec.top_picks.length) {
+    const ownedSet = new Set(rec.user_owned.map(n => n.toLowerCase()));
+    const chemNice = rec.chemistry_class ? rec.chemistry_class.replace(/_/g, ' ') : null;
+    const fabNice = rec.fabric_class ? rec.fabric_class.replace(/_/g, ' ') : null;
+    html += `
+      <div class="rec-card">
+        <h4>Recommended for you</h4>
+        <div class="rec-meta">
+          ${chemNice ? `Stain class: <strong style="color:var(--text)">${escapeHtml(chemNice)}</strong>` : ''}
+          ${fabNice ? ` · Fabric: <strong style="color:var(--text)">${escapeHtml(fabNice)}</strong>` : ''}
+        </div>
+        <ul>
+          ${rec.top_picks.map(p => {
+            const isOwned = ownedSet.has(p.name.toLowerCase());
+            const primaryRole = p.roles[0] || '';
+            return `<li>${escapeHtml(p.name)}${isOwned ? ' <span class="owned-tag">you own</span>' : ''}${primaryRole ? ` <span style="color:var(--muted)">— ${escapeHtml(roleNice(primaryRole))}</span>` : ''}</li>`;
+          }).join('')}
+        </ul>
+        ${rec.avoid.length ? `<div class="avoid"><strong>Avoid:</strong> ${rec.avoid.map(escapeHtml).join(', ')}</div>` : ''}
+        ${rec.why_it_works ? `<div class="why">${escapeHtml(rec.why_it_works)}</div>` : ''}
+      </div>
+    `;
+  }
+  // Always show the playbook's static products too — they're the source-of-truth
+  // for what the playbook itself recommends, and the user might already trust those.
   if (t.products && t.products.length) {
-    const roleNice = r => {
-      if (!r) return '';
-      const s = String(r).toLowerCase();
-      if (s === 'primary') return 'first choice';
-      if (s === 'alternative') return 'alternative';
-      return r;
-    };
-    prodWrap.innerHTML = `
-      <div class="step-products">
-        <strong>You'll need</strong>
+    html += `
+      <div class="step-products" style="margin-top:10px">
+        <strong>${rec ? 'Also works (playbook)' : "You'll need"}</strong>
         <ul>${t.products.map(p => `<li>${escapeHtml(p.name)}${p.role ? ` <span style="color:var(--muted)">— ${escapeHtml(roleNice(p.role))}</span>` : ''}</li>`).join('')}</ul>
       </div>
     `;
-  } else {
-    prodWrap.innerHTML = '';
   }
+  prodWrap.innerHTML = html;
 }
 
 function nextStep() {
