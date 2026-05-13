@@ -177,6 +177,12 @@
     .chip.priority-high { color: var(--danger); border-color: rgba(255,35,127,0.35); }
     .chip.priority-medium { color: var(--warn); border-color: rgba(255,187,28,0.35); }
     .chip.priority-low { color: #FFB7D5; border-color: rgba(255,135,185,0.35); }
+
+    /* Difficulty chip — replaces the old clock + minutes chip on the result card */
+    .chip-difficulty { font-weight: 600; }
+    .difficulty-easy   { background: rgba(99,153,34,0.15);  color: #97C459; border-color: rgba(99,153,34,0.30); }
+    .difficulty-medium { background: rgba(255,181,71,0.15); color: #FFB547; border-color: rgba(255,181,71,0.30); }
+    .difficulty-hard   { background: rgba(255,93,115,0.15); color: #FF5D73; border-color: rgba(255,93,115,0.30); }
     .chip.member { font-weight: 600; }
 
     .quickplan {
@@ -564,20 +570,6 @@
             <button class="btn secondary" onclick="document.getElementById('stain-gallery-input').click()">From gallery</button>
             <button class="btn secondary" onclick="document.getElementById('stain-camera-input').click()">Take photo</button>
           </div>
-
-          <!-- Picker fallback: visually clearly secondary to the photo CTA above -->
-          <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px">
-            <div style="flex:1;height:0.5px;background:var(--border)"></div>
-            <span style="font-size:12px;color:var(--muted)">or pick one</span>
-            <div style="flex:1;height:0.5px;background:var(--border)"></div>
-          </div>
-
-          <div id="stain-recent-wrap" style="display:none;margin-bottom:10px">
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Recently used</div>
-            <div id="stain-recent-list" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-          </div>
-
-          <div id="stain-group-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"></div>
         </div>
 
         <!-- Stain list shown when a group is tapped from the picker grid -->
@@ -591,34 +583,30 @@
           <div id="group-stains-list" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
 
-        <!-- STEP 2: ask after the photo is loaded -->
-        <div id="stain-origin-question" class="stain-hero" style="display:none">
-          <h2 style="margin-top:0;margin-bottom:6px">Do you know what caused the stain?</h2>
-          <p>If you know, telling me directly is faster and free. Otherwise I'll analyze the photo.</p>
-          <div class="row" style="margin-top:8px">
-            <button class="btn secondary press-gold" onclick="setOriginMode('known', this)">Yes</button>
-            <button class="btn secondary press-gold" onclick="setOriginMode('photo', this)">Not sure</button>
+        <!-- Cause prompt: shown after a photo is loaded -->
+        <div id="stain-cause-prompt" class="stain-result" style="display:none">
+          <h2 style="margin-bottom:6px">Do you know what caused the stain?</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Helps me get to the right treatment faster.</p>
+          <div class="row">
+            <button class="btn secondary" onclick="onKnowCauseYes()">Yes</button>
+            <button class="btn" onclick="onKnowCauseNotSure()">Not sure</button>
           </div>
         </div>
 
-        <!-- Loading card: shown while OpenAI is analyzing the photo -->
-        <div id="stain-loading" class="stain-hero" style="display:none;text-align:center">
-          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
-          <div class="loading-text" style="margin-top:14px">Analyzing the stain</div>
-          <div class="loading-countdown" id="stain-loading-countdown">3</div>
-        </div>
-
-        <!-- STEP 3a: typed origin (when user clicked "Yes") -->
-        <div id="stain-typed-card" class="stain-hero" style="display:none">
-          <h2 style="margin-bottom:6px">What is the stain?</h2>
-          <p style="margin-bottom:10px">Type what caused it. The playbook covers 800+ stains.</p>
-          <input type="text" id="stain-typed-input" list="stain-names-list" placeholder="e.g. red wine, bacon grease, motor oil" autocomplete="off" autocapitalize="none" />
+        <!-- Yes branch: type the stain name -->
+        <div id="stain-name-input-card" class="stain-result" style="display:none">
+          <h2>What is the stain?</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Type a name — for example, "red wine" or "blood."</p>
+          <input type="text" id="stain-name-input" list="stain-names-list" placeholder="e.g. red wine" autocomplete="off" autocapitalize="none" style="margin-bottom:10px" />
           <datalist id="stain-names-list"></datalist>
-          <div id="stain-typed-hints" style="margin-top:8px"></div>
-          <div class="row" style="margin-top:10px">
-            <button class="btn" onclick="findByTypedName()">Find treatment</button>
-            <button class="btn secondary" onclick="showOriginQuestion()">Back</button>
-          </div>
+          <div id="stain-typed-hints" style="margin-top:8px;margin-bottom:10px"></div>
+          <button class="btn" onclick="onSubmitStainName()">Find treatment</button>
+        </div>
+
+        <!-- Not sure: visible 5 → 1 countdown while AI runs -->
+        <div id="stain-countdown-card" class="stain-result" style="display:none;text-align:center">
+          <div style="font-size:48px;font-weight:700;margin-bottom:6px"><span id="stain-countdown-text">Analyzing… 5</span></div>
+          <p style="font-size:13px;color:var(--muted)">Reading the photo carefully.</p>
         </div>
 
         <!-- Result: confident match -->
@@ -634,12 +622,11 @@
           </div>
         </div>
 
-        <!-- Result: needs category -->
+        <!-- Result: not sure — at most 3 candidates, no category fallback -->
         <div id="stain-needs-category" class="stain-result" style="display:none">
-          <h2>Not 100% sure — pick the closest</h2>
-          <p id="stain-needs-reason" style="font-size:13px;margin-bottom:8px"></p>
-          <div id="stain-candidates"></div>
-          <div class="category-grid" id="stain-category-grid"></div>
+          <h2>Pick the closest one</h2>
+          <p id="stain-needs-reason" style="font-size:13px;color:var(--muted);margin-bottom:12px">I couldn't tell for sure — which looks closest?</p>
+          <div id="stain-candidates-list"></div>
           <button class="btn ghost" onclick="resetStainFlow()" style="margin-top:6px">Start over</button>
         </div>
 
@@ -726,6 +713,51 @@
 
       </section>
 
+      <!-- HACKS VIEW: browse-only, no AI call -->
+      <section id="view-hacks" class="view">
+        <!-- State A: 8 categories -->
+        <div id="hacks-categories">
+          <h1 style="margin-bottom:4px">Stain hacks</h1>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Learn how to treat any stain — no photo needed.</p>
+          <div id="hacks-group-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"></div>
+        </div>
+
+        <!-- State B: stain list for a chosen category -->
+        <div id="hacks-stain-list-wrap" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px">
+            <button class="btn small ghost" onclick="hacksBackToCategories()" style="width:auto">← Back</button>
+            <h2 id="hacks-list-title" style="margin:0;font-size:16px;flex:1;text-align:center">—</h2>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <div id="hacks-stain-list" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+        <!-- State C: 3-block stain detail -->
+        <div id="hacks-detail" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px">
+            <button class="btn small ghost" onclick="hacksBackToList()" style="width:auto">← Back</button>
+            <h2 id="hacks-detail-title" style="margin:0;font-size:16px;flex:1;text-align:center">—</h2>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <div id="hacks-detail-about" class="stain-result" style="margin-bottom:12px"></div>
+          <div id="hacks-detail-ingredients" class="stain-result" style="margin-bottom:12px"></div>
+          <div id="hacks-detail-products" class="stain-result"></div>
+        </div>
+
+        <!-- State D: "Something else" search -->
+        <div id="hacks-search" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px">
+            <button class="btn small ghost" onclick="hacksBackToList()" style="width:auto">← Back</button>
+            <h2 style="margin:0;font-size:16px;flex:1;text-align:center">Something else</h2>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:10px">What stain are you looking for? I'll search 800+ entries.</p>
+          <input type="text" id="hacks-search-input" placeholder="e.g. permanent marker" autocomplete="off" autocapitalize="none" style="margin-bottom:10px" />
+          <button class="btn" onclick="hacksSearchSubmit()">Search</button>
+          <div id="hacks-search-result" style="margin-top:14px"></div>
+        </div>
+      </section>
+
       <!-- SETTINGS VIEW -->
       <section id="view-settings" class="view">
         <h1>Settings</h1>
@@ -779,7 +811,15 @@
     <nav class="tabs">
       <button data-tab="laundry" class="active" onclick="switchTab('laundry')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.32 0z"/></svg>
-        <span>Laundry</span>
+        <span>Stains</span>
+        <span class="dot"></span>
+      </button>
+      <button data-tab="hacks" onclick="switchTab('hacks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21h6"/><path d="M12 17v4"/>
+          <path d="M12 3a6 6 0 0 1 6 6c0 2.5-1.5 4-3 5-1 1-1 1.5-1 3H10c0-1.5 0-2-1-3-1.5-1-3-2.5-3-5a6 6 0 0 1 6-6z"/>
+        </svg>
+        <span>Hacks</span>
         <span class="dot"></span>
       </button>
       <button data-tab="settings" onclick="switchTab('settings')">

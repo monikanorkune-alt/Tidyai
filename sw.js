@@ -1,5 +1,5 @@
 // TidyAI service worker — network-first so updates always reach the user.
-const CACHE = 'tidyai-v9-picker';
+const CACHE = 'tidyai-v10-stains-hacks';
 const SHELL = [
   './',
   './index.html',

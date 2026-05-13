@@ -83,6 +83,307 @@ const STAIN_GROUPS = [
     stains: ['Rust','Mold / mildew','Candle wax','Charcoal / ash','Chewing gum','Shoe polish','Latex paint','Oil paint','Super glue'] },
 ];
 
+// =====================================================================
+// HACK_RECIPES — chemistry_class → { ingredients, temperature, products }
+// Used by the Hacks tab's 3-block detail view. Pure data, no AI.
+// =====================================================================
+const HACK_RECIPES = {
+  protein_based: {
+    ingredients: ['Protease enzyme', 'Hydrogen peroxide 3% (whites only)', 'Surfactant (Dawn dish soap)', 'Sodium percarbonate (OxiClean)'],
+    temperature: 'Cold water only — hot water cooks protein into fibers permanently.',
+    products: [
+      { name: 'Persil ProClean Original Liquid', note: '5 enzymes incl. protease' },
+      { name: 'OxiClean MaxForce Spray', note: 'Enzyme + surfactant pre-treater' },
+      { name: 'OxiClean Versatile Powder', note: 'Oxygen booster for the wash' },
+      { name: 'Carbona Stain Devils #4', note: 'Blood, dairy, ice cream, glue' },
+      { name: 'Tide Free & Gentle', note: 'Sensitive-skin enzyme detergent' },
+      { name: 'Dawn Ultra Blue dish soap', note: 'Pre-treat for stubborn protein-on-cotton' },
+    ],
+  },
+  pet_related: {
+    ingredients: ['Uricase enzyme (pet-specific)', 'Plant-derived enzymes', 'Surfactant'],
+    temperature: 'Cool to lukewarm — NEVER steam (heat sets uric acid permanently).',
+    products: [
+      { name: 'Rocco & Roxie Stain & Odor Eliminator', note: 'Top-rated pet enzyme cleaner' },
+      { name: "Nature's Miracle Advanced", note: 'Cult favorite for pet urine' },
+      { name: 'Anti-Icky-Poo (Mister Max)', note: 'For intact tomcat spray' },
+      { name: "Skout's Honor Stain & Odor Solution", note: 'Plant-derived enzymes' },
+      { name: 'Folex Carpet Cleaner', note: 'Carpet-specific after enzyme soak' },
+    ],
+  },
+  food_grease_or_body_oil: {
+    ingredients: ['Lipase enzyme', 'Surfactant (Dawn)', 'Absorbent powder (cornstarch, baking soda)', 'Solvent for set stains (alcohol, mineral spirits)'],
+    temperature: 'Warm to hot — heat helps the oil release from fibers.',
+    products: [
+      { name: 'Dawn Ultra Blue dish soap', note: 'Universal grease cutter (~$3)' },
+      { name: 'Persil ProClean Powder', note: 'Has lipase enzyme' },
+      { name: 'Tide Original Powder', note: 'Lipase-rich workhorse' },
+      { name: 'Lestoil', note: 'Heavy/industrial grease' },
+      { name: 'Krud Kutter Original Cleaner/Degreaser', note: 'Mechanic / kitchen grease' },
+      { name: 'OxiClean MaxForce Spray', note: 'Multi-enzyme pre-treater' },
+      { name: 'Cornstarch or baking soda', note: 'Absorbent — apply BEFORE wash' },
+    ],
+  },
+  tannin_based: {
+    ingredients: ['Sodium percarbonate (oxygen bleach)', 'Mild acid (white vinegar)', 'Surfactant (Dawn)', 'Hydrogen peroxide 3% (whites)'],
+    temperature: 'Cold rinse first, then warm wash. Hot water on a fresh tannin stain sets it permanently.',
+    products: [
+      { name: 'OxiClean Versatile Powder', note: 'Overnight soak for set stains' },
+      { name: 'Wine Away', note: 'Purpose-built for wine (~$8)' },
+      { name: 'Carbona Stain Devils #8', note: 'Coffee/tea/wine/juice specialist' },
+      { name: 'The Laundress Wine & Coffee Stain Bar', note: 'Gentle for silk (~$16)' },
+      { name: 'Persil ProClean liquid', note: 'Multi-enzyme detergent' },
+      { name: 'Dawn + 3% hydrogen peroxide paste', note: 'DIY — whites only' },
+    ],
+  },
+  dye_based: {
+    ingredients: ['Isopropyl alcohol 91%', 'Surfactant (Dawn)', 'Sodium percarbonate (OxiClean)', 'Specialty dye-lift (Amodex)'],
+    temperature: 'Cool to lukewarm — hot water sets dye permanently.',
+    products: [
+      { name: 'Amodex Ink & Stain Remover', note: 'Gentler than alcohol, more fabric-safe' },
+      { name: '91% Isopropyl rubbing alcohol', note: 'Cheap drugstore staple' },
+      { name: 'OxiClean Versatile Powder', note: 'Overnight soak for set color' },
+      { name: 'Dawn Ultra Blue', note: 'After alcohol, removes dye carrier' },
+      { name: 'Carbona Color Run Remover', note: 'For bleed accidents' },
+      { name: 'Old-formula hairspray', note: 'High-alcohol — works on Sharpie' },
+    ],
+  },
+  mineral_based: {
+    ingredients: ['Oxalic acid (Whink)', 'Citric acid (lemon juice)', 'UV / direct sunlight'],
+    temperature: 'Cool water — never hot (sets rust permanently).',
+    products: [
+      { name: 'Whink Rust Stain Remover', note: 'Heavy-duty (hydrofluoric acid — wear gloves)' },
+      { name: 'Whink Color-Safe Iron Out', note: 'Gentler color-safe version' },
+      { name: 'Iron Out spray gel', note: 'Bathroom + fabric + carpet' },
+      { name: 'CLR Calcium Lime Rust', note: 'Test fabric first' },
+      { name: 'Lemon juice + salt + sunlight', note: 'DIY — 1-2 hours in direct sun' },
+    ],
+  },
+  mold_or_mildew: {
+    ingredients: ['Acetic acid (white vinegar)', 'Sodium percarbonate (oxygen bleach)', 'Enzyme detergent', 'UV / sunlight'],
+    temperature: 'Hot wash kills spores. Sun-dry to prevent regrowth.',
+    products: [
+      { name: 'White vinegar', note: '1 cup pre-soak for an hour' },
+      { name: 'OxiClean Tough Stain Remover', note: 'Oxygen bleach soak' },
+      { name: 'Persil ProClean', note: 'Hot wash with enzyme detergent' },
+      { name: 'OdorKlenz Laundry Additive', note: 'Mineral-based, fragrance-free' },
+      { name: 'HEX Performance', note: 'Athletic-wear specific musty' },
+      { name: 'Affresh Washing Machine Cleaner', note: 'Treat the machine itself' },
+    ],
+  },
+  sweat_aluminum_yellow_pit: {
+    ingredients: ['Oxalic acid (Iron Out)', 'Sodium percarbonate (OxiClean)', 'Lipase enzyme', 'Surfactant (Dawn)', 'UV / sunlight'],
+    temperature: 'Hot soak — heat dissolves aluminum-protein bonds.',
+    products: [
+      { name: 'Whink Color-Safe Iron Out', note: 'Dissolves the aluminum component' },
+      { name: 'OxiClean Versatile Powder', note: 'Overnight hot soak' },
+      { name: 'Dawn Ultra Blue', note: 'Pre-treat for the sebum layer' },
+      { name: 'Persil ProClean Powder', note: 'Lipase-rich hot wash' },
+      { name: 'Carbona Stain Devils #1', note: 'Cosmetics + deodorant specialist' },
+    ],
+  },
+  sugar_or_sticky: {
+    ingredients: ['Cold (ice)', 'Surfactant (Dawn)', 'Solvent (91% alcohol)', 'Citrus oil (Goo Gone)'],
+    temperature: 'Cold first for physical removal, then warm wash for sugar residue.',
+    products: [
+      { name: 'Ice', note: 'Hardens gum / sap for scraping' },
+      { name: '91% Isopropyl rubbing alcohol', note: 'Dissolves polymer residue' },
+      { name: 'Goo Gone Citrus Cleaner', note: 'Tape glue, sticker residue' },
+      { name: 'Dawn Ultra Blue', note: 'After scraping, cuts oil component' },
+      { name: 'Persil ProClean', note: 'Final wash' },
+      { name: 'White vinegar', note: 'Soak for slime polymer' },
+    ],
+  },
+  wax_based: {
+    ingredients: ['Heat (warm iron)', 'Absorbent (brown paper bag)', 'Surfactant (Dawn)'],
+    temperature: 'Warm iron through paper for melt-and-absorb; final wash warm.',
+    products: [
+      { name: 'Brown paper bag + warm iron', note: 'The core technique' },
+      { name: 'Dawn Ultra Blue', note: 'Removes residual oil ring' },
+      { name: 'Persil ProClean', note: 'Final warm wash' },
+      { name: 'Goo Gone', note: 'For stubborn rings' },
+      { name: 'Lestoil', note: 'Crayon-in-dryer disasters' },
+    ],
+  },
+  iodine_or_betadine: {
+    ingredients: ['Ascorbic acid (Vitamin C)', 'Sodium thiosulfate', 'Hydrogen peroxide 3% (whites only)'],
+    temperature: 'Cool water from the back. NEVER chlorine bleach — creates a permanent brown mark.',
+    products: [
+      { name: 'Vitamin C tablets', note: '2 × 500mg crushed in 1/2 cup warm water' },
+      { name: 'Sodium thiosulfate', note: '1 tbsp in 1 cup water — lab-grade' },
+      { name: 'Betadine Stain Remover (Bruce Medical)', note: 'Purpose-built' },
+      { name: 'Spartan Clothesline Fresh S5', note: 'Commercial iodine/betadine remover' },
+      { name: 'Hydrogen peroxide 3%', note: 'Whites only — never with bleach' },
+    ],
+  },
+  tannin_and_oil_combo: {
+    ingredients: ['Dawn (oil first)', 'Oxygen bleach (color second)', 'Lipase + protease enzymes'],
+    temperature: 'Cold rinse from back, then warm wash. Hot first sets the protein/tannin.',
+    products: [
+      { name: 'Dawn Ultra Blue', note: 'Step 1 — oil layer' },
+      { name: 'OxiClean Versatile Powder', note: 'Step 2 — color/tannin layer' },
+      { name: 'Persil ProClean', note: 'Multi-enzyme wash' },
+      { name: 'OxiClean MaxForce Spray', note: 'Single-step pre-treater' },
+      { name: 'Lestoil', note: 'For heavy oily sauces like BBQ' },
+    ],
+  },
+};
+
+const HACK_DEFAULT = {
+  ingredients: ['Surfactant (Dawn)', 'Sodium percarbonate (OxiClean)', 'Cool water'],
+  temperature: 'Start cool — escalate to warm only if needed.',
+  products: [
+    { name: 'Dawn Ultra Blue dish soap', note: 'Universal pre-treater' },
+    { name: 'OxiClean Versatile Powder', note: 'Oxygen booster' },
+    { name: 'Persil ProClean', note: 'Multi-enzyme detergent' },
+    { name: 'Tide Free & Gentle', note: 'Sensitive-skin alternative' },
+    { name: 'White vinegar', note: 'For mineral or musty issues' },
+  ],
+};
+
+function getHackRecipe(stain) {
+  const cls = stain?.chemistry_class;
+  return HACK_RECIPES[cls] || HACK_DEFAULT;
+}
+
+// =====================================================================
+// HACKS TAB — browse-only category → list → 3-block detail → search
+// Never calls the AI vision API.
+// =====================================================================
+let HACKS_CURRENT_GROUP = null;
+
+function renderHacksCategories() {
+  const grid = document.getElementById('hacks-group-grid');
+  if (!grid) return;
+  grid.innerHTML = STAIN_GROUPS.map(g => `
+    <button class="cat-btn" data-group="${g.id}" style="text-align:left;display:flex;flex-direction:column;gap:4px;min-height:72px;padding:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:10px;height:10px;border-radius:50%;background:${g.color};flex:none"></span>
+        <span style="font-size:14px;font-weight:600;color:var(--text)">${escapeHtml(g.label)}</span>
+      </div>
+      <span style="font-size:11px;color:var(--muted);font-weight:400">${escapeHtml(g.examples)} · ${g.stains.length}</span>
+    </button>
+  `).join('');
+  grid.querySelectorAll('button[data-group]').forEach(btn => {
+    btn.addEventListener('click', () => openHacksList(btn.dataset.group));
+  });
+}
+
+function openHacksList(groupId) {
+  const group = STAIN_GROUPS.find(g => g.id === groupId);
+  if (!group) return;
+  HACKS_CURRENT_GROUP = groupId;
+  document.getElementById('hacks-list-title').textContent = group.label;
+  const list = document.getElementById('hacks-stain-list');
+  const rows = group.stains.map(name => `
+    <button class="stain-row" data-stain="${escapeHtml(name)}" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card-strong);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);cursor:pointer;min-height:44px;text-align:left;width:100%">
+      <span>${escapeHtml(name)}</span>
+      <span style="color:var(--muted);font-size:14px">›</span>
+    </button>
+  `);
+  // Always-on "Something else" row at the bottom.
+  rows.push(`
+    <button class="stain-row" data-stain="__SOMETHING_ELSE__" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card-strong);border:1px dashed var(--border);border-radius:12px;font-size:14px;color:var(--muted);cursor:pointer;min-height:44px;text-align:left;width:100%">
+      <span>🔍 Something else</span>
+      <span style="color:var(--muted);font-size:14px">›</span>
+    </button>
+  `);
+  list.innerHTML = rows.join('');
+  list.querySelectorAll('button[data-stain]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.stain;
+      if (name === '__SOMETHING_ELSE__') return openHacksSearch();
+      openHacksDetail(name);
+    });
+  });
+  document.getElementById('hacks-categories').style.display = 'none';
+  document.getElementById('hacks-stain-list-wrap').style.display = 'block';
+  document.getElementById('hacks-detail').style.display = 'none';
+  document.getElementById('hacks-search').style.display = 'none';
+}
+
+function hacksBackToCategories() {
+  document.getElementById('hacks-categories').style.display = 'block';
+  document.getElementById('hacks-stain-list-wrap').style.display = 'none';
+  document.getElementById('hacks-detail').style.display = 'none';
+  document.getElementById('hacks-search').style.display = 'none';
+}
+
+function hacksBackToList() {
+  if (HACKS_CURRENT_GROUP) openHacksList(HACKS_CURRENT_GROUP);
+  else hacksBackToCategories();
+}
+
+async function openHacksDetail(stainName) {
+  await loadAllPlaybooks();
+  const stain = findStainInPlaybook(stainName);
+  if (!stain) {
+    // Show a "not in playbook" message in the search panel
+    openHacksSearch();
+    document.getElementById('hacks-search-input').value = stainName;
+    document.getElementById('hacks-search-result').innerHTML = `<div class="stain-result"><p>I don't have "${escapeHtml(stainName)}" in the playbook yet. Try a more common name (e.g. "wine" instead of "merlot"), or open the Stains tab to identify by photo.</p></div>`;
+    return;
+  }
+  const recipe = getHackRecipe(stain);
+
+  document.getElementById('hacks-detail-title').textContent = stain.name;
+
+  const aboutText = stain.science
+    || stain.treatment_summary
+    || `This is a ${(stain.chemistry_class || 'general').replace(/_/g, ' ')} stain. Treat per the active ingredients and products below.`;
+  document.getElementById('hacks-detail-about').innerHTML = `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">About this stain</div>
+    <p style="margin:0;line-height:1.5">${escapeHtml(aboutText)}</p>
+  `;
+
+  document.getElementById('hacks-detail-ingredients').innerHTML = `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Active ingredients + temperature</div>
+    <ul style="margin:0 0 10px;padding-left:18px;line-height:1.6">${recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
+    <div style="padding:10px;background:rgba(165,222,244,0.10);border:1px solid rgba(165,222,244,0.30);border-radius:10px;font-size:13px;line-height:1.5">
+      <strong style="color:#A5DEF4">🌡 Water:</strong> ${escapeHtml(recipe.temperature)}
+    </div>
+  `;
+
+  document.getElementById('hacks-detail-products').innerHTML = `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${recipe.products.length})</div>
+    ${recipe.products.map(p => `
+      <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">
+        <div style="font-weight:600">${escapeHtml(p.name)}</div>
+        <div style="color:var(--muted);font-size:12px;text-align:right;max-width:55%">${escapeHtml(p.note || '')}</div>
+      </div>
+    `).join('')}
+  `;
+
+  document.getElementById('hacks-categories').style.display = 'none';
+  document.getElementById('hacks-stain-list-wrap').style.display = 'none';
+  document.getElementById('hacks-detail').style.display = 'block';
+  document.getElementById('hacks-search').style.display = 'none';
+}
+
+function openHacksSearch() {
+  document.getElementById('hacks-categories').style.display = 'none';
+  document.getElementById('hacks-stain-list-wrap').style.display = 'none';
+  document.getElementById('hacks-detail').style.display = 'none';
+  document.getElementById('hacks-search').style.display = 'block';
+  document.getElementById('hacks-search-result').innerHTML = '';
+  setTimeout(() => document.getElementById('hacks-search-input')?.focus(), 60);
+}
+
+async function hacksSearchSubmit() {
+  const q = (document.getElementById('hacks-search-input').value || '').trim();
+  if (!q) return;
+  await loadAllPlaybooks();
+  const stain = findStainInPlaybook(q);
+  if (!stain) {
+    document.getElementById('hacks-search-result').innerHTML = `
+      <div class="stain-result"><p>Sorry, "${escapeHtml(q)}" isn't in our playbook yet. Try a more common name (e.g. "wine" instead of "merlot"), or open the Stains tab to identify by photo.</p></div>
+    `;
+    return;
+  }
+  // Hand off to the same detail renderer
+  openHacksDetail(stain.name);
+}
+
 function renderStainGroupGrid() {
   const grid = document.getElementById('stain-group-grid');
   if (!grid) return;
@@ -375,6 +676,34 @@ function catLabel(id) {
   return c?.label || id;
 }
 // Estimate minutes from a stain's step count + treatment_summary length.
+// Difficulty: Easy | Medium | Hard. V3 stains have per-surface .difficulty (1|2|3);
+// legacy stains map to Hard for known-hard sets, otherwise Medium.
+function deriveDifficulty(treatment) {
+  if (!treatment) return 'Medium';
+  if (treatment._source === 'v3' && treatment.surfaces) {
+    const surfaceKey = state.stainSurface || 'cotton';
+    const d = treatment.surfaces[surfaceKey]?.difficulty
+      ?? Object.values(treatment.surfaces)[0]?.difficulty
+      ?? 2;
+    return ['Easy','Medium','Hard'][Math.max(0, Math.min(2, d - 1))];
+  }
+  const HARD = ['rust','set_blood','set_yellow_armpit','set_hair_dye','super_glue','cured_paint','iodine','betadine','polymer_cured'];
+  const id = ((treatment.id || treatment.name) || '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  if (HARD.some(h => id.includes(h))) return 'Hard';
+  return 'Medium';
+}
+
+// Water-temp label as a single short word, sourced from the existing parser.
+function deriveWaterTemp(treatment) {
+  const text = (treatment.treatment_summary || (treatment.steps || []).join(' ') || '');
+  const wash = parseWashTemp(text);
+  if (!wash) return 'Cool';
+  if (wash.kind === 'hot') return 'Hot';
+  if (wash.kind === 'warm') return 'Warm';
+  if (wash.kind === 'cold') return 'Cold';
+  return 'Cool';
+}
+
 function estimateMinutes(stain) {
   const steps = (stain.steps || []).length;
   const text = (stain.treatment_summary || '').toLowerCase();
@@ -452,13 +781,15 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   loadAllPlaybooks();
   restorePrefsUI();
-  // On boot the Laundry view shows just the photo upload card. The question
+  // On boot the Stains view shows just the photo upload card. The cause prompt
   // appears after a photo is chosen; the result card after a match is made.
   if (state.stainScan) renderStainResult(state.stainScan);
   renderStainHistory();
-  // Picker fallback (always rendered, never auto-expanded)
+  // Legacy picker render calls — no-op now since the grid was moved to Hacks.
   renderStainGroupGrid();
   renderRecentStrip();
+  // Hacks tab category grid
+  renderHacksCategories();
 });
 
 // --- Tabs ---
@@ -471,13 +802,16 @@ function switchTab(name) {
   if (name === 'laundry') {
     loadAllPlaybooks();
     renderStainHistory();
-    renderStainGroupGrid();
-    renderRecentStrip();
-    // Photo upload card is always visible. The question only appears after
+    // Photo upload card is always visible. The cause prompt only appears after
     // a photo is chosen, and the result/typed cards only after the user picks.
     if (!state.stainScan && !state.stainTreatment) {
-      hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-group-stains']);
+      hideAll(['stain-cause-prompt', 'stain-name-input-card', 'stain-countdown-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
     }
+  }
+  if (name === 'hacks') {
+    loadAllPlaybooks();
+    renderHacksCategories();
+    hacksBackToCategories();
   }
 }
 
@@ -790,39 +1124,92 @@ Return JSON only. No prose, no markdown, no preamble.`;
 // Photo upload card is always visible. Question card appears once a photo
 // is chosen. "Yes" reveals the typed input. "Not sure" runs the AI directly.
 function showOriginQuestion() {
-  hideAll(['stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
-  const q = document.getElementById('stain-origin-question');
+  hideAll(['stain-name-input-card', 'stain-countdown-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  const q = document.getElementById('stain-cause-prompt');
   if (q) q.style.display = 'block';
 }
 
 function hideOriginQuestion() {
-  const q = document.getElementById('stain-origin-question');
+  const q = document.getElementById('stain-cause-prompt');
   if (q) q.style.display = 'none';
 }
 
+// Yes branch: reveal the name-input card and auto-scroll into view.
+function onKnowCauseYes() {
+  hideOriginQuestion();
+  hideAll(['stain-countdown-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
+  const card = document.getElementById('stain-name-input-card');
+  if (!card) return;
+  card.style.display = 'block';
+  if (PLAYBOOK || PLAYBOOK_V3) populateStainDatalist(); else loadAllPlaybooks();
+  const hints = document.getElementById('stain-typed-hints');
+  if (hints) hints.innerHTML = '';
+  setTimeout(() => {
+    const input = document.getElementById('stain-name-input');
+    if (input) input.focus();
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+}
+
+function onSubmitStainName() {
+  const input = document.getElementById('stain-name-input');
+  const val = (input?.value || '').trim();
+  if (!val) return toast('Please type the stain name');
+  document.getElementById('stain-name-input-card').style.display = 'none';
+  pickStainManually(val);  // SAME renderer as the AI flow — no separate code path
+}
+
+// Not sure branch: visible 5 → 4 → 3 → 2 → 1 → "Still analyzing…" countdown
+// while the AI runs.
+let _stainCountdownTimer = null;
+async function onKnowCauseNotSure() {
+  hideOriginQuestion();
+  hideAll(['stain-name-input-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
+  const card = document.getElementById('stain-countdown-card');
+  const label = document.getElementById('stain-countdown-text');
+  if (!card || !label) return;
+  card.style.display = 'block';
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  let count = 5;
+  label.textContent = `Analyzing… ${count}`;
+  if (_stainCountdownTimer) clearInterval(_stainCountdownTimer);
+  _stainCountdownTimer = setInterval(() => {
+    count--;
+    if (count >= 1) {
+      label.textContent = `Analyzing… ${count}`;
+    } else {
+      label.textContent = 'Still analyzing…';
+      clearInterval(_stainCountdownTimer);
+      _stainCountdownTimer = null;
+    }
+  }, 1000);
+
+  try {
+    await analyzeStain();
+  } catch (err) {
+    toast(err?.message || 'Identification failed');
+  } finally {
+    if (_stainCountdownTimer) { clearInterval(_stainCountdownTimer); _stainCountdownTimer = null; }
+    card.style.display = 'none';
+  }
+}
+
+// Back-compat (old buttons that still call setOriginMode go through the new path)
 function setOriginMode(mode, btnEl) {
-  // mode: 'known' (typed origin) | 'photo' (AI vision on the loaded photo)
-  // Flash the pressed button gold briefly before transitioning.
   if (btnEl) { btnEl.classList.add('pressed'); setTimeout(() => btnEl.classList.remove('pressed'), 250); }
   const run = () => {
-    hideOriginQuestion();
-    hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card', 'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks']);
-    if (mode === 'known') {
-      const typed = document.getElementById('stain-typed-card');
-      if (typed) typed.style.display = 'block';
-      if (PLAYBOOK || PLAYBOOK_V3) populateStainDatalist(); else loadAllPlaybooks();
-      setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
-      document.getElementById('stain-typed-hints').innerHTML = '';
-    } else if (mode === 'photo') {
-      analyzeStain();
-    }
+    if (mode === 'known') return onKnowCauseYes();
+    if (mode === 'photo') return onKnowCauseNotSure();
   };
   if (btnEl) setTimeout(run, 180); else run();
 }
 
 // --- Find by typed name (no AI call) ---
+// Kept for the inline autocomplete on the name-input card. The "Find treatment"
+// button now calls onSubmitStainName() (above), which delegates to pickStainManually.
 function findByTypedName() {
-  const input = document.getElementById('stain-typed-input');
+  const input = document.getElementById('stain-name-input') || document.getElementById('stain-typed-input');
   if (!input) return;
   const text = (input.value || '').trim();
   if (!text) return toast('Type what the stain is first');
@@ -907,10 +1294,16 @@ function onStainFileChosen(e) {
     };
     img.onerror = () => console.warn('decode failed, sending original');
     img.src = dataUrl;
-    // Hide the gallery/camera buttons now that we have a photo; the question takes over.
+    // Hide the gallery/camera buttons now that we have a photo; the cause prompt takes over.
     const uploadBtns = document.getElementById('stain-upload-buttons');
     if (uploadBtns) uploadBtns.style.display = 'none';
+    // Guarded — the legacy "Identify stain" button may not exist in the current UI.
+    const analyzeBtn = document.getElementById('stain-analyze-btn');
+    if (analyzeBtn) analyzeBtn.style.display = 'none';
     showOriginQuestion();
+    setTimeout(() => {
+      document.getElementById('stain-cause-prompt')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
   };
   reader.readAsDataURL(file);
   e.target.value = '';
@@ -947,7 +1340,7 @@ async function analyzeStain(optionalCategory = null) {
   await loadAllPlaybooks();
 
   // Show the loading card with the looping countdown
-  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
+  hideAll(['stain-cause-prompt', 'stain-name-input-card', 'stain-countdown-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   showStainLoading();
   const btn = document.getElementById('stain-analyze-btn');
   const label = document.getElementById('stain-analyze-label');
@@ -1103,10 +1496,12 @@ function renderStainResult(parsed) {
       const urgencyHTML = `<span class="urgency-badge ${urg}">⏱ ${urgLabel}${treatment.urgency_text ? ' · ' + escapeHtml(treatment.urgency_text) : ''}</span>`;
       document.getElementById('stain-summary').innerHTML = urgencyHTML;
       const catNice = (treatment.category || '').replace(/-/g, ' ');
-      const chemNice = (treatment.chemistry_class || '').replace(/_/g, ' ');
+      const water = deriveWaterTemp(treatment);
+      const diff = deriveDifficulty(treatment);
       document.getElementById('stain-tags').innerHTML = `
         ${catNice ? `<span class="chip" style="color:#FFB906;border-color:rgba(255,185,6,0.4)">${escapeHtml(catNice)}</span>` : ''}
-        ${chemNice ? `<span class="chip">${escapeHtml(chemNice)}</span>` : ''}
+        <span class="chip">💧 ${escapeHtml(water)}</span>
+        <span class="chip chip-difficulty difficulty-${diff.toLowerCase()}">${diff}</span>
       `;
       // Never-do warning is the V3 hero risk message
       const warningsEl = document.getElementById('stain-warnings');
@@ -1119,14 +1514,12 @@ function renderStainResult(parsed) {
         parsed.fabric_observation || treatment.treatment_summary || '';
       const color = catColor(treatment.category);
       const label = catLabel(treatment.category);
-      const wash = parseWashTemp(treatment.treatment_summary || (treatment.steps || []).join(' '));
-      const washChip = wash
-        ? `<span class="wash-chip ${wash.kind}">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>`
-        : '';
+      const water = deriveWaterTemp(treatment);
+      const diff = deriveDifficulty(treatment);
       document.getElementById('stain-tags').innerHTML = `
         <span class="chip" style="color:${color};border-color:${color}66">${escapeHtml(label)}</span>
-        ${washChip}
-        <span class="chip">⏱ ~${treatment.estimated_minutes} min total</span>
+        <span class="chip">💧 ${escapeHtml(water)}</span>
+        <span class="chip chip-difficulty difficulty-${diff.toLowerCase()}">${diff}</span>
       `;
       const warningsEl = document.getElementById('stain-warnings');
       const allWarnings = [
@@ -1142,73 +1535,38 @@ function renderStainResult(parsed) {
   }
 }
 
-function showCategoryPicker(reason, suggestedCats = null, candidateStains = null) {
+// Shape B (AI not sure). Per spec: cap candidates to 3, no "or pick a category"
+// fallback. The category grid lives only in the Hacks tab now.
+function showCategoryPicker(reason, _ignoredSuggestedCats, candidateStains) {
   hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
-  document.getElementById('stain-needs-category').style.display = 'block';
-  document.getElementById('stain-needs-reason').textContent =
-    reason || "I want to make sure I get this right. Pick the closest category and I'll narrow it down.";
+  const card = document.getElementById('stain-needs-category');
+  if (!card) return;
+  card.style.display = 'block';
 
-  // Candidates first (faster path)
-  const candEl = document.getElementById('stain-candidates');
-  if (candidateStains && candidateStains.length && PLAYBOOK) {
-    candEl.innerHTML = '<div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin:8px 0 6px">Looks like one of these?</div>' +
-      candidateStains.map(name => `
-        <div class="candidate-row" data-stain="${escapeHtml(name)}">
-          <span>${escapeHtml(name)}</span>
-          <span style="color:var(--muted);font-size:18px">›</span>
-        </div>
-      `).join('');
-    candEl.querySelectorAll('.candidate-row').forEach(el => {
-      el.addEventListener('click', () => pickCandidate(el.dataset.stain));
-    });
-  } else {
-    candEl.innerHTML = '';
+  const reasonEl = document.getElementById('stain-needs-reason');
+  if (reasonEl) reasonEl.textContent = reason || "I couldn't tell for sure — which looks closest?";
+
+  const list = document.getElementById('stain-candidates-list');
+  if (!list) return;
+  const candidates = (Array.isArray(candidateStains) ? candidateStains : []).slice(0, 3);
+  if (!candidates.length) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:13px">No candidates — try the photo path again or open the Hacks tab to browse.</p>`;
+    return;
   }
-
-  // Category grid
-  const grid = document.getElementById('stain-category-grid');
-  if (!PLAYBOOK) { grid.innerHTML = '<p>Loading categories…</p>'; return; }
-  const cats = suggestedCats && suggestedCats.length
-    ? PLAYBOOK.categories.filter(c => suggestedCats.includes(c.id))
-    : PLAYBOOK.categories;
-  grid.innerHTML = `
-    <div style="grid-column:1/-1;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:8px">Or pick a category</div>
-  ` + cats.map(c => {
-    const color = catColor(c.id);
-    const count = c.stain_count ? `${c.stain_count} stains` : '';
-    return `
-      <button class="cat-btn" style="border-color:${color}55" data-cat="${c.id}">
-        <span style="color:${color}">${escapeHtml(c.label)}</span>
-        <span class="cat-blurb">${escapeHtml(count)}</span>
-      </button>
-    `;
-  }).join('');
-  grid.querySelectorAll('.cat-btn').forEach(el => {
-    el.addEventListener('click', () => pickCategory(el.dataset.cat));
+  list.innerHTML = candidates.map(name => `
+    <button class="stain-row" data-stain="${escapeHtml(name)}" style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--card-strong);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);cursor:pointer;min-height:48px;text-align:left;width:100%;margin-bottom:8px">
+      <span>${escapeHtml(name)}</span>
+      <span style="color:var(--muted)">›</span>
+    </button>
+  `).join('');
+  list.querySelectorAll('button[data-stain]').forEach(btn => {
+    btn.addEventListener('click', () => pickStainManually(btn.dataset.stain));
   });
 }
 
-function pickCategory(catId) {
-  if (!PLAYBOOK) return;
-  const cat = PLAYBOOK.categories.find(c => c.id === catId);
-  if (!cat) return;
-  // Show all stains in that category as candidate list
-  const stainsInCat = PLAYBOOK.stains.filter(s => s.category === catId);
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
-  document.getElementById('stain-needs-category').style.display = 'block';
-  document.getElementById('stain-needs-reason').textContent = `Pick the closest match in ${cat.label}.`;
-  document.getElementById('stain-candidates').innerHTML =
-    stainsInCat.map(s => `
-      <div class="candidate-row" data-stain="${escapeHtml(s.name)}">
-        <span>${escapeHtml(s.name)}</span>
-        <span style="color:var(--muted);font-size:18px">›</span>
-      </div>
-    `).join('');
-  document.getElementById('stain-candidates').querySelectorAll('.candidate-row').forEach(el => {
-    el.addEventListener('click', () => pickCandidate(el.dataset.stain));
-  });
-  document.getElementById('stain-category-grid').innerHTML = '';
-}
+// pickCategory is no longer used (the category grid was removed from the
+// candidates view). Kept as a no-op so any stale onclick attribute doesn't error.
+function pickCategory() { /* removed in v10 — Hacks tab owns category browsing */ }
 
 function pickCandidate(stainName) {
   const treatment = getStainTreatment(stainName);
@@ -1375,7 +1733,7 @@ function renderStep() {
   back.textContent = i === 0 ? '◀ Back' : '◀ Back';
 
   // Next vs Done — finish
-  document.getElementById('step-next-btn').textContent = isLast ? 'Done — finish ▶' : 'Next ▶';
+  document.getElementById('step-next-btn').textContent = isLast ? 'Finish' : 'Done — next ▶';
 
   // Products section — try the if-then rule engine first (personalized to user
   // prefs and chemistry class). If RULES failed to load or no match is found,
@@ -1424,7 +1782,7 @@ function renderStep() {
   if (t.products && t.products.length) {
     html += `
       <div class="step-products" style="margin-top:10px">
-        <strong>${rec ? 'Also works (playbook)' : "You'll need"}</strong>
+        <strong>Alternative products</strong>
         <ul>${t.products.map(p => `<li>${escapeHtml(p.name)}${p.role ? ` <span style="color:var(--muted)">— ${escapeHtml(roleNice(p.role))}</span>` : ''}</li>`).join('')}</ul>
       </div>
     `;
@@ -1467,7 +1825,7 @@ function renderStepV3() {
 
   // Back: alive on step 1 — returns to surface picker (so user can change surface) or the result card if no V3 surfaces.
   document.getElementById('step-back-btn').disabled = false;
-  document.getElementById('step-next-btn').textContent = isLast ? 'Done — finish ▶' : 'Next ▶';
+  document.getElementById('step-next-btn').textContent = isLast ? 'Finish' : 'Done — next ▶';
 
   // Products section: TidyAI picks (V3 specific) + per-step generic "you'll need" + preference variants.
   const prodWrap = document.getElementById('step-products-wrap');
@@ -1483,26 +1841,19 @@ function renderStepV3() {
     `;
   }
 
-  // Generic "you'll need" from the per-surface products
-  if (Array.isArray(surfData.products) && surfData.products.length) {
-    html += `
-      <div class="step-products" style="margin-top:10px">
-        <strong>You'll need</strong>
-        <ul>${surfData.products.map(p => `<li>${escapeHtml(String(p))}</li>`).join('')}</ul>
-      </div>
-    `;
-  }
-
-  // TidyAI brand picks
+  // Combined "Alternative products" section — surface generic items + V3 brand picks.
   const tp = t.tidyai_products || {};
   const tpPrimary = Array.isArray(tp.primary) ? tp.primary : [];
   const tpDIY = Array.isArray(tp.diy_fallback) ? tp.diy_fallback : [];
-  if (tpPrimary.length || tpDIY.length) {
+  const hasSurface = Array.isArray(surfData.products) && surfData.products.length;
+  const hasPicks = tpPrimary.length || tpDIY.length;
+  if (hasSurface || hasPicks) {
     html += `
-      <div class="rec-card">
-        <h4>💎 TidyAI picks</h4>
-        ${tpPrimary.length ? `<ul>${tpPrimary.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
-        ${tpDIY.length ? `<div class="rec-meta" style="margin-top:6px"><strong style="color:var(--text)">DIY:</strong> ${tpDIY.map(escapeHtml).join('; ')}</div>` : ''}
+      <div class="step-products" style="margin-top:10px">
+        <strong>Alternative products</strong>
+        ${hasSurface ? `<ul>${surfData.products.map(p => `<li>${escapeHtml(String(p))}</li>`).join('')}</ul>` : ''}
+        ${tpPrimary.length ? `<ul style="margin-top:6px">${tpPrimary.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
+        ${tpDIY.length ? `<div style="margin-top:6px;font-size:12px;color:var(--muted)"><strong style="color:var(--text)">DIY:</strong> ${tpDIY.map(escapeHtml).join('; ')}</div>` : ''}
       </div>
     `;
   }
@@ -1707,7 +2058,7 @@ function renderStainHistory() { /* no-op: Recents section removed */ }
 // --- Happy-question flow (shown after Finish or after verify completes) ---
 function showHappyQuestion() {
   hideAll([
-    'stain-origin-question', 'stain-typed-card',
+    'stain-cause-prompt', 'stain-name-input-card', 'stain-countdown-card',
     'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
     'stain-surface-picker', 'stain-pro-tip-card',
     'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
@@ -1758,7 +2109,7 @@ function resetStainFlow() {
   state.surfaceFromAI = null;
   localStorage.removeItem(LS.lastStainScan);
   hideAll([
-    'stain-origin-question', 'stain-typed-card',
+    'stain-cause-prompt', 'stain-name-input-card', 'stain-countdown-card',
     'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
     'stain-surface-picker', 'stain-pro-tip-card', 'stain-group-stains',
     'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
