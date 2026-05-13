@@ -94,12 +94,12 @@ function loadAllPlaybooks() {
 const STAIN_GROUPS = [
   { id: 'drinks',    label: 'Drinks',          color: '#993556', examples: 'Wine, coffee, tea',
     stains: ['Red wine','Coffee','Tea','Berry juice'] },
-  { id: 'food',      label: 'Food & sauces',   color: '#BA7517', examples: 'Ketchup, curry, chocolate',
-    stains: ['Tomato sauce','Ketchup','BBQ sauce','Mustard','Soy sauce','Hot sauce / sriracha','Curry / turmeric','Red beet','Pesto','Honey / syrup','Jam / jelly','Chocolate'] },
-  { id: 'oils',      label: 'Oils & fats',     color: '#EF9F27', examples: 'Butter, olive oil, avocado',
-    stains: ['Butter / ghee','Olive oil','Cooking spray','Avocado / guacamole'] },
+  { id: 'food',      label: 'Food & sauces',   color: '#BA7517', examples: 'Ketchup, egg, chocolate',
+    stains: ['Tomato sauce','Ketchup','BBQ sauce','Mustard','Soy sauce','Hot sauce / sriracha','Curry / turmeric','Red beet','Pesto','Honey / syrup','Jam / jelly','Chocolate','Egg','Baby formula','Avocado / guacamole','Chewing gum'] },
+  { id: 'oils',      label: 'Oils & fats',     color: '#EF9F27', examples: 'Butter, olive oil, ghee',
+    stains: ['Butter / ghee','Olive oil','Cooking spray'] },
   { id: 'body',      label: 'Body fluids',     color: '#A32D2D', examples: 'Blood, sweat, vomit',
-    stains: ['Blood','Sweat','Vomit','Egg','Baby formula'] },
+    stains: ['Blood','Sweat','Vomit'] },
   { id: 'cosmetics', label: 'Personal care',   color: '#D4537E', examples: 'Lipstick, deodorant',
     stains: ['Lipstick','Foundation','Hair dye','Nail polish','Deodorant','Sunscreen','Toothpaste'] },
   { id: 'outdoors',  label: 'Outdoors',        color: '#639922', examples: 'Grass, mud, tree sap',
@@ -107,8 +107,55 @@ const STAIN_GROUPS = [
   { id: 'kids',      label: 'Kids & pets',     color: '#7F77DD', examples: 'Crayon, marker, pet',
     stains: ['Crayon','Play-Doh / slime','Permanent marker','Ballpoint ink','Pet urine'] },
   { id: 'house',     label: 'Household & DIY', color: '#5F5E5A', examples: 'Rust, wax, paint, glue',
-    stains: ['Rust','Mold / mildew','Candle wax','Charcoal / ash','Chewing gum','Shoe polish','Latex paint','Oil paint','Super glue'] },
+    stains: ['Rust','Mold / mildew','Candle wax','Charcoal / ash','Shoe polish','Latex paint','Oil paint','Super glue'] },
 ];
+
+// Known brand prefixes used to infer brand from static product names
+// (HACK_RECIPES entries have only {name, note}, not a brand field).
+const KNOWN_BRANDS = [
+  'White Hack','Persil','OxiClean','Tide','Carbona','Dawn','Lestoil','Krud Kutter',
+  'Wine Away','The Laundress','Whink','Iron Out','CLR','Rocco & Roxie',"Nature's Miracle",
+  'Goo Gone','Earth Breeze','Tru Earth','Kind Laundry','Folex','HEX Performance',
+  'WIN','Affresh','OdorKlenz','All','Seventh Generation','Method',"Mrs. Meyer's",
+  'ECOS','Branch Basics','Babyganics','Dreft','Cheer','Biz','Anti-Icky-Poo',
+  'Spartan','Amodex','Ivory','Fels-Naptha','Zout','Vanish','Sard','The Pink Stuff',
+  'Bar Keepers Friend','Arm & Hammer','20 Mule Team','Calgon','Rockin’ Green',
+  "Charlie's Soap","Skout's Honor","Mister Max",
+];
+function brandOf(name) {
+  if (!name) return '';
+  for (const b of KNOWN_BRANDS) {
+    if (name.toLowerCase().startsWith(b.toLowerCase())) return b;
+  }
+  // Fallback: first significant token
+  return name.split(/[\s·]+/)[0];
+}
+
+// Product IDs / names that should never appear in any "Suggested products"
+// list because they aren't suitable for fabric use.
+const HIDE_PRODUCT_IDS = new Set(['pink-stuff-paste']);
+const HIDE_PRODUCT_NAMES = ['Pink Stuff Miracle Cleaning Paste', 'Miracle Cleaning Paste'];
+function isHiddenProduct(p) {
+  if (!p) return false;
+  if (p.id && HIDE_PRODUCT_IDS.has(p.id)) return true;
+  const n = (p.name || '').toLowerCase();
+  return HIDE_PRODUCT_NAMES.some(h => n.includes(h.toLowerCase()));
+}
+
+// Keep only one product per brand in the order given.
+function dedupeByBrand(products) {
+  const seen = new Set();
+  const out = [];
+  for (const p of products || []) {
+    if (isHiddenProduct(p)) continue;
+    const brand = ((p.brand || brandOf(p.name)) || '').toLowerCase();
+    if (!brand) continue;
+    if (seen.has(brand)) continue;
+    seen.add(brand);
+    out.push(p);
+  }
+  return out;
+}
 
 // =====================================================================
 // HACK_RECIPES — chemistry_class → { ingredients, temperature, products }
@@ -121,7 +168,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Persil ProClean Original Liquid', note: '5 enzymes incl. protease' },
       { name: 'OxiClean MaxForce Spray', note: 'Enzyme + surfactant pre-treater' },
-      { name: 'White Hack laundry sheets', note: 'Plant-based protease + fragrance-free' },
+      { name: 'White Hack Laundry Detergent Sheets', note: 'Enzyme-powered sheet — targets sweat, grease, odors. Plastic-free, HE-compatible.' },
       { name: 'OxiClean Versatile Powder', note: 'Oxygen booster for the wash' },
       { name: 'Carbona Stain Devils #4', note: 'Blood, dairy, ice cream, glue' },
       { name: 'Tide Free & Gentle', note: 'Sensitive-skin enzyme detergent' },
@@ -145,7 +192,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Dawn Ultra Blue dish soap', note: 'Universal grease cutter (~$3)' },
       { name: 'Persil ProClean Powder', note: 'Has lipase enzyme' },
-      { name: 'White Hack laundry sheets', note: 'Plant-based lipase + fragrance-free' },
+      { name: 'White Hack Laundry Detergent Sheets', note: 'Enzyme-powered sheet — targets sweat, grease, odors. Plastic-free, HE-compatible.' },
       { name: 'Tide Original Powder', note: 'Lipase-rich workhorse' },
       { name: 'Lestoil', note: 'Heavy/industrial grease' },
       { name: 'Krud Kutter Original Cleaner/Degreaser', note: 'Mechanic / kitchen grease' },
@@ -159,7 +206,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'OxiClean Versatile Powder', note: 'Overnight soak for set stains' },
       { name: 'Wine Away', note: 'Purpose-built for wine (~$8)' },
-      { name: 'White Hack laundry sheets', note: 'Plant-based surfactants + fragrance-free' },
+      { name: 'White Hack Laundry Detergent Sheets', note: 'Enzyme-powered sheet — targets sweat, grease, odors. Plastic-free, HE-compatible.' },
       { name: 'Carbona Stain Devils #8', note: 'Coffee/tea/wine/juice specialist' },
       { name: 'The Laundress Wine & Coffee Stain Bar', note: 'Gentle for silk (~$16)' },
       { name: 'Persil ProClean liquid', note: 'Multi-enzyme detergent' },
@@ -207,7 +254,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Whink Color-Safe Iron Out', note: 'Dissolves the aluminum component' },
       { name: 'OxiClean Versatile Powder', note: 'Overnight hot soak' },
-      { name: 'White Hack laundry sheets', note: 'Plant-based protease + lipase' },
+      { name: 'White Hack Laundry Detergent Sheets', note: 'Enzyme-powered sheet — targets sweat, grease, odors. Plastic-free, HE-compatible.' },
       { name: 'Dawn Ultra Blue', note: 'Pre-treat for the sebum layer' },
       { name: 'Persil ProClean Powder', note: 'Lipase-rich hot wash' },
       { name: 'Carbona Stain Devils #1', note: 'Cosmetics + deodorant specialist' },
@@ -266,7 +313,7 @@ const HACK_DEFAULT = {
   products: [
     { name: 'Dawn Ultra Blue dish soap', note: 'Universal pre-treater' },
     { name: 'OxiClean Versatile Powder', note: 'Oxygen booster' },
-    { name: 'White Hack laundry sheets', note: 'Plant-based, fragrance-free everyday detergent' },
+    { name: 'White Hack Laundry Detergent Sheets', note: 'Enzyme-powered sheet — targets sweat, grease, odors. Plastic-free, HE-compatible.' },
     { name: 'Persil ProClean', note: 'Multi-enzyme detergent' },
     { name: 'Tide Free & Gentle', note: 'Sensitive-skin alternative' },
     { name: 'White vinegar', note: 'For mineral or musty issues' },
@@ -493,7 +540,8 @@ function onHacksFilterChip(filterId) {
   } else {
     filtered = PRODUCTS_DB.products.filter(p => (p.tags || []).includes(filterId));
   }
-  filtered = filtered.slice(0, 30);
+  // Hide Pink Stuff + one product per brand
+  filtered = dedupeByBrand(filtered).slice(0, 30);
   if (!filtered.length) {
     wrap.innerHTML = `<p style="color:var(--muted)">No products with that tag yet.</p>`;
     return;
@@ -627,7 +675,10 @@ async function openHacksDetail(stainName) {
   // Hack is in the picks (ingredient-fit with this chemistry class), promote
   // it to position 3.
   const rawPicks = pickProductsForStain(stain, state.prefs) || [];
-  const picks = promoteWhiteHack(rawPicks, stain, state.prefs);
+  // One product per brand + hide Pink Stuff (not fabric-safe). White Hack
+  // promotion runs AFTER dedupe so it still lands at position 3.
+  const deduped = dedupeByBrand(rawPicks);
+  const picks = promoteWhiteHack(deduped, stain, state.prefs);
   const productsEl = document.getElementById('hacks-detail-products');
   if (picks.length) {
     productsEl.innerHTML = `
@@ -647,10 +698,11 @@ async function openHacksDetail(stainName) {
       `).join('')}
     `;
   } else {
-    // Fallback: HACK_RECIPES static list
+    // Fallback: HACK_RECIPES static list. Dedupe by brand + hide Pink Stuff.
+    const fallback = dedupeByBrand(recipe.products);
     productsEl.innerHTML = `
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products</div>
-      ${recipe.products.map(p => `
+      ${fallback.map(p => `
         <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">
           <div style="font-weight:600">${escapeHtml(p.name)}</div>
           <div style="color:var(--muted);font-size:12px;text-align:right;max-width:55%">${escapeHtml(p.note || '')}</div>

@@ -749,7 +749,7 @@
     {
       "id": "white-hack-sheets",
       "brand": "White Hack",
-      "name": "Laundry Detergent Sheets (Refreshing Mist + Fragrance Free SKUs)",
+      "name": "Laundry Detergent Sheets",
       "category": "detergent",
       "format": "sheet",
       "active_ingredients": [
@@ -776,13 +776,13 @@
         "athletic",
         "cult_favorite"
       ],
-      "price": "$15–22 / 60 loads",
-      "description": "Sweden-made enzyme-powered sheets. Brand markets protease + lipase activity — strong on sweat, body odor, grease, and activewear funk. Two SKUs: Refreshing Mist (mild fragrance) and Fragrance Free (for sensitive skin, baby clothes, chemical-sensitive households). Plastic-free, dissolves in cold or hot water."
+      "price": "$15–22",
+      "description": "The enzyme-powered sheet that targets sweat, grease, odors, and mystery stains in one wash. Plastic-free, HE-compatible, and tough on buildup some other detergents leave behind."
     },
     {
       "id": "white-hack-fragrance-free",
       "brand": "White Hack",
-      "name": "Fragrance Free Laundry Detergent Sheets",
+      "name": "Laundry Detergent Sheets",
       "category": "detergent",
       "format": "sheet",
       "active_ingredients": [
@@ -810,8 +810,8 @@
         "he_compatible",
         "athletic"
       ],
-      "price": "$15–22 / 60 loads",
-      "description": "Same enzyme-powered formula as the standard White Hack sheets but with zero fragrance, dyes, or optical brighteners. Best pick when fragrance-free is required — eczema, baby clothes, asthma-sensitive households."
+      "price": "$15–22",
+      "description": "The enzyme-powered sheet that targets sweat, grease, odors, and mystery stains in one wash. Plastic-free, HE-compatible, and tough on buildup some other detergents leave behind."
     },
     {
       "id": "earth-breeze-sheets",
@@ -837,7 +837,7 @@
         "plant_based",
         "he_compatible"
       ],
-      "price": "$15–25 / 60 loads",
+      "price": "$15–25",
       "description": "Cheapest per-load sheet detergent (~$0.20–0.33). B Corp; donates 10 washes per pack."
     },
     {
@@ -864,7 +864,7 @@
         "sheet_format",
         "he_compatible"
       ],
-      "price": "$20–28 / 32 loads",
+      "price": "$20–28",
       "description": "Pioneer of the sheet format. Paraben-free, phosphate-free, hypoallergenic."
     },
     {
@@ -894,7 +894,7 @@
         "sheet_format",
         "he_compatible"
       ],
-      "price": "$18–28 / 60 loads",
+      "price": "$18–28",
       "description": "EWG Verified, Leaping Bunny, USDA BioPreferred, Mom's Choice. Stain-fighting enzymes."
     },
     {
