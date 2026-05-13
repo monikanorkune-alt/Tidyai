@@ -256,6 +256,73 @@ function getHackRecipe(stain) {
   return HACK_RECIPES[cls] || HACK_DEFAULT;
 }
 
+// Extract a "For Whites" callout from a stain's prose if one exists.
+// V3 stains store these inside alt_method / science / pro_tip; legacy stains
+// store them inside treatment_summary. Returns the matching sentence or null.
+function getForWhitesNote(stain) {
+  if (!stain) return null;
+  const sources = [
+    stain.pro_tip, stain.alt_method, stain.expectation,
+    stain.science, stain.treatment_summary, stain.never_do,
+  ];
+  for (const src of sources) {
+    if (!src || typeof src !== 'string') continue;
+    // Split on sentence boundaries (period/exclamation/question + space + capital)
+    const sentences = src.split(/(?<=[.!?])\s+(?=[A-Z])/);
+    for (const sent of sentences) {
+      const lower = sent.toLowerCase();
+      if (/\bwhites only\b|\bon whites\b|\bfor whites\b|\bfor white (cotton|fabric|linen|t-shirt|shirt)/.test(lower)) {
+        return sent.trim();
+      }
+    }
+  }
+  return null;
+}
+
+// Place White Hack in position 3 whenever its active ingredients align with
+// what this stain needs. Implementation: look up the best-fit White Hack SKU
+// from PRODUCTS_DB (one whose best_for includes the stain's chemistry_class)
+// and inject it at index 2 — moving it from its current spot if it's already
+// there, or replacing the picked product at index 2 if not.
+//
+// Respects pref-driven hard-exclusions: if the user has sensitive_skin /
+// fragrance_free / eco_only and the WH SKU doesn't carry the required tag,
+// we don't inject it.
+function promoteWhiteHack(picks, stain, prefs) {
+  if (!Array.isArray(picks)) return picks;
+  if (!PRODUCTS_DB) return picks;
+  const chem = (stain && stain.chemistry_class) || 'general_purpose';
+  const userPrefs = prefs || (state && state.prefs) || {};
+
+  // All White Hack SKUs whose chemistry-fit matches this stain.
+  const candidates = PRODUCTS_DB.products.filter(p =>
+    (p.brand || '').toLowerCase() === 'white hack' &&
+    (p.best_for || []).includes(chem)
+  );
+  if (!candidates.length) return picks;
+
+  // Respect hard-exclusion prefs — pick the first WH SKU that survives.
+  const fragfree = userPrefs.sensitive_skin || userPrefs.baby_household || userPrefs.fragrance_free;
+  const passesPrefs = p => {
+    const tags = p.tags || [];
+    if (fragfree && !tags.includes('fragrance_free') && !tags.includes('sensitive_skin')) return false;
+    if (userPrefs.eco_only && !tags.includes('eco') && !tags.includes('plant_based')) return false;
+    return true;
+  };
+  const wh = candidates.find(passesPrefs);
+  if (!wh) return picks;
+
+  // Remove any existing WH entries (avoid duplicates), then inject at index 2.
+  const cleaned = picks.filter(p => (p.brand || '').toLowerCase() !== 'white hack');
+  // If fewer than 3 items exist, append; otherwise insert at index 2.
+  if (cleaned.length < 2) {
+    cleaned.push(wh);
+  } else {
+    cleaned.splice(2, 0, wh);
+  }
+  return cleaned.slice(0, 10);
+}
+
 // =====================================================================
 // pickProductsForStain — DB-driven picker for the Hacks tab's
 // "Suggested products" block. Scores and ranks the 107-product catalog
@@ -471,29 +538,41 @@ async function openHacksDetail(stainName) {
 
   document.getElementById('hacks-detail-title').textContent = stain.name;
 
+  // Block 1 — Hack the stain. If the stain's prose mentions a whites-specific
+  // treatment, surface it in a callout row ABOVE the science explanation.
   const aboutText = stain.science
     || stain.treatment_summary
     || `This is a ${(stain.chemistry_class || 'general').replace(/_/g, ' ')} stain. Treat per the active ingredients and products below.`;
+  const whitesNote = getForWhitesNote(stain);
   document.getElementById('hacks-detail-about').innerHTML = `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">About this stain</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Hack the stain</div>
+    ${whitesNote ? `
+      <div style="padding:10px 12px;background:rgba(244,244,244,0.06);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;font-size:13px;line-height:1.5">
+        <strong style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:#FFB906;display:block;margin-bottom:4px">For Whites</strong>
+        ${escapeHtml(whitesNote)}
+      </div>
+    ` : ''}
     <p style="margin:0;line-height:1.5">${escapeHtml(aboutText)}</p>
   `;
 
+  // Block 2 — Active ingredients needed (renamed; same ingredients list + water box)
   document.getElementById('hacks-detail-ingredients').innerHTML = `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Active ingredients + temperature</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Active ingredients needed</div>
     <ul style="margin:0 0 10px;padding-left:18px;line-height:1.6">${recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>
     <div style="padding:10px;background:rgba(165,222,244,0.10);border:1px solid rgba(165,222,244,0.30);border-radius:10px;font-size:13px;line-height:1.5">
       <strong style="color:#A5DEF4">🌡 Water:</strong> ${escapeHtml(recipe.temperature)}
     </div>
   `;
 
-  // Block 3 — smart picker from products_database.json (107 verified products).
-  // Falls back silently to the static HACK_RECIPES list if the DB didn't load.
-  const picks = pickProductsForStain(stain, state.prefs) || [];
+  // Block 3 — Suggested products. Drop the count from the header. If White
+  // Hack is in the picks (ingredient-fit with this chemistry class), promote
+  // it to position 3.
+  const rawPicks = pickProductsForStain(stain, state.prefs) || [];
+  const picks = promoteWhiteHack(rawPicks, stain, state.prefs);
   const productsEl = document.getElementById('hacks-detail-products');
   if (picks.length) {
     productsEl.innerHTML = `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${picks.length})</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products</div>
       ${picks.map(p => `
         <div style="padding:10px 0;border-bottom:0.5px solid var(--border)">
           <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
@@ -511,7 +590,7 @@ async function openHacksDetail(stainName) {
   } else {
     // Fallback: HACK_RECIPES static list
     productsEl.innerHTML = `
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${recipe.products.length})</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products</div>
       ${recipe.products.map(p => `
         <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">
           <div style="font-weight:600">${escapeHtml(p.name)}</div>
