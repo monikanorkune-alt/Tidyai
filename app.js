@@ -251,8 +251,41 @@ const HACK_DEFAULT = {
   ],
 };
 
+// Maps V3's combo / specialty chemistry classes to the closest primary class
+// that HACK_RECIPES and the products database actually cover. Without these
+// aliases, half the V3 stains land in HACK_DEFAULT because HACK_RECIPES has
+// no entry for "tannin_and_oil_combo", "particulate", "wax_and_dye_combo", etc.
+const CHEMISTRY_CLASS_ALIAS = {
+  tannin_and_oil_combo:   'tannin_based',
+  tannin_and_sugar_combo: 'tannin_based',
+  wax_and_dye_combo:      'wax_based',
+  particulate:            'food_grease_or_body_oil',
+  particulate_with_tannin: 'tannin_based',
+  particulate_with_oil:    'food_grease_or_body_oil',
+  water_soluble_polymer:   'dye_based',
+  polymer_cured:           'food_grease_or_body_oil',
+  oil_polymer:             'food_grease_or_body_oil',
+};
+function canonChem(c) { return (c && CHEMISTRY_CLASS_ALIAS[c]) || c; }
+
+// Picks a canonical chemistry class for any stain, regardless of source:
+//   1. stain.chemistry_class (V3) — canonicalized via alias map
+//   2. inferred from name + treatment_summary keywords (legacy fallback)
+//   3. 'general_purpose' (final fallback)
+function resolveChemistryClass(stain) {
+  if (!stain) return 'general_purpose';
+  const direct = canonChem(stain.chemistry_class);
+  if (direct) return direct;
+  // Legacy stains: scan name + treatment_summary against RULES.stain_chemistry keywords
+  if (typeof stainChemistryClass === 'function') {
+    const inferred = stainChemistryClass(stain);
+    if (inferred) return canonChem(inferred);
+  }
+  return 'general_purpose';
+}
+
 function getHackRecipe(stain) {
-  const cls = stain?.chemistry_class;
+  const cls = resolveChemistryClass(stain);
   return HACK_RECIPES[cls] || HACK_DEFAULT;
 }
 
@@ -291,7 +324,7 @@ function getForWhitesNote(stain) {
 function promoteWhiteHack(picks, stain, prefs) {
   if (!Array.isArray(picks)) return picks;
   if (!PRODUCTS_DB) return picks;
-  const chem = (stain && stain.chemistry_class) || 'general_purpose';
+  const chem = resolveChemistryClass(stain);
   const userPrefs = prefs || (state && state.prefs) || {};
 
   // All White Hack SKUs whose chemistry-fit matches this stain.
@@ -339,7 +372,8 @@ function promoteWhiteHack(picks, stain, prefs) {
 function pickProductsForStain(stain, userPrefs) {
   if (!PRODUCTS_DB || !Array.isArray(PRODUCTS_DB.products)) return null;
   const prefs = userPrefs || state.prefs || {};
-  const chemClass = (stain && stain.chemistry_class) || 'general_purpose';
+  // resolveChemistryClass handles missing chem (legacy) + combo aliasing (V3).
+  const chemClass = resolveChemistryClass(stain);
 
   const isExcluded = (p) => {
     const tags = p.tags || [];
@@ -534,6 +568,9 @@ async function openHacksDetail(stainName) {
     document.getElementById('hacks-search-result').innerHTML = `<div class="stain-result"><p>I don't have "${escapeHtml(stainName)}" in the playbook yet. Try a more common name (e.g. "wine" instead of "merlot"), or open the Stains tab to identify by photo.</p></div>`;
     return;
   }
+  // Stamp the canonical chemistry class so legacy stains (no chem) and V3 combo
+  // classes both map to a HACK_RECIPES entry the picker / WH promoter can use.
+  stain.chemistry_class = resolveChemistryClass(stain);
   const recipe = getHackRecipe(stain);
 
   document.getElementById('hacks-detail-title').textContent = stain.name;
