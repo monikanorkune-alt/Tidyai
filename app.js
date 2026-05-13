@@ -1945,6 +1945,41 @@ function renderStainResult(parsed) {
       if (isV3 && treatment.pro_tip)    blocks.push(`<div class="info-block pro-tip"><h4>💡 Pro tip</h4><p>${escapeHtml(treatment.pro_tip)}</p></div>`);
       if (isV3 && treatment.expectation) blocks.push(`<div class="info-block expectation"><h4>📊 What to expect</h4><p>${escapeHtml(treatment.expectation)}</p></div>`);
       if (isV3 && treatment.alt_method)  blocks.push(`<div class="info-block alt-method"><h4>🔁 Alt method</h4><p>${escapeHtml(treatment.alt_method)}</p></div>`);
+
+      // Alternative products — consolidated single list (no per-step dupe).
+      // Prefer V3 brand picks; fall back to surface generic items or legacy products.
+      let altList = [];
+      if (isV3) {
+        const tp = treatment.tidyai_products || {};
+        if (Array.isArray(tp.primary)) altList = altList.concat(tp.primary);
+        // Pull a surface's generic items if a surface is already selected
+        const surfKey = state.stainSurface || (parsed.surface_observed && parsed.surface_observed !== 'unknown' ? parsed.surface_observed : null);
+        if (surfKey && treatment.surfaces?.[surfKey]?.products) {
+          altList = altList.concat(treatment.surfaces[surfKey].products);
+        }
+      } else if (Array.isArray(treatment.products)) {
+        altList = treatment.products.map(p => p?.name || p);
+      }
+      // Dedupe by lowercased name (kept simple — no need for brand inference here)
+      const seenAlt = new Set();
+      const altClean = [];
+      for (const item of altList) {
+        const s = String(item || '').trim();
+        const key = s.toLowerCase();
+        if (!s || seenAlt.has(key)) continue;
+        seenAlt.add(key);
+        altClean.push(s);
+      }
+      if (altClean.length) {
+        blocks.push(`
+          <div class="info-block">
+            <h4>Alternative products</h4>
+            <ul style="margin:6px 0 0;padding-left:18px;line-height:1.6">
+              ${altClean.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+            </ul>
+          </div>
+        `);
+      }
       rich.innerHTML = blocks.join('');
     }
   } else if (parsed && parsed.needs_category) {
@@ -2209,28 +2244,6 @@ function renderStep() {
 
 // V3 step renderer — surface-aware, with stars, time, common-mistakes (step 1),
 // TidyAI picks, and inline preference variant callouts.
-// Match per-step text against the stain's product list. A product is
-// "relevant" to a step if any word from its name (≥4 chars, ignoring stop
-// words) appears in the step text. Returns the filtered subset; empty array
-// means hide the section.
-function relevantProductsForStep(stepText, products) {
-  if (!stepText || !Array.isArray(products) || !products.length) return [];
-  const t = stepText.toLowerCase();
-  // Also accept these generic ingredient names as "matches" against any
-  // product that includes them — e.g., a step that says "dish soap" surfaces
-  // products with "dish soap" in the name even if the brand isn't named.
-  const STOP = new Set(['the','for','with','from','this','that','have','only','spray','powder','liquid','bar','laundry','detergent','sheet','sheets']);
-  return products.filter(p => {
-    const name = (typeof p === 'string' ? p : (p.name || '')).toLowerCase();
-    const tokens = name
-      .split(/[\s,()\/+&·]+/)
-      .map(w => w.replace(/[^a-z0-9]/g, ''))
-      .filter(w => w.length >= 4 && !STOP.has(w));
-    if (!tokens.length) return false;
-    return tokens.some(w => t.includes(w));
-  });
-}
-
 function renderStepV3() {
   const t = state.stainTreatment;
   const surface = state.stainSurface || resolveV3Surface(t, state.surfaceFromAI);
@@ -2259,28 +2272,10 @@ function renderStepV3() {
   document.getElementById('step-back-btn').disabled = false;
   document.getElementById('step-next-btn').textContent = isLast ? 'Finish' : 'Done — next ▶';
 
-  // No common mistakes here (moved to Most likely card). No TidyAI flat picks.
-  // Show only "Alternative products" that are actually relevant to THIS step.
+  // Alternative products are shown ONCE on the Most likely card (no per-step
+  // duplication). Step screens stay lean: action + wash temp + variants.
   const prodWrap = document.getElementById('step-products-wrap');
   let html = '';
-
-  const tp = t.tidyai_products || {};
-  const tpPrimary = Array.isArray(tp.primary) ? tp.primary : [];
-  const surfProducts = Array.isArray(surfData.products) ? surfData.products : [];
-  // Combine surface-generic + V3 brand picks, then filter by relevance
-  const combined = [
-    ...surfProducts.map(s => ({ name: typeof s === 'string' ? s : s.name })),
-    ...tpPrimary.map(s => ({ name: typeof s === 'string' ? s : s.name })),
-  ];
-  const relevant = relevantProductsForStep(actionText, combined);
-  if (relevant.length) {
-    html += `
-      <div class="step-relevant">
-        <h5>Alternative products</h5>
-        <ul>${relevant.map(p => `<li>${escapeHtml(p.name)}</li>`).join('')}</ul>
-      </div>
-    `;
-  }
 
   // Preference variant callouts — still surfaced per step where the data exists.
   const variants = t.if_then_variants || {};
