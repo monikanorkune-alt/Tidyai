@@ -272,6 +272,78 @@
     }
     .quickplan { animation: pulse-glow 3.5s ease-in-out infinite; }
 
+    /* V3 elements: surface picker, urgency badge, pro tip card, variant callouts */
+    .surface-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;
+    }
+    .surface-btn {
+      padding: 14px 10px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--card-strong); color: var(--text);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .surface-btn.recommended {
+      border-color: rgba(255,185,6,0.55); background: rgba(255,185,6,0.10);
+    }
+    .surface-btn .surface-emoji { font-size: 18px; }
+    .surface-btn .surface-tag {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      color: #121212; background: #FFB906; padding: 2px 6px; border-radius: 999px;
+    }
+    .urgency-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
+      margin-bottom: 8px;
+    }
+    .urgency-badge.immediate { background: rgba(255,35,127,0.12); color: var(--danger); border: 1px solid rgba(255,35,127,0.40); }
+    .urgency-badge.hours { background: rgba(255,185,6,0.12); color: #FFB906; border: 1px solid rgba(255,185,6,0.40); }
+    .urgency-badge.flexible { background: rgba(255,135,185,0.12); color: #FFB7D5; border: 1px solid rgba(255,135,185,0.40); }
+    .never-do {
+      background: rgba(255,35,127,0.10); border: 1px solid rgba(255,35,127,0.30);
+      color: #FFB7D5; padding: 10px 12px; border-radius: 12px; font-size: 13px;
+      margin: 10px 0 4px; line-height: 1.45;
+    }
+    .never-do strong { color: var(--danger); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    .difficulty-stars { letter-spacing: 1px; color: #FFB906; }
+    .difficulty-stars .dim { color: rgba(244,244,244,0.18); }
+    .common-mistakes {
+      background: rgba(255,35,127,0.08); border-left: 3px solid rgba(255,35,127,0.45);
+      padding: 10px 12px; border-radius: 8px; margin-top: 10px; font-size: 12px;
+    }
+    .common-mistakes h5 {
+      margin: 0 0 6px; font-size: 11px; color: var(--danger);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .common-mistakes ul { margin: 0; padding-left: 18px; }
+    .common-mistakes li { color: var(--text); margin-bottom: 3px; line-height: 1.4; }
+    .variant-callout {
+      padding: 10px 12px; border-radius: 10px; font-size: 13px;
+      margin-top: 8px; line-height: 1.45;
+    }
+    .variant-callout strong {
+      display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 4px;
+    }
+    .variant-callout.sensitive_skin { background: rgba(255,185,6,0.10); border: 1px solid rgba(255,185,6,0.30); color: #FFD89A; }
+    .variant-callout.sensitive_skin strong { color: #FFB906; }
+    .variant-callout.white_hack { background: rgba(165,222,244,0.10); border: 1px solid rgba(165,222,244,0.30); color: #A5DEF4; }
+    .variant-callout.white_hack strong { color: #A5DEF4; }
+    .variant-callout.eco_only { background: rgba(255,135,185,0.10); border: 1px solid rgba(255,135,185,0.30); color: #FFB7D5; }
+    .variant-callout.eco_only strong { color: #FF87B9; }
+    .variant-callout.hard_water,
+    .variant-callout.baby_household,
+    .variant-callout.has_pet { background: rgba(244,244,244,0.06); border: 1px solid var(--border); color: var(--muted); }
+    .pro-tip-block { margin-top: 14px; }
+    .pro-tip-block h4 {
+      margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #FFB906;
+    }
+    .pro-tip-block p { color: var(--text); font-size: 14px; line-height: 1.5; margin: 0; }
+    .pro-tip-block.expectation h4 { color: #FFB7D5; }
+    .pro-tip-block.alt-method h4 { color: #A5DEF4; }
+    .pro-tip-block.science h4 { color: var(--muted); }
+
     /* Laundry Hacks */
     .stain-hero {
       background: linear-gradient(135deg, rgba(255,135,185,0.20), rgba(255,250,240,0.06));
@@ -467,97 +539,6 @@
     </header>
 
     <main>
-      <!-- SCAN VIEW -->
-      <section id="view-scan" class="view">
-        <div class="card">
-          <span class="hero-3min">⚡ 3-Minute Reset</span>
-          <h1 style="margin-top:4px">Make this room look better in 3 minutes</h1>
-          <p>Snap a photo. TidyAI names what it actually sees and gives you a tiny, doable plan — no full-house deep-clean guilt.</p>
-
-          <div class="upload-zone" id="upload-zone">
-            <img id="preview-img" alt="Room preview" style="display:none" />
-            <div class="placeholder" id="upload-placeholder">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M3 7h3l2-3h8l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-              <div style="margin-top:8px;font-size:14px">Tap below to add a photo</div>
-            </div>
-          </div>
-
-          <input type="file" id="file-input" accept="image/*" />
-          <input type="file" id="camera-input" accept="image/*" capture="environment" />
-
-          <div class="row">
-            <button class="btn secondary" onclick="document.getElementById('file-input').click()">
-              From gallery
-            </button>
-            <button class="btn secondary" onclick="document.getElementById('camera-input').click()">
-              Take photo
-            </button>
-          </div>
-          <button class="btn" id="analyze-btn" onclick="analyzePhoto()" style="margin-top:10px">
-            <span id="analyze-label">Analyze</span>
-          </button>
-        </div>
-
-        <div id="scan-results" style="display:none">
-          <div class="card" style="margin-top:14px">
-            <div class="score-wrap">
-              <div class="score-ring" id="score-ring" style="--p:0"><span id="score-num">--</span></div>
-              <div class="score-meta">
-                <h2 id="score-label">Cleanliness</h2>
-                <p id="score-summary">—</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="quickplan" id="quickplan-card" style="display:none">
-            <h2>⚡ 3-Minute Quick Win <span class="timer" id="quickplan-time">0:00</span></h2>
-            <p style="margin-bottom:10px">Do these in order — biggest visible impact first.</p>
-            <ul class="task-list" id="quickplan-list"></ul>
-            <button class="btn small secondary" onclick="addAllTasks()">Save all to my list</button>
-          </div>
-
-          <div class="card">
-            <h2>All suggested tasks</h2>
-            <ul class="task-list" id="suggested-list"></ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- TASKS VIEW -->
-      <section id="view-tasks" class="view">
-        <h1>Your tasks</h1>
-        <div class="pill-tabs" id="task-filter"></div>
-        <ul class="task-list" id="tasks-list"></ul>
-        <div class="empty" id="tasks-empty" style="display:none">
-          No tasks yet. Scan a room to get started.
-        </div>
-        <button class="btn secondary" id="reassign-btn" style="margin-top:8px;display:none" onclick="reassignAll()">
-          Reassign tasks fairly
-        </button>
-      </section>
-
-      <!-- FAMILY VIEW -->
-      <section id="view-family" class="view">
-        <h1>Family</h1>
-        <p>Add the people who'll share the work. Tasks get split fairly across everyone you add.</p>
-
-        <div class="card">
-          <h2>Add member</h2>
-          <div class="add-member">
-            <input type="text" id="new-member" placeholder="Name (e.g. Sam)" maxlength="20" />
-            <button class="btn small" onclick="addMember()">Add</button>
-          </div>
-        </div>
-
-        <div style="margin-top:14px">
-          <div id="members-list"></div>
-          <div class="empty" id="members-empty">No one added yet.</div>
-        </div>
-      </section>
-
       <!-- LAUNDRY VIEW -->
       <section id="view-laundry" class="view active">
         <!-- STEP 1: photo upload (always shown first) -->
@@ -637,6 +618,15 @@
           <button class="btn ghost" onclick="resetStainFlow()" style="margin-top:6px">Start over</button>
         </div>
 
+        <!-- Surface picker (V3 only): shown between identification and treatment
+             when the AI returned surface_observed = "unknown" or after "Wrong surface?" -->
+        <div id="stain-surface-picker" class="stain-result" style="display:none">
+          <h2 style="margin-top:0">Which surface is it on?</h2>
+          <p id="stain-surface-picker-hint" style="margin-bottom:10px">Wine on cotton ≠ wine on marble — pick the surface so the steps adapt.</p>
+          <div class="surface-grid" id="stain-surface-grid"></div>
+          <button class="btn ghost" onclick="resetStainFlow()" style="margin-top:8px">Start over</button>
+        </div>
+
         <!-- Treatment screen -->
         <div id="stain-treatment" style="display:none">
           <div class="step-card">
@@ -665,6 +655,17 @@
           </div>
 
           <div id="stain-verify-result" style="display:none;margin-top:14px"></div>
+        </div>
+
+        <!-- V3 only: shown after the last treatment step. Pro tip + expectation + alt method. -->
+        <div id="stain-pro-tip-card" class="stain-result" style="display:none">
+          <div style="font-size:32px;text-align:center;margin-bottom:6px">✓</div>
+          <h2 style="text-align:center;margin-bottom:14px">Treatment done.</h2>
+          <div id="stain-pro-tip-body"></div>
+          <div class="row" style="margin-top:14px">
+            <button class="btn press-gold" onclick="this.classList.add('pressed'); setTimeout(continueToVerify, 200)">Take "after" photo</button>
+            <button class="btn secondary press-gold" onclick="this.classList.add('pressed'); setTimeout(showHappyQuestion, 200)">Finish</button>
+          </div>
         </div>
 
         <!-- Happy / not-happy survey shown when user taps Finish -->
@@ -739,7 +740,7 @@
 
         <div class="card">
           <h2>Data</h2>
-          <p>All your tasks, family, and key are stored only on this device.</p>
+          <p>Your API key, preferences, and stain history are stored only on this device.</p>
           <button class="btn secondary" onclick="clearData()">Clear all data</button>
         </div>
 
@@ -751,21 +752,6 @@
     </main>
 
     <nav class="tabs">
-      <button data-tab="scan" onclick="switchTab('scan')" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h3l2-3h8l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/></svg>
-        <span>Scan</span>
-        <span class="dot"></span>
-      </button>
-      <button data-tab="tasks" onclick="switchTab('tasks')" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span>Tasks</span>
-        <span class="dot"></span>
-      </button>
-      <button data-tab="family" onclick="switchTab('family')" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span>Family</span>
-        <span class="dot"></span>
-      </button>
       <button data-tab="laundry" class="active" onclick="switchTab('laundry')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.32 0z"/></svg>
         <span>Laundry</span>
