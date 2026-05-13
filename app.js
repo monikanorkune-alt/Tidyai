@@ -7,6 +7,7 @@ const LS = {
   lastStainScan: 'tidyai_last_stain_scan',
   stainFeedback: 'tidyai_stain_feedback',
   prefs: 'tidyai_prefs',
+  recentStains: 'tidyai_recent_stains',
 };
 
 // --- State ---
@@ -55,6 +56,124 @@ function loadRules() {
 // Boot helper — call all three loaders in parallel and resolve when done.
 function loadAllPlaybooks() {
   return Promise.all([loadPlaybookV3(), loadPlaybook(), loadRules()]);
+}
+
+// =====================================================================
+// 2-TAP STAIN PICKER
+// 8 fixed groups → flat list of stains in each group → tap → same
+// treatment renderer as the AI flow (no separate code path).
+// =====================================================================
+
+const STAIN_GROUPS = [
+  { id: 'drinks',    label: 'Drinks',          color: '#993556', examples: 'Wine, coffee, tea',
+    stains: ['Red wine','Coffee','Tea','Berry juice'] },
+  { id: 'food',      label: 'Food & sauces',   color: '#BA7517', examples: 'Ketchup, curry, chocolate',
+    stains: ['Tomato sauce','Ketchup','BBQ sauce','Mustard','Soy sauce','Hot sauce / sriracha','Curry / turmeric','Red beet','Pesto','Honey / syrup','Jam / jelly','Chocolate'] },
+  { id: 'oils',      label: 'Oils & fats',     color: '#EF9F27', examples: 'Butter, olive oil, avocado',
+    stains: ['Butter / ghee','Olive oil','Cooking spray','Avocado / guacamole'] },
+  { id: 'body',      label: 'Body fluids',     color: '#A32D2D', examples: 'Blood, sweat, vomit',
+    stains: ['Blood','Sweat','Vomit','Egg','Baby formula'] },
+  { id: 'cosmetics', label: 'Personal care',   color: '#D4537E', examples: 'Lipstick, deodorant',
+    stains: ['Lipstick','Foundation','Hair dye','Nail polish','Deodorant','Sunscreen','Toothpaste'] },
+  { id: 'outdoors',  label: 'Outdoors',        color: '#639922', examples: 'Grass, mud, tree sap',
+    stains: ['Grass','Mud','Pollen','Tree sap'] },
+  { id: 'kids',      label: 'Kids & pets',     color: '#7F77DD', examples: 'Crayon, marker, pet',
+    stains: ['Crayon','Play-Doh / slime','Permanent marker','Ballpoint ink','Pet urine'] },
+  { id: 'house',     label: 'Household & DIY', color: '#5F5E5A', examples: 'Rust, wax, paint, glue',
+    stains: ['Rust','Mold / mildew','Candle wax','Charcoal / ash','Chewing gum','Shoe polish','Latex paint','Oil paint','Super glue'] },
+];
+
+function renderStainGroupGrid() {
+  const grid = document.getElementById('stain-group-grid');
+  if (!grid) return;
+  grid.innerHTML = STAIN_GROUPS.map(g => `
+    <button class="cat-btn" data-group="${g.id}" style="text-align:left;display:flex;flex-direction:column;gap:4px;min-height:72px;padding:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:10px;height:10px;border-radius:50%;background:${g.color};flex:none"></span>
+        <span style="font-size:14px;font-weight:600;color:var(--text)">${escapeHtml(g.label)}</span>
+      </div>
+      <span style="font-size:11px;color:var(--muted);font-weight:400">${escapeHtml(g.examples)} · ${g.stains.length}</span>
+    </button>
+  `).join('');
+  grid.querySelectorAll('button[data-group]').forEach(btn => {
+    btn.addEventListener('click', () => openGroupStains(btn.dataset.group));
+  });
+}
+
+function openGroupStains(groupId) {
+  const group = STAIN_GROUPS.find(g => g.id === groupId);
+  if (!group) return;
+  document.getElementById('group-stains-title').textContent = group.label;
+  const list = document.getElementById('group-stains-list');
+  list.innerHTML = group.stains.map(name => `
+    <button class="stain-row" data-stain="${escapeHtml(name)}" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card-strong);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);cursor:pointer;min-height:44px;text-align:left;width:100%">
+      <span>${escapeHtml(name)}</span>
+      <span style="color:var(--muted);font-size:14px">›</span>
+    </button>
+  `).join('');
+  list.querySelectorAll('button[data-stain]').forEach(btn => {
+    btn.addEventListener('click', () => pickStainManually(btn.dataset.stain));
+  });
+  // Hide the hero (the photo CTA + grid) so the user isn't shown two competing screens.
+  document.getElementById('laundry-hero').style.display = 'none';
+  document.getElementById('stain-group-stains').style.display = 'block';
+}
+
+function closeGroupStains() {
+  document.getElementById('stain-group-stains').style.display = 'none';
+  document.getElementById('laundry-hero').style.display = 'block';
+}
+
+// The critical hand-off: a manually-picked stain lands in the same flow as an
+// AI-identified stain. Sets state, then calls startTreatment() — the SAME
+// function the AI flow uses — which routes to surface picker (V3) or steps (legacy).
+async function pickStainManually(stainName) {
+  await loadAllPlaybooks();
+  const treatment = getStainTreatment(stainName);
+  if (!treatment) {
+    toast('No playbook entry for ' + stainName);
+    return;
+  }
+  state.stainTreatment = treatment;
+  state.currentStain = treatment;  // alias used by spec tests + future code
+  state.surfaceFromAI = null;
+  state.stainSurface = null;
+  // Synthesize a scan so "Back to result" + history paths work uniformly.
+  state.stainScan = {
+    confident: true, stain_name: treatment.name, category: treatment.category,
+    confidence: 1.0, surface_observed: 'unknown',
+  };
+  save(LS.lastStainScan, state.stainScan);
+
+  // Save to "recently used" (max 3, dedupe by name)
+  const recent = load(LS.recentStains, []).filter(r => r !== stainName);
+  recent.unshift(stainName);
+  save(LS.recentStains, recent.slice(0, 3));
+  renderRecentStrip();
+
+  // Hide the picker view + hero before kicking off treatment.
+  document.getElementById('stain-group-stains').style.display = 'none';
+  document.getElementById('laundry-hero').style.display = 'block';
+  // Hand off to the same treatment renderer used by AI-identified stains.
+  startTreatment();
+}
+
+// Up to 3 most-recently picked stains shown as chips above the group grid.
+function renderRecentStrip() {
+  const wrap = document.getElementById('stain-recent-wrap');
+  const list = document.getElementById('stain-recent-list');
+  if (!wrap || !list) return;
+  const recent = load(LS.recentStains, []);
+  if (!recent.length) { wrap.style.display = 'none'; return; }
+  list.innerHTML = recent.slice(0, 3).map(name => `
+    <button class="chip" data-stain="${escapeHtml(name)}" style="padding:6px 12px;border-radius:999px;background:var(--card-strong);border:1px solid var(--border);font-size:12px;color:var(--text);cursor:pointer">
+      ${escapeHtml(name)}
+    </button>
+  `).join('');
+  list.querySelectorAll('button[data-stain]').forEach(btn => {
+    btn.addEventListener('click', () => pickStainManually(btn.dataset.stain));
+  });
+  wrap.style.display = 'block';
 }
 
 // Map a playbook stain to one of the chemistry classes in the rules file.
@@ -337,6 +456,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // appears after a photo is chosen; the result card after a match is made.
   if (state.stainScan) renderStainResult(state.stainScan);
   renderStainHistory();
+  // Picker fallback (always rendered, never auto-expanded)
+  renderStainGroupGrid();
+  renderRecentStrip();
 });
 
 // --- Tabs ---
@@ -349,10 +471,12 @@ function switchTab(name) {
   if (name === 'laundry') {
     loadAllPlaybooks();
     renderStainHistory();
+    renderStainGroupGrid();
+    renderRecentStrip();
     // Photo upload card is always visible. The question only appears after
     // a photo is chosen, and the result/typed cards only after the user picks.
     if (!state.stainScan && !state.stainTreatment) {
-      hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+      hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-group-stains']);
     }
   }
 }
@@ -1636,9 +1760,12 @@ function resetStainFlow() {
   hideAll([
     'stain-origin-question', 'stain-typed-card',
     'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
-    'stain-surface-picker', 'stain-pro-tip-card',
+    'stain-surface-picker', 'stain-pro-tip-card', 'stain-group-stains',
     'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
   ]);
+  // Make sure the hero (photo CTA + picker grid) is visible again
+  const hero = document.getElementById('laundry-hero');
+  if (hero) hero.style.display = 'block';
   const input = document.getElementById('stain-typed-input');
   if (input) input.value = '';
   const fb = document.getElementById('stain-feedback-text');

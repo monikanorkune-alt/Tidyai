@@ -1,10 +1,11 @@
 // TidyAI service worker — network-first so updates always reach the user.
-const CACHE = 'tidyai-v7-products';
+const CACHE = 'tidyai-v9-picker';
 const SHELL = [
   './',
   './index.html',
   './app.js',
   './manifest.json',
+  './laundry_playbook_v3.json',
   './laundry_playbook.json',
   './product_ifthen_rules.json',
   './icons/icon-192.png',

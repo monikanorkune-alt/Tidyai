@@ -564,6 +564,31 @@
             <button class="btn secondary" onclick="document.getElementById('stain-gallery-input').click()">From gallery</button>
             <button class="btn secondary" onclick="document.getElementById('stain-camera-input').click()">Take photo</button>
           </div>
+
+          <!-- Picker fallback: visually clearly secondary to the photo CTA above -->
+          <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px">
+            <div style="flex:1;height:0.5px;background:var(--border)"></div>
+            <span style="font-size:12px;color:var(--muted)">or pick one</span>
+            <div style="flex:1;height:0.5px;background:var(--border)"></div>
+          </div>
+
+          <div id="stain-recent-wrap" style="display:none;margin-bottom:10px">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Recently used</div>
+            <div id="stain-recent-list" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+          </div>
+
+          <div id="stain-group-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"></div>
+        </div>
+
+        <!-- Stain list shown when a group is tapped from the picker grid -->
+        <div id="stain-group-stains" class="stain-result" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px">
+            <button class="btn small ghost" onclick="closeGroupStains()" style="width:auto">← Back</button>
+            <h2 id="group-stains-title" style="margin:0;font-size:16px;flex:1;text-align:center">—</h2>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <p id="group-stains-hint" style="font-size:12px;color:var(--muted);margin-bottom:10px">Pick the closest match.</p>
+          <div id="group-stains-list" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
 
         <!-- STEP 2: ask after the photo is loaded -->
