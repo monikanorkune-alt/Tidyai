@@ -178,6 +178,16 @@
     .chip.priority-medium { color: var(--warn); border-color: rgba(255,187,28,0.35); }
     .chip.priority-low { color: #FFB7D5; border-color: rgba(255,135,185,0.35); }
 
+    /* Hacks tab filter chips (Popular / Eco / Fragrance-free / Sensitive skin / Sheets / Baby / Athletic) */
+    .hacks-filter-chip {
+      background: var(--card-strong); border: 1px solid var(--border); color: var(--muted);
+      padding: 6px 14px; border-radius: 999px; font-size: 12px; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0; font-weight: 500;
+    }
+    .hacks-filter-chip[data-active="true"] {
+      color: #121212; background: var(--accent); border-color: var(--accent); font-weight: 600;
+    }
+
     /* Difficulty chip — replaces the old clock + minutes chip on the result card */
     .chip-difficulty { font-weight: 600; }
     .difficulty-easy   { background: rgba(99,153,34,0.15);  color: #97C459; border-color: rgba(99,153,34,0.30); }
@@ -715,11 +725,22 @@
 
       <!-- HACKS VIEW: browse-only, no AI call -->
       <section id="view-hacks" class="view">
-        <!-- State A: 8 categories -->
+        <!-- State A: 8 categories + filter chips -->
         <div id="hacks-categories">
           <h1 style="margin-bottom:4px">Stain hacks</h1>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Learn how to treat any stain — no photo needed.</p>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Learn how to treat any stain — no photo needed.</p>
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch">
+            <button class="hacks-filter-chip" data-filter="all" data-active="true">All</button>
+            <button class="hacks-filter-chip" data-filter="popular">Popular</button>
+            <button class="hacks-filter-chip" data-filter="eco">Eco</button>
+            <button class="hacks-filter-chip" data-filter="fragrance_free">Fragrance-free</button>
+            <button class="hacks-filter-chip" data-filter="sensitive_skin">Sensitive skin</button>
+            <button class="hacks-filter-chip" data-filter="sheet">Sheets</button>
+            <button class="hacks-filter-chip" data-filter="baby">Baby</button>
+            <button class="hacks-filter-chip" data-filter="athletic">Athletic</button>
+          </div>
           <div id="hacks-group-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"></div>
+          <div id="hacks-filtered-products" style="display:none;margin-top:14px"></div>
         </div>
 
         <!-- State B: stain list for a chosen category -->

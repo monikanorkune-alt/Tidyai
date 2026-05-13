@@ -1,5 +1,5 @@
 // TidyAI service worker — network-first so updates always reach the user.
-const CACHE = 'tidyai-v10-stains-hacks';
+const CACHE = 'tidyai-v11-products-db';
 const SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const SHELL = [
   './laundry_playbook_v3.json',
   './laundry_playbook.json',
   './product_ifthen_rules.json',
+  './products_database.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
 ];

@@ -53,9 +53,19 @@ function loadRules() {
     .catch(err => { console.warn('Product rules load failed (using playbook fallback)', err); return null; });
 }
 
-// Boot helper — call all three loaders in parallel and resolve when done.
+// 107-product catalog used by the Hacks tab's "Suggested products" block.
+let PRODUCTS_DB = null;
+function loadProductsDb() {
+  if (PRODUCTS_DB) return Promise.resolve(PRODUCTS_DB);
+  return fetch('products_database.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { PRODUCTS_DB = d; return d; })
+    .catch(err => { console.warn('Products DB load failed (falling back to HACK_RECIPES)', err); return null; });
+}
+
+// Boot helper — call all loaders in parallel and resolve when done.
 function loadAllPlaybooks() {
-  return Promise.all([loadPlaybookV3(), loadPlaybook(), loadRules()]);
+  return Promise.all([loadPlaybookV3(), loadPlaybook(), loadRules(), loadProductsDb()]);
 }
 
 // =====================================================================
@@ -247,14 +257,147 @@ function getHackRecipe(stain) {
 }
 
 // =====================================================================
+// pickProductsForStain — DB-driven picker for the Hacks tab's
+// "Suggested products" block. Scores and ranks the 107-product catalog
+// by (a) chemistry-class match, (b) user prefs, (c) popularity.
+//
+// Hard rules per the spec:
+//  - min 5, max 10 products returned
+//  - sensitive_skin / baby_household HARD-EXCLUDES non fragrance-free SKUs
+//  - eco_only HARD-EXCLUDES non eco / non plant-based SKUs
+//  - pet boost only fires when chemistry_class === 'pet_related'
+//  - fallback to general_purpose products when the stain has no chemistry_class
+//  - never returns a product not in PRODUCTS_DB.products
+// =====================================================================
+function pickProductsForStain(stain, userPrefs) {
+  if (!PRODUCTS_DB || !Array.isArray(PRODUCTS_DB.products)) return null;
+  const prefs = userPrefs || state.prefs || {};
+  const chemClass = (stain && stain.chemistry_class) || 'general_purpose';
+
+  const isExcluded = (p) => {
+    const tags = p.tags || [];
+    if (prefs.sensitive_skin || prefs.baby_household) {
+      if (!tags.includes('fragrance_free') && !tags.includes('sensitive_skin')) return true;
+    }
+    if (prefs.eco_only) {
+      if (!tags.includes('eco') && !tags.includes('plant_based')) return true;
+    }
+    if (prefs.fragrance_free) {
+      if (!tags.includes('fragrance_free') && !tags.includes('sensitive_skin')) return true;
+    }
+    return false;
+  };
+
+  const score = (p) => {
+    let s = 0;
+    const tags = p.tags || [];
+    const bestFor = p.best_for || [];
+    // Big bonus for matching the stain's chemistry class
+    if (bestFor.includes(chemClass)) s += 100;
+    // Smaller bonus for general_purpose (always relevant as a backup pick)
+    if (bestFor.includes('general_purpose')) s += 20;
+    // Popular brands get a baseline boost
+    if (tags.includes('popular')) s += 30;
+    if (tags.includes('cult_favorite')) s += 25;
+    // Preference-driven boosts
+    if (prefs.sensitive_skin && tags.includes('sensitive_skin')) s += 40;
+    if (prefs.baby_household && tags.includes('baby')) s += 40;
+    if (prefs.fragrance_free && tags.includes('fragrance_free')) s += 35;
+    if (prefs.eco_only && tags.includes('eco')) s += 35;
+    if (prefs.has_pet && tags.includes('pet') && chemClass === 'pet_related') s += 50;
+    if (prefs.hard_water && tags.includes('hard_water')) s += 35;
+    // "On hand" boosts — only fire when chemistry class matches
+    const chemMatches = bestFor.includes(chemClass);
+    if (prefs.has_white_hack && p.brand === 'White Hack' && chemMatches) s += 60;
+    if (prefs.has_oxiclean && p.brand === 'OxiClean' && chemMatches) s += 30;
+    if (prefs.has_dawn && p.id === 'dawn-blue' && chemMatches) s += 30;
+    if (prefs.has_persil && p.brand === 'Persil' && chemMatches) s += 30;
+    if (prefs.has_tide_powder && p.id === 'tide-original-powder' && chemMatches) s += 30;
+    return s;
+  };
+
+  const ranked = PRODUCTS_DB.products
+    .filter(p => !isExcluded(p))
+    .map(p => ({ p, s: score(p) }))
+    .filter(x => x.s > 0)
+    .sort((a, b) => b.s - a.s);
+
+  const top = ranked.slice(0, 10).map(x => x.p);
+
+  // Pad to minimum 5 with popular general-purpose products that aren't excluded.
+  if (top.length < 5) {
+    const fillers = PRODUCTS_DB.products
+      .filter(p => !top.includes(p) && !isExcluded(p))
+      .filter(p => (p.best_for || []).includes('general_purpose') && (p.tags || []).includes('popular'));
+    for (const f of fillers) {
+      top.push(f);
+      if (top.length >= 5) break;
+    }
+  }
+
+  return top.slice(0, 10);
+}
+
+// =====================================================================
 // HACKS TAB — browse-only category → list → 3-block detail → search
 // Never calls the AI vision API.
 // =====================================================================
 let HACKS_CURRENT_GROUP = null;
 
+// Filter-chip handler on the Hacks tab landing. Tapping a tag (eco, popular,
+// fragrance-free, sensitive skin, sheets, baby, athletic) replaces the category
+// grid with a flat list of matching products from the database. Tapping "All"
+// restores the grid.
+function onHacksFilterChip(filterId) {
+  document.querySelectorAll('.hacks-filter-chip').forEach(c => {
+    c.setAttribute('data-active', c.dataset.filter === filterId ? 'true' : 'false');
+  });
+  const grid = document.getElementById('hacks-group-grid');
+  const wrap = document.getElementById('hacks-filtered-products');
+  if (!grid || !wrap) return;
+  if (filterId === 'all') {
+    grid.style.display = 'grid';
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
+  grid.style.display = 'none';
+  wrap.style.display = 'block';
+  if (!PRODUCTS_DB) { wrap.innerHTML = '<p style="color:var(--muted)">Loading products…</p>'; loadProductsDb().then(() => onHacksFilterChip(filterId)); return; }
+  let filtered;
+  if (filterId === 'sheet') {
+    filtered = PRODUCTS_DB.products.filter(p => p.format === 'sheet');
+  } else {
+    filtered = PRODUCTS_DB.products.filter(p => (p.tags || []).includes(filterId));
+  }
+  filtered = filtered.slice(0, 30);
+  if (!filtered.length) {
+    wrap.innerHTML = `<p style="color:var(--muted)">No products with that tag yet.</p>`;
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:8px">${filtered.length} products</div>
+    ${filtered.map(p => `
+      <div style="padding:10px 0;border-bottom:0.5px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+          <div><span style="font-weight:600">${escapeHtml(p.brand)}</span><span style="color:var(--muted)"> · ${escapeHtml(p.name)}</span></div>
+          <span style="color:var(--muted);font-size:12px;white-space:nowrap">${escapeHtml(p.price || '')}</span>
+        </div>
+        ${p.description ? `<div style="font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4">${escapeHtml(p.description)}</div>` : ''}
+      </div>
+    `).join('')}
+  `;
+}
+
 function renderHacksCategories() {
   const grid = document.getElementById('hacks-group-grid');
   if (!grid) return;
+  // Wire chip handlers (idempotent — replaces any existing listener via cloneNode)
+  document.querySelectorAll('.hacks-filter-chip').forEach(c => {
+    const next = c.cloneNode(true);
+    c.parentNode.replaceChild(next, c);
+    next.addEventListener('click', () => onHacksFilterChip(next.dataset.filter));
+  });
   grid.innerHTML = STAIN_GROUPS.map(g => `
     <button class="cat-btn" data-group="${g.id}" style="text-align:left;display:flex;flex-direction:column;gap:4px;min-height:72px;padding:12px">
       <div style="display:flex;align-items:center;gap:8px">
@@ -344,15 +487,39 @@ async function openHacksDetail(stainName) {
     </div>
   `;
 
-  document.getElementById('hacks-detail-products').innerHTML = `
-    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${recipe.products.length})</div>
-    ${recipe.products.map(p => `
-      <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">
-        <div style="font-weight:600">${escapeHtml(p.name)}</div>
-        <div style="color:var(--muted);font-size:12px;text-align:right;max-width:55%">${escapeHtml(p.note || '')}</div>
-      </div>
-    `).join('')}
-  `;
+  // Block 3 — smart picker from products_database.json (107 verified products).
+  // Falls back silently to the static HACK_RECIPES list if the DB didn't load.
+  const picks = pickProductsForStain(stain, state.prefs) || [];
+  const productsEl = document.getElementById('hacks-detail-products');
+  if (picks.length) {
+    productsEl.innerHTML = `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${picks.length})</div>
+      ${picks.map(p => `
+        <div style="padding:10px 0;border-bottom:0.5px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+            <div>
+              <span style="font-weight:600">${escapeHtml(p.brand)}</span>
+              <span style="color:var(--muted);font-weight:400"> · ${escapeHtml(p.name)}</span>
+            </div>
+            <span style="color:var(--muted);font-size:12px;white-space:nowrap">${escapeHtml(p.price || '')}</span>
+          </div>
+          ${p.description ? `<div style="margin-top:4px;font-size:12px;color:var(--muted);line-height:1.4">${escapeHtml(p.description)}</div>` : ''}
+          ${(p.tags && p.tags.length) ? `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${p.tags.slice(0, 4).map(t => `<span style="padding:2px 8px;border-radius:999px;background:var(--card-strong);border:1px solid var(--border);font-size:10px;color:var(--muted)">${escapeHtml(t.replace(/_/g, ' '))}</span>`).join('')}</div>` : ''}
+        </div>
+      `).join('')}
+    `;
+  } else {
+    // Fallback: HACK_RECIPES static list
+    productsEl.innerHTML = `
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Suggested products (${recipe.products.length})</div>
+      ${recipe.products.map(p => `
+        <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)">
+          <div style="font-weight:600">${escapeHtml(p.name)}</div>
+          <div style="color:var(--muted);font-size:12px;text-align:right;max-width:55%">${escapeHtml(p.note || '')}</div>
+        </div>
+      `).join('')}
+    `;
+  }
 
   document.getElementById('hacks-categories').style.display = 'none';
   document.getElementById('hacks-stain-list-wrap').style.display = 'none';
@@ -542,7 +709,9 @@ function splitProductString(s) {
 
 // Given the identified stain, optional fabric hint, and user prefs,
 // return a ranked structured recommendation. Null if rules unavailable.
-function pickProductsForStain(stain, fabricHint, prefsArg) {
+// Rules-based picker (legacy step screen). Different from the DB-driven
+// pickProductsForStain() that powers the Hacks tab — see below.
+function pickProductsByRules(stain, fabricHint, prefsArg) {
   if (!RULES) return null;
   const prefs = prefsArg || state.prefs || {};
   const chemClass = stainChemistryClass(stain);
@@ -1739,7 +1908,7 @@ function renderStep() {
   // prefs and chemistry class). If RULES failed to load or no match is found,
   // fall back silently to the playbook's static products.
   const prodWrap = document.getElementById('step-products-wrap');
-  const rec = pickProductsForStain(t, null, state.prefs);
+  const rec = pickProductsByRules(t, null, state.prefs);
   const roleNice = r => {
     if (!r) return '';
     const s = String(r).toLowerCase();
