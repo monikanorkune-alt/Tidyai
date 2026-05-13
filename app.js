@@ -31,19 +31,27 @@ const state = {
   prefs: load(LS.prefs, {}),  // sensitive_skin, eco_only, has_pet, hard_water, baby_household, fragrance_free, has_white_hack, has_oxiclean
 };
 
-// Playbook (loaded lazily)
+// V3 playbook (50 stains × 8 surfaces, rich schema). Authoritative when matched.
+let PLAYBOOK_V3 = null;
+function loadPlaybookV3() {
+  if (PLAYBOOK_V3) return Promise.resolve(PLAYBOOK_V3);
+  return fetch('laundry_playbook_v3.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { PLAYBOOK_V3 = d; populateStainDatalist(); return d; })
+    .catch(err => { console.warn('V3 playbook load failed (falling back to legacy)', err); return null; });
+}
+
+// Legacy 802-stain playbook — long-tail fallback for stains V3 doesn't cover.
 let PLAYBOOK = null;
 function loadPlaybook() {
   if (PLAYBOOK) return Promise.resolve(PLAYBOOK);
   return fetch('laundry_playbook.json')
     .then(r => r.json())
     .then(d => { PLAYBOOK = d; populateStainDatalist(); return d; })
-    .catch(err => { console.error('Playbook load failed', err); return null; });
+    .catch(err => { console.error('Legacy playbook load failed', err); return null; });
 }
 
 // If-then product recommendation rules (loaded lazily, optional).
-// If the file fails to load, pickProductsForStain returns null and the UI
-// falls back to the playbook's static products silently.
 let RULES = null;
 function loadRules() {
   if (RULES) return Promise.resolve(RULES);
@@ -51,6 +59,11 @@ function loadRules() {
     .then(r => r.ok ? r.json() : null)
     .then(d => { RULES = d; return d; })
     .catch(err => { console.warn('Product rules load failed (using playbook fallback)', err); return null; });
+}
+
+// Boot helper — call all three loaders in parallel and resolve when done.
+function loadAllPlaybooks() {
+  return Promise.all([loadPlaybookV3(), loadPlaybook(), loadRules()]);
 }
 
 // Map a playbook stain to one of the chemistry classes in the rules file.
@@ -209,11 +222,24 @@ function pickProductsForStain(stain, fabricHint, prefsArg) {
   };
 }
 
-// Populate the <datalist> with all 802 stain names for the typed-origin autocomplete.
+// Populate the <datalist> from both V3 (50 rich) + legacy (802 long-tail).
+// V3 names come first so the autocomplete suggests them when prefixes overlap.
 function populateStainDatalist() {
   const dl = document.getElementById('stain-names-list');
-  if (!dl || !PLAYBOOK) return;
-  dl.innerHTML = PLAYBOOK.stains.map(s => `<option value="${s.name.replace(/"/g, '&quot;')}"></option>`).join('');
+  if (!dl) return;
+  const seen = new Set();
+  const opts = [];
+  const addAll = src => {
+    (src?.stains || []).forEach(s => {
+      const key = (s.name || '').toLowerCase();
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      opts.push(`<option value="${s.name.replace(/"/g, '&quot;')}"></option>`);
+    });
+  };
+  addAll(PLAYBOOK_V3);
+  addAll(PLAYBOOK);
+  dl.innerHTML = opts.join('');
 }
 
 // Color per category (22 internal categories in the 802-stain playbook).
@@ -324,8 +350,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') { e.preventDefault(); findByTypedName(); }
     });
   }
-  loadPlaybook();
-  loadRules();
+  loadAllPlaybooks();
   restorePrefsUI();
   // On boot the Laundry view shows just the photo upload card. The question
   // appears after a photo is chosen; the result card after a match is made.
@@ -346,7 +371,7 @@ function switchTab(name) {
   if (name === 'tasks') renderTasks();
   if (name === 'family') renderFamily();
   if (name === 'laundry') {
-    loadPlaybook();
+    loadAllPlaybooks();
     renderStainHistory();
     // Photo upload card is always visible. The question only appears after
     // a photo is chosen, and the result/typed cards only after the user picks.
@@ -1157,7 +1182,7 @@ Return STRICT JSON. No markdown, no preamble, no commentary.
 Shape A — CONFIDENT (≥ 70% likely):
 {
   "confident": true,
-  "stain_name": "<EXACT name from the lists above (closest match is fine, fuzzy lookup runs after)>",
+  "stain_name": "<EXACT name. The app uses laundry_playbook_v3.json (50 deeply-modeled stains: Red Wine, Coffee, Tomato Sauce, Blood, Sweat, Permanent Marker, Grass, Mud, Motor Oil, Pet Urine, Crayon, etc.) plus laundry_playbook.json (800+ long-tail). Prefer V3 names when applicable; closest match is fine — fuzzy lookup runs after>",
   "category": "<one of: food_drink | body_fluids | cosmetics | office_craft | outdoor_nature | pet | mechanical | household | seasonal>",
   "internal_category": "<the granular category id from Part 2, e.g. food_alcohol or hair_body_care>",
   "confidence": <0.7-1.0 float>,
@@ -1166,6 +1191,7 @@ Shape A — CONFIDENT (≥ 70% likely):
   "location_observation": "<where on the garment, if visible: collar | pit | lap | knee | bum | cuff | hem | pocket | unknown>",
   "freshness": "fresh" | "set" | "unknown",
   "fabric_observation": "<one short sentence on the fabric: cotton, denim, silk, carpet, upholstery, leather, etc.>",
+  "surface_observed": "<the SURFACE the stain is on, one of: cotton | polyester | carpet | hardwood | marble | leather | upholstery | tile | unknown. Use 'unknown' if you can't tell from the photo — the app will ask the user.>",
   "warning_if_any": "<one sentence about heat/bleach/fabric risk, or null>"
 }
 
@@ -1220,11 +1246,11 @@ function setOriginMode(mode, btnEl) {
   if (btnEl) { btnEl.classList.add('pressed'); setTimeout(() => btnEl.classList.remove('pressed'), 250); }
   const run = () => {
     hideOriginQuestion();
-    hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks']);
+    hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card', 'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks']);
     if (mode === 'known') {
       const typed = document.getElementById('stain-typed-card');
       if (typed) typed.style.display = 'block';
-      if (PLAYBOOK) populateStainDatalist(); else loadPlaybook();
+      if (PLAYBOOK || PLAYBOOK_V3) populateStainDatalist(); else loadAllPlaybooks();
       setTimeout(() => document.getElementById('stain-typed-input')?.focus(), 60);
       document.getElementById('stain-typed-hints').innerHTML = '';
     } else if (mode === 'photo') {
@@ -1358,10 +1384,10 @@ async function analyzeStain(optionalCategory = null) {
   const key = localStorage.getItem(LS.key);
   if (!key) { switchTab('settings'); return toast('Add your OpenAI API key in Settings'); }
   const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
-  await loadPlaybook();
+  await loadAllPlaybooks();
 
   // Show the loading card with the looping countdown
-  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  hideAll(['stain-origin-question', 'stain-typed-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   showStainLoading();
   const btn = document.getElementById('stain-analyze-btn');
   const label = document.getElementById('stain-analyze-label');
@@ -1424,27 +1450,35 @@ function stainTokens(s) {
 }
 
 function findStainInPlaybook(stainName) {
-  if (!PLAYBOOK || !stainName) return null;
+  if (!stainName) return null;
   const want = stainName.toLowerCase().trim();
 
-  // 1) Exact match
-  let hit = PLAYBOOK.stains.find(s => s.name.toLowerCase() === want);
-  if (hit) return hit;
+  // --- Tier 1: V3 (rich data, 50 stains) — checked first so the rich UX wins ---
+  if (PLAYBOOK_V3?.stains) {
+    let hit = PLAYBOOK_V3.stains.find(s => (s.name || '').toLowerCase() === want);
+    if (hit) return { ...hit, _source: 'v3' };
+    hit = PLAYBOOK_V3.stains.find(s => {
+      const n = (s.name || '').toLowerCase();
+      return n.includes(want) || want.includes(n);
+    });
+    if (hit) return { ...hit, _source: 'v3' };
+  }
 
-  // 2) Substring containment in either direction
-  hit = PLAYBOOK.stains.find(s => {
-    const n = s.name.toLowerCase();
-    return n.includes(want) || want.includes(n);
-  });
-  if (hit) return hit;
+  // --- Tier 2: Legacy playbook (802 stains, long-tail) ---
+  if (PLAYBOOK?.stains) {
+    let hit = PLAYBOOK.stains.find(s => s.name.toLowerCase() === want);
+    if (hit) return { ...hit, _source: 'legacy' };
+    hit = PLAYBOOK.stains.find(s => {
+      const n = s.name.toLowerCase();
+      return n.includes(want) || want.includes(n);
+    });
+    if (hit) return { ...hit, _source: 'legacy' };
+  }
 
-  // 3) Token-overlap score — find the playbook entry that shares the most
-  //    meaningful tokens with the AI's candidate. Threshold: at least one
-  //    non-stopword token in common AND that token covers >= 50% of the
-  //    candidate's tokens. This catches "food grease" -> "Bacon grease",
-  //    "wine spill" -> "Red wine", "ink mark" -> "Ballpoint pen ink", etc.
+  // --- Tier 3: token-overlap fuzzy match against legacy ---
+  // Catches "food grease" -> "Bacon grease", "wine spill" -> "Red wine", etc.
   const wantTokens = stainTokens(stainName);
-  if (!wantTokens.length) return null;
+  if (!wantTokens.length || !PLAYBOOK?.stains) return null;
 
   let best = null;
   let bestScore = 0;
@@ -1455,21 +1489,26 @@ function findStainInPlaybook(stainName) {
     let shared = 0;
     for (const t of wantTokens) if (stainSet.has(t)) shared++;
     if (shared === 0) continue;
-    // Score = shared / total candidate tokens (i.e. how much of what the AI
-    // said is reflected in this playbook entry). Tiebreak: shorter name wins
-    // (more specific match).
     const score = shared / wantTokens.length;
     if (score > bestScore || (score === bestScore && best && s.name.length < best.name.length)) {
       best = s;
       bestScore = score;
     }
   }
-  return bestScore >= 0.5 ? best : null;
+  return bestScore >= 0.5 ? { ...best, _source: 'legacy' } : null;
 }
 
 function getStainTreatment(stainName, fabricHint = null) {
   const stain = findStainInPlaybook(stainName);
   if (!stain) return null;
+  // V3 stains: warnings come from never_do + common_mistakes; estimated_minutes
+  // is computed per surface, so we surface "—" here and let the renderer fill in.
+  if (stain._source === 'v3') {
+    const warnings = [];
+    if (stain.never_do) warnings.push({ fabric: 'general', warning: stain.never_do });
+    return { ...stain, applicable_warnings: warnings, estimated_minutes: null };
+  }
+  // Legacy schema
   const fc = stain.fabric_compatibility || {};
   const warnings = [];
   if (fc.full_note) warnings.push({ fabric: 'general', warning: fc.full_note });
@@ -1481,7 +1520,7 @@ function getStainTreatment(stainName, fabricHint = null) {
 
 // --- Render: AI result (confident or category fallback) ---
 function renderStainResult(parsed) {
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
 
   if (parsed && parsed.confident && parsed.stain_name) {
     const treatment = getStainTreatment(parsed.stain_name);
@@ -1491,38 +1530,60 @@ function renderStainResult(parsed) {
       return;
     }
     state.stainTreatment = treatment;
+    // Remember the AI's surface observation for V3 routing
+    state.surfaceFromAI = parsed.surface_observed || 'unknown';
+    state.stainSurface = null; // chosen later
     document.getElementById('stain-confident').style.display = 'block';
     document.getElementById('stain-name').textContent = treatment.name;
-    // Prefer the observation from the AI; fall back to the playbook's treatment summary.
-    document.getElementById('stain-summary').textContent =
-      parsed.fabric_observation || treatment.treatment_summary || '';
-    const color = catColor(treatment.category);
-    const label = catLabel(treatment.category);
-    // Wash temperature is parsed from the playbook's treatment text.
-    const wash = parseWashTemp(treatment.treatment_summary || (treatment.steps || []).join(' '));
-    const washChip = wash
-      ? `<span class="wash-chip ${wash.kind}">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>`
-      : '';
-    document.getElementById('stain-tags').innerHTML = `
-      <span class="chip" style="color:${color};border-color:${color}66">${escapeHtml(label)}</span>
-      ${washChip}
-      <span class="chip">⏱ ~${treatment.estimated_minutes} min total</span>
-    `;
-    const warningsEl = document.getElementById('stain-warnings');
-    const allWarnings = [
-      ...(parsed.warning_if_any ? [{ fabric: 'general', warning: parsed.warning_if_any }] : []),
-      ...(treatment.applicable_warnings || []),
-    ];
-    warningsEl.innerHTML = allWarnings.map(w => `
-      <div class="fabric-warning"><strong>⚠ Heads up</strong><br>${escapeHtml(w.warning)}</div>
-    `).join('');
+
+    if (treatment._source === 'v3') {
+      // V3 result card: urgency badge as the hero metric, then never-do.
+      const urg = treatment.urgency || 'flexible';
+      const urgLabel = urg === 'immediate' ? 'Immediate' : urg === 'hours' ? 'Treat within hours' : 'Flexible';
+      const urgencyHTML = `<span class="urgency-badge ${urg}">⏱ ${urgLabel}${treatment.urgency_text ? ' · ' + escapeHtml(treatment.urgency_text) : ''}</span>`;
+      document.getElementById('stain-summary').innerHTML = urgencyHTML;
+      const catNice = (treatment.category || '').replace(/-/g, ' ');
+      const chemNice = (treatment.chemistry_class || '').replace(/_/g, ' ');
+      document.getElementById('stain-tags').innerHTML = `
+        ${catNice ? `<span class="chip" style="color:#FFB906;border-color:rgba(255,185,6,0.4)">${escapeHtml(catNice)}</span>` : ''}
+        ${chemNice ? `<span class="chip">${escapeHtml(chemNice)}</span>` : ''}
+      `;
+      // Never-do warning is the V3 hero risk message
+      const warningsEl = document.getElementById('stain-warnings');
+      warningsEl.innerHTML = treatment.never_do
+        ? `<div class="never-do"><strong>⚠ Never do</strong><br>${escapeHtml(treatment.never_do)}</div>`
+        : '';
+    } else {
+      // Legacy result card (unchanged behavior)
+      document.getElementById('stain-summary').textContent =
+        parsed.fabric_observation || treatment.treatment_summary || '';
+      const color = catColor(treatment.category);
+      const label = catLabel(treatment.category);
+      const wash = parseWashTemp(treatment.treatment_summary || (treatment.steps || []).join(' '));
+      const washChip = wash
+        ? `<span class="wash-chip ${wash.kind}">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>`
+        : '';
+      document.getElementById('stain-tags').innerHTML = `
+        <span class="chip" style="color:${color};border-color:${color}66">${escapeHtml(label)}</span>
+        ${washChip}
+        <span class="chip">⏱ ~${treatment.estimated_minutes} min total</span>
+      `;
+      const warningsEl = document.getElementById('stain-warnings');
+      const allWarnings = [
+        ...(parsed.warning_if_any ? [{ fabric: 'general', warning: parsed.warning_if_any }] : []),
+        ...(treatment.applicable_warnings || []),
+      ];
+      warningsEl.innerHTML = allWarnings.map(w => `
+        <div class="fabric-warning"><strong>⚠ Heads up</strong><br>${escapeHtml(w.warning)}</div>
+      `).join('');
+    }
   } else if (parsed && parsed.needs_category) {
     showCategoryPicker(parsed.reason, parsed.suggested_categories, parsed.candidate_stains);
   }
 }
 
 function showCategoryPicker(reason, suggestedCats = null, candidateStains = null) {
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   document.getElementById('stain-needs-category').style.display = 'block';
   document.getElementById('stain-needs-reason').textContent =
     reason || "I want to make sure I get this right. Pick the closest category and I'll narrow it down.";
@@ -1573,7 +1634,7 @@ function pickCategory(catId) {
   if (!cat) return;
   // Show all stains in that category as candidate list
   const stainsInCat = PLAYBOOK.stains.filter(s => s.category === catId);
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   document.getElementById('stain-needs-category').style.display = 'block';
   document.getElementById('stain-needs-reason').textContent = `Pick the closest match in ${cat.label}.`;
   document.getElementById('stain-candidates').innerHTML =
@@ -1623,11 +1684,100 @@ function pickCandidate(stainName) {
   renderStainResult(state.stainScan);
 }
 
+// V3 surface fallback chain: when the AI picks (or user requests) a surface not
+// present in the V3 stain's surfaces, fall through in this order. Per the spec.
+const V3_SURFACE_ORDER = ['cotton', 'polyester', 'upholstery', 'carpet', 'tile', 'hardwood', 'marble', 'leather'];
+const SURFACE_EMOJI = {
+  cotton: '👕', polyester: '🎽', carpet: '🪺', upholstery: '🛋', leather: '👜',
+  hardwood: '🪵', marble: '🪨', tile: '🧱',
+};
+const SURFACE_LABEL = {
+  cotton: 'Cotton', polyester: 'Polyester', carpet: 'Carpet', upholstery: 'Upholstery',
+  leather: 'Leather', hardwood: 'Hardwood', marble: 'Marble', tile: 'Tile',
+};
+
+// Resolve a V3 stain + desired surface to the actual surface key we'll use.
+// Returns the requested surface if it exists, otherwise the closest fallback,
+// otherwise the first surface in the stain's surfaces map.
+function resolveV3Surface(stain, desired) {
+  if (!stain?.surfaces) return null;
+  const keys = Object.keys(stain.surfaces);
+  if (!keys.length) return null;
+  if (desired && keys.includes(desired)) return desired;
+  for (const s of V3_SURFACE_ORDER) {
+    if (keys.includes(s)) return s;
+  }
+  return keys[0];
+}
+
 // --- Treatment step flow ---
 function startTreatment() {
   if (!state.stainTreatment) return toast('Identify the stain first');
+  const t = state.stainTreatment;
   state.stainStepIndex = 0;
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-final']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
+
+  // V3: route through surface picker (unless AI gave us a valid one already).
+  if (t._source === 'v3' && t.surfaces) {
+    const aiSurface = state.surfaceFromAI;
+    if (aiSurface && aiSurface !== 'unknown' && t.surfaces[aiSurface]) {
+      // AI surface is valid in this stain's V3 entry — go straight to treatment.
+      state.stainSurface = aiSurface;
+      document.getElementById('stain-treatment').style.display = 'block';
+      renderStep();
+      return;
+    }
+    // Otherwise show the picker.
+    showSurfacePicker();
+    return;
+  }
+
+  // Legacy: jump to step 1 as before.
+  document.getElementById('stain-treatment').style.display = 'block';
+  renderStep();
+}
+
+function showSurfacePicker() {
+  const t = state.stainTreatment;
+  if (!t?.surfaces) { document.getElementById('stain-treatment').style.display = 'block'; renderStep(); return; }
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-final', 'stain-treatment', 'stain-pro-tip-card']);
+  const card = document.getElementById('stain-surface-picker');
+  if (!card) return;
+  card.style.display = 'block';
+
+  // Hint copy: name the stain so the picker feels specific.
+  document.getElementById('stain-surface-picker-hint').textContent =
+    `Where is the ${t.name?.toLowerCase() || 'stain'}? Steps adapt to the surface.`;
+
+  // Order surfaces with the available V3 keys first, then any extras.
+  const available = Object.keys(t.surfaces);
+  const ordered = V3_SURFACE_ORDER.filter(s => available.includes(s)).concat(available.filter(s => !V3_SURFACE_ORDER.includes(s)));
+  const aiSurface = state.surfaceFromAI && state.surfaceFromAI !== 'unknown' ? state.surfaceFromAI : null;
+
+  document.getElementById('stain-surface-grid').innerHTML = ordered.map(s => {
+    const isRec = s === aiSurface;
+    return `
+      <button class="surface-btn press-gold ${isRec ? 'recommended' : ''}" data-surface="${s}">
+        <span class="surface-emoji">${SURFACE_EMOJI[s] || '·'}</span>
+        <span>${escapeHtml(SURFACE_LABEL[s] || s)}</span>
+        ${isRec ? '<span class="surface-tag">AI guess</span>' : ''}
+      </button>
+    `;
+  }).join('');
+  document.getElementById('stain-surface-grid').querySelectorAll('.surface-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.add('pressed');
+      setTimeout(() => pickSurface(btn.dataset.surface), 200);
+    });
+  });
+}
+
+function pickSurface(surface) {
+  const t = state.stainTreatment;
+  if (!t) return;
+  state.stainSurface = resolveV3Surface(t, surface);
+  state.stainStepIndex = 0;
+  hideAll(['stain-surface-picker']);
   document.getElementById('stain-treatment').style.display = 'block';
   renderStep();
 }
@@ -1635,6 +1785,9 @@ function startTreatment() {
 function renderStep() {
   const t = state.stainTreatment;
   if (!t) return;
+  // Route to V3 step renderer when applicable; legacy path is untouched.
+  if (t._source === 'v3') return renderStepV3();
+
   const steps = t.steps || [];
   const i = state.stainStepIndex;
   if (i >= steps.length) return finishTreatment();
@@ -1719,10 +1872,122 @@ function renderStep() {
   prodWrap.innerHTML = html;
 }
 
+// V3 step renderer — surface-aware, with stars, time, common-mistakes (step 1),
+// TidyAI picks, and inline preference variant callouts.
+function renderStepV3() {
+  const t = state.stainTreatment;
+  const surface = state.stainSurface || resolveV3Surface(t, state.surfaceFromAI);
+  if (!surface) return finishTreatment();
+  state.stainSurface = surface;
+  const surfData = t.surfaces[surface] || {};
+  const steps = surfData.steps || [];
+  const i = state.stainStepIndex;
+  if (i >= steps.length) return finishTreatment();
+  const isLast = i === steps.length - 1;
+  const actionText = String(steps[i] || '');
+  const seconds = estimateStepSeconds(actionText);
+  const wash = parseWashTemp(actionText);
+
+  const surfaceLabel = SURFACE_LABEL[surface] || surface;
+  const difficulty = Math.max(1, Math.min(3, parseInt(surfData.difficulty) || 1));
+  const stars = '★'.repeat(difficulty) + `<span class="dim">${'★'.repeat(3 - difficulty)}</span>`;
+
+  document.getElementById('step-counter').innerHTML =
+    `${escapeHtml(t.name)} · ${escapeHtml(surfaceLabel)} · Step ${i + 1} of ${steps.length}` +
+    ` <span style="margin-left:8px"><span class="difficulty-stars">${stars}</span></span>` +
+    (surfData.time ? ` <span style="color:var(--muted);font-size:11px;margin-left:6px">${escapeHtml(surfData.time)}</span>` : '');
+
+  document.getElementById('step-action').innerHTML = escapeHtml(actionText);
+
+  // Time + wash row
+  document.getElementById('step-time').innerHTML = `
+    <span class="step-time">⏱ ${formatSeconds(seconds)}</span>
+    ${wash ? `<span class="wash-chip ${wash.kind}" style="margin-left:6px">💧 ${escapeHtml(wash.label)} · ${escapeHtml(wash.fahrenheit)}</span>` : ''}
+  `;
+
+  // Back: alive on step 1 — returns to surface picker (so user can change surface) or the result card if no V3 surfaces.
+  document.getElementById('step-back-btn').disabled = false;
+  document.getElementById('step-next-btn').textContent = isLast ? 'Done — finish ▶' : 'Next ▶';
+
+  // Products section: TidyAI picks (V3 specific) + per-step generic "you'll need" + preference variants.
+  const prodWrap = document.getElementById('step-products-wrap');
+  let html = '';
+
+  // Step 1 only: common mistakes block
+  if (i === 0 && Array.isArray(t.common_mistakes) && t.common_mistakes.length) {
+    html += `
+      <div class="common-mistakes">
+        <h5>⚠ Common mistakes</h5>
+        <ul>${t.common_mistakes.map(m => `<li>${escapeHtml(m)}</li>`).join('')}</ul>
+      </div>
+    `;
+  }
+
+  // Generic "you'll need" from the per-surface products
+  if (Array.isArray(surfData.products) && surfData.products.length) {
+    html += `
+      <div class="step-products" style="margin-top:10px">
+        <strong>You'll need</strong>
+        <ul>${surfData.products.map(p => `<li>${escapeHtml(String(p))}</li>`).join('')}</ul>
+      </div>
+    `;
+  }
+
+  // TidyAI brand picks
+  const tp = t.tidyai_products || {};
+  const tpPrimary = Array.isArray(tp.primary) ? tp.primary : [];
+  const tpDIY = Array.isArray(tp.diy_fallback) ? tp.diy_fallback : [];
+  if (tpPrimary.length || tpDIY.length) {
+    html += `
+      <div class="rec-card">
+        <h4>💎 TidyAI picks</h4>
+        ${tpPrimary.length ? `<ul>${tpPrimary.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
+        ${tpDIY.length ? `<div class="rec-meta" style="margin-top:6px"><strong style="color:var(--text)">DIY:</strong> ${tpDIY.map(escapeHtml).join('; ')}</div>` : ''}
+      </div>
+    `;
+  }
+
+  // If-then variant callouts: only show for prefs the user opted into.
+  const variants = t.if_then_variants || {};
+  const prefs = state.prefs || {};
+  const variantLabels = {
+    sensitive_skin: '🌿 Sensitive skin',
+    white_hack: '💧 With White Hack',
+    eco_only: '🌱 Eco only',
+    baby_household: '🍼 Baby in the home',
+    hard_water: '💎 Hard water',
+    has_pet: '🐾 Has pet',
+  };
+  // Map pref-toggle keys to variant keys: has_white_hack -> white_hack
+  const PREF_TO_VARIANT_KEY = {
+    sensitive_skin: 'sensitive_skin',
+    has_white_hack: 'white_hack',
+    eco_only: 'eco_only',
+    baby_household: 'baby_household',
+    hard_water: 'hard_water',
+    has_pet: 'has_pet',
+  };
+  for (const [prefKey, varKey] of Object.entries(PREF_TO_VARIANT_KEY)) {
+    if (prefs[prefKey] && variants[varKey]) {
+      html += `<div class="variant-callout ${varKey}"><strong>${variantLabels[varKey] || varKey}</strong>${escapeHtml(variants[varKey])}</div>`;
+    }
+  }
+
+  prodWrap.innerHTML = html;
+}
+
 function nextStep() {
   if (!state.stainTreatment) return;
+  const t = state.stainTreatment;
+  let totalSteps;
+  if (t._source === 'v3') {
+    const surface = state.stainSurface;
+    totalSteps = (t.surfaces?.[surface]?.steps || []).length;
+  } else {
+    totalSteps = (t.steps || []).length;
+  }
   state.stainStepIndex++;
-  if (state.stainStepIndex >= state.stainTreatment.steps.length) finishTreatment();
+  if (state.stainStepIndex >= totalSteps) finishTreatment();
   else renderStep();
 }
 function prevStep() {
@@ -1730,15 +1995,18 @@ function prevStep() {
     state.stainStepIndex--;
     renderStep();
   } else {
-    // Already on step 1 — return to the "Stain found" result card.
+    // On step 1: V3 → back to surface picker; legacy → back to result card.
     hideAll(['stain-treatment']);
-    if (state.stainScan) renderStainResult(state.stainScan);
+    if (state.stainTreatment?._source === 'v3' && state.stainTreatment.surfaces) {
+      showSurfacePicker();
+    } else if (state.stainScan) {
+      renderStainResult(state.stainScan);
+    }
   }
 }
 
 function finishTreatment() {
   const t = state.stainTreatment;
-  // Save to history
   if (t) {
     state.stainHistory.unshift({
       id: 'sh_' + Math.random().toString(36).slice(2, 9),
@@ -1749,11 +2017,46 @@ function finishTreatment() {
     state.stainHistory = state.stainHistory.slice(0, 20);
     save(LS.stainHistory, state.stainHistory);
   }
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-surface-picker']);
+
+  // V3 → render the pro tip + expectation + alt method card.
+  if (t?._source === 'v3') {
+    const body = document.getElementById('stain-pro-tip-body');
+    let html = '';
+    if (t.pro_tip)     html += `<div class="pro-tip-block"><h4>💡 Pro tip</h4><p>${escapeHtml(t.pro_tip)}</p></div>`;
+    if (t.expectation) html += `<div class="pro-tip-block expectation"><h4>📊 Expectation</h4><p>${escapeHtml(t.expectation)}</p></div>`;
+    if (t.alt_method)  html += `<div class="pro-tip-block alt-method"><h4>🔁 Alt method</h4><p>${escapeHtml(t.alt_method)}</p></div>`;
+    if (t.science)     html += `<div class="pro-tip-block science"><h4>🧪 Science</h4><p>${escapeHtml(t.science)}</p></div>`;
+    body.innerHTML = html;
+    document.getElementById('stain-pro-tip-card').style.display = 'block';
+    renderStainHistory();
+    return;
+  }
+
+  // Legacy: original verify-photo card
   document.getElementById('stain-final').style.display = 'block';
   document.getElementById('stain-verify-result').style.display = 'none';
   document.getElementById('stain-verify-result').innerHTML = '';
   renderStainHistory();
+}
+
+// Called from the V3 pro-tip card when the user wants to verify with an after-photo.
+function continueToVerify() {
+  hideAll(['stain-pro-tip-card']);
+  document.getElementById('stain-final').style.display = 'block';
+  document.getElementById('stain-verify-result').style.display = 'none';
+  document.getElementById('stain-verify-result').innerHTML = '';
+}
+
+// Convenience alias used by the V3 spec's test scenarios.
+function saveUserPrefs(prefs) {
+  state.prefs = { ...(state.prefs || {}), ...(prefs || {}) };
+  save(LS.prefs, state.prefs);
+  restorePrefsUI();
+  if (state.stainTreatment && document.getElementById('stain-treatment')?.style.display === 'block') {
+    renderStep();
+  }
+  return state.prefs;
 }
 
 // --- After photo + verification ---
@@ -1846,6 +2149,7 @@ function showHappyQuestion() {
   hideAll([
     'stain-origin-question', 'stain-typed-card',
     'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
+    'stain-surface-picker', 'stain-pro-tip-card',
     'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
   ]);
   const card = document.getElementById('stain-happy-question');
@@ -1855,7 +2159,7 @@ function showHappyQuestion() {
 function happyAnswer(answer) {
   hideAll([
     'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
-    'stain-final',
+    'stain-final', 'stain-pro-tip-card', 'stain-surface-picker',
   ]);
   if (answer === 'yes') {
     const yes = document.getElementById('stain-happy-yes');
@@ -1890,10 +2194,13 @@ function resetStainFlow() {
   state.stainStepIndex = 0;
   state.stainScan = null;
   state.stainImageDataUrl = null;
+  state.stainSurface = null;
+  state.surfaceFromAI = null;
   localStorage.removeItem(LS.lastStainScan);
   hideAll([
     'stain-origin-question', 'stain-typed-card',
     'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final',
+    'stain-surface-picker', 'stain-pro-tip-card',
     'stain-happy-question', 'stain-happy-yes', 'stain-happy-no', 'stain-happy-thanks',
   ]);
   const input = document.getElementById('stain-typed-input');
