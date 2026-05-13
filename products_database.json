@@ -1,0 +1,2691 @@
+{
+  "version": "1.1.0",
+  "built_at": "2026-05-13T15:20:00.615Z",
+  "description": "Curated 100+ laundry, stain-removal, and booster products for the TidyAI Hacks \"Suggested products\" section. Each product has verified active ingredients, the stain chemistry classes it works best on, and category tags (popular / eco / fragrance-free / sensitive-skin / etc.) that drive UI filtering.",
+  "total": 108,
+  "schema": {
+    "id": "slug",
+    "brand": "manufacturer name",
+    "name": "product name as marketed",
+    "category": "detergent | stain_remover | booster | pet_enzyme | softener | scent_booster | machine_cleaner",
+    "format": "liquid | powder | sheet | pod | spray | gel | paste | stick | bar | tablet | granular | wipe | ball",
+    "active_ingredients": "array of canonical chemistry names",
+    "best_for": "array of chemistry_class values (matches product_ifthen_rules.json + laundry_playbook_v3.json)",
+    "tags": "array of UI filter tags",
+    "price": "US price hint string",
+    "description": "one-sentence positioning + cult-favorite signal where relevant"
+  },
+  "product_categories_for_ui": [
+    {
+      "id": "all",
+      "label": "All products",
+      "filter": null
+    },
+    {
+      "id": "popular",
+      "label": "Most popular",
+      "filter": {
+        "tag": "popular"
+      }
+    },
+    {
+      "id": "eco",
+      "label": "Eco-friendly",
+      "filter": {
+        "tag": "eco"
+      }
+    },
+    {
+      "id": "fragrance_free",
+      "label": "Fragrance-free",
+      "filter": {
+        "tag": "fragrance_free"
+      }
+    },
+    {
+      "id": "sensitive_skin",
+      "label": "Sensitive skin",
+      "filter": {
+        "tag": "sensitive_skin"
+      }
+    },
+    {
+      "id": "baby",
+      "label": "Baby & cloth diapers",
+      "filter": {
+        "tag": "baby"
+      }
+    },
+    {
+      "id": "athletic",
+      "label": "Athletic & sport",
+      "filter": {
+        "tag": "athletic"
+      }
+    },
+    {
+      "id": "pet",
+      "label": "Pet stains",
+      "filter": {
+        "tag": "pet"
+      }
+    },
+    {
+      "id": "hard_water",
+      "label": "Hard water",
+      "filter": {
+        "tag": "hard_water"
+      }
+    },
+    {
+      "id": "dark_clothes",
+      "label": "Dark colors",
+      "filter": {
+        "tag": "dark_clothes"
+      }
+    },
+    {
+      "id": "sheets",
+      "label": "Detergent sheets",
+      "filter": {
+        "format": "sheet"
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": "tide-original-liquid",
+      "brand": "Tide",
+      "name": "Original Liquid Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Sodium lauryl sulfate",
+        "Protease",
+        "Amylase",
+        "Mannanase",
+        "Optical brighteners"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular",
+        "he_compatible"
+      ],
+      "price": "$13–22",
+      "description": "The #1 US laundry detergent. Multi-enzyme workhorse that handles 90% of everyday stains."
+    },
+    {
+      "id": "tide-original-powder",
+      "brand": "Tide",
+      "name": "Original Powder Laundry Detergent",
+      "category": "detergent",
+      "format": "powder",
+      "active_ingredients": [
+        "Linear alkylbenzene sulfonate",
+        "Sodium carbonate",
+        "Sodium silicate",
+        "Protease",
+        "Amylase",
+        "Lipase",
+        "Mannanase",
+        "Sodium percarbonate",
+        "Optical brighteners"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "hard_water"
+      ],
+      "tags": [
+        "popular",
+        "powder_format",
+        "he_compatible"
+      ],
+      "price": "$12–20",
+      "description": "Powder variant carries more enzymes (incl. lipase) than the liquid. The KismaiAesthetics spa-day favorite."
+    },
+    {
+      "id": "tide-pods-original",
+      "brand": "Tide",
+      "name": "Pods Original",
+      "category": "detergent",
+      "format": "pod",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "C12-15 pareth-7",
+        "Protease",
+        "Amylase",
+        "Mannanase",
+        "Hydrogen peroxide",
+        "Optical brighteners"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular",
+        "pod_format",
+        "he_compatible"
+      ],
+      "price": "$15–25",
+      "description": "Pre-dosed convenience. Most-bought pod SKU in the US (~250K+ monthly units on Amazon)."
+    },
+    {
+      "id": "tide-hygienic-clean",
+      "brand": "Tide",
+      "name": "Hygienic Clean Heavy Duty 10X",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate (high concentration)",
+        "Sodium laureth sulfate",
+        "5 enzymes",
+        "Hydrogen peroxide",
+        "Sodium percarbonate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "athletic",
+        "he_compatible"
+      ],
+      "price": "$18–28",
+      "description": "Tide's strongest formula. Designed for set stains and heavy soil; high surfactant + enzyme concentration."
+    },
+    {
+      "id": "tide-plus-bleach",
+      "brand": "Tide",
+      "name": "Plus Bleach Alternative",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Sodium percarbonate (bleach alternative)",
+        "Protease",
+        "Amylase",
+        "Mannanase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "he_compatible"
+      ],
+      "price": "$14–22",
+      "description": "Color-safe oxygen-bleach detergent. For whites and lights without chlorine bleach risk."
+    },
+    {
+      "id": "persil-proclean-original",
+      "brand": "Persil",
+      "name": "ProClean Original Power-Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "C12-15 pareth-7",
+        "Protease",
+        "Amylase",
+        "Lipase",
+        "Cellulase",
+        "Mannanase",
+        "Pectate lyase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "tannin_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "he_compatible"
+      ],
+      "price": "$15–24",
+      "description": "The 5-enzyme champion. Beats Tide on stain removal by ~2% in independent tests."
+    },
+    {
+      "id": "persil-proclean-powder",
+      "brand": "Persil",
+      "name": "ProClean Power-Pearls Powder",
+      "category": "detergent",
+      "format": "powder",
+      "active_ingredients": [
+        "Linear alkylbenzene sulfonate",
+        "Sodium carbonate",
+        "Sodium percarbonate",
+        "Protease",
+        "Amylase",
+        "Lipase",
+        "Cellulase",
+        "Mannanase",
+        "Zeolite (water softener)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "sweat_aluminum_yellow_pit",
+        "food_grease_or_body_oil",
+        "hard_water"
+      ],
+      "tags": [
+        "cult_favorite",
+        "powder_format",
+        "he_compatible"
+      ],
+      "price": "$16–24",
+      "description": "Powder version with maximum enzyme load. Best for spa-day soaks."
+    },
+    {
+      "id": "persil-oxi-power",
+      "brand": "Persil",
+      "name": "ProClean Oxi Power-Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "5 enzymes",
+        "Alkylbenzenesulfonate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based",
+        "protein_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "he_compatible"
+      ],
+      "price": "$16–25",
+      "description": "Detergent + built-in oxygen bleach booster. Two products in one bottle."
+    },
+    {
+      "id": "gain-original-liquid",
+      "brand": "Gain",
+      "name": "Original Scent Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Protease",
+        "Amylase",
+        "Optical brighteners",
+        "Fragrance"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "he_compatible"
+      ],
+      "price": "$10–18",
+      "description": "#2 US-selling detergent. Mid-tier cleaning, top-rated for scent strength."
+    },
+    {
+      "id": "gain-flings",
+      "brand": "Gain",
+      "name": "Flings Original Scent Pods",
+      "category": "detergent",
+      "format": "pod",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "C12-15 pareth-7",
+        "Protease",
+        "Amylase",
+        "Fragrance"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "pod_format",
+        "he_compatible"
+      ],
+      "price": "$12–20",
+      "description": "Gain's pod version. Same scent strength as the liquid."
+    },
+    {
+      "id": "arm-hammer-deep-clean",
+      "brand": "Arm & Hammer",
+      "name": "Plus OxiClean Deep Clean",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium carbonate (washing soda)",
+        "Sodium percarbonate",
+        "Linear alkylbenzene sulfonate",
+        "Protease",
+        "Amylase",
+        "Lipase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based",
+        "food_grease_or_body_oil",
+        "hard_water"
+      ],
+      "tags": [
+        "popular",
+        "he_compatible"
+      ],
+      "price": "$9–15",
+      "description": "Budget workhorse with built-in OxiClean. Strong value pick."
+    },
+    {
+      "id": "all-mighty-pacs",
+      "brand": "All",
+      "name": "Mighty Pacs Original",
+      "category": "detergent",
+      "format": "pod",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Protease",
+        "Amylase"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "pod_format",
+        "he_compatible"
+      ],
+      "price": "$10–17",
+      "description": "Affordable pod option. Owned by Henkel (same parent as Persil)."
+    },
+    {
+      "id": "cheer-bright-clean",
+      "brand": "Cheer",
+      "name": "Bright Clean Color Guard",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Polyvinyl pyridine N-oxide (dye magnet)",
+        "Cellulase",
+        "Optical brighteners"
+      ],
+      "best_for": [
+        "general_purpose",
+        "color_protection"
+      ],
+      "tags": [
+        "popular",
+        "dark_clothes",
+        "he_compatible"
+      ],
+      "price": "$11–18",
+      "description": "Color-protection detergent. Cheaper Woolite Darks alternative."
+    },
+    {
+      "id": "woolite-darks-defense",
+      "brand": "Woolite",
+      "name": "Darks Defense Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Tetrasodium glutamate diacetate (GLDA chelator)",
+        "Polyvinyl pyridine N-oxide (dye magnet)",
+        "Cellulase",
+        "Mild surfactants"
+      ],
+      "best_for": [
+        "color_protection",
+        "general_purpose"
+      ],
+      "tags": [
+        "dark_clothes",
+        "he_compatible",
+        "specialty"
+      ],
+      "price": "$8–14",
+      "description": "Specifically formulated for dark colors. Active dye-magnet keeps blacks black."
+    },
+    {
+      "id": "wisk-deep-clean",
+      "brand": "Wisk",
+      "name": "Deep Clean Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Protease",
+        "Amylase",
+        "Sodium percarbonate"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "he_compatible"
+      ],
+      "price": "$11–17",
+      "description": "Classic workhorse, mid-tier cleaning. Less premium than Tide/Persil."
+    },
+    {
+      "id": "seventh-gen-free-clear",
+      "brand": "Seventh Generation",
+      "name": "Free & Clear Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Coco glucoside",
+        "Decyl glucoside",
+        "Caprylyl/Capryl glucoside",
+        "Protease",
+        "Amylase",
+        "Lipase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "popular",
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "plant_based",
+        "dermatologist_recommended",
+        "baby",
+        "he_compatible"
+      ],
+      "price": "$13–18",
+      "description": "96% plant-based. NEA-endorsed for eczema. Parents magazine top baby pick."
+    },
+    {
+      "id": "seventh-gen-easy-dose",
+      "brand": "Seventh Generation",
+      "name": "EasyDose Ultra-Concentrated",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Glucoside surfactants",
+        "Plant-derived enzymes",
+        "Sodium citrate"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$10–14",
+      "description": "Concentrated formula with pre-measured dispenser. 66 loads in a small bottle."
+    },
+    {
+      "id": "method-laundry-detergent",
+      "brand": "Method",
+      "name": "8X Concentrated Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "C12-15 pareth-7",
+        "Glycerin",
+        "Protease",
+        "Amylase",
+        "Citric acid"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$12–18",
+      "description": "Biodegradable + phosphate-free. Pump bottle, ultra-concentrated 8X formula."
+    },
+    {
+      "id": "mrs-meyers-clean-day",
+      "brand": "Mrs. Meyer's",
+      "name": "Clean Day Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium lauryl sulfate (plant-derived)",
+        "Glucoside surfactants",
+        "Essential oils",
+        "Protease",
+        "Sodium citrate"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$14–20",
+      "description": "88% bio-based. Essential-oil scented (lavender, lemon verbena, basil)."
+    },
+    {
+      "id": "ecos-2x-laundry",
+      "brand": "ECOS",
+      "name": "2X Liquid Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Coconut-based enzymes",
+        "Soap bark (saponin)"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$10–15",
+      "description": "EPA Safer Choice certified. Includes built-in softener (no separate fabric softener needed)."
+    },
+    {
+      "id": "dropps-pods",
+      "brand": "Dropps",
+      "name": "Sensitive Skin & Baby Pods",
+      "category": "detergent",
+      "format": "pod",
+      "active_ingredients": [
+        "Polyvinyl alcohol (film)",
+        "Glucoside surfactants",
+        "Sodium citrate",
+        "Plant-derived enzymes"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based"
+      ],
+      "tags": [
+        "eco",
+        "sensitive_skin",
+        "baby",
+        "plant_based",
+        "pod_format",
+        "he_compatible"
+      ],
+      "price": "$15–22",
+      "description": "Plastic-free packaging. Subscription model. NEA-endorsed for eczema."
+    },
+    {
+      "id": "charlies-soap-powder",
+      "brand": "Charlie's Soap",
+      "name": "Laundry Powder",
+      "category": "detergent",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate (washing soda)",
+        "Sodium metasilicate",
+        "Linear alcohol ethoxylate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "hard_water"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "hard_water",
+        "cult_favorite",
+        "powder_format",
+        "he_compatible"
+      ],
+      "price": "$18–28",
+      "description": "Cult favorite. Minimalist 3-ingredient formula. Excellent in hard water."
+    },
+    {
+      "id": "country-save-detergent",
+      "brand": "Country Save",
+      "name": "Laundry Powder",
+      "category": "detergent",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Sodium silicate",
+        "Sodium percarbonate",
+        "Linear alcohol ethoxylate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "cloth_diapers"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "powder_format",
+        "he_compatible"
+      ],
+      "price": "$15–22",
+      "description": "Cloth-diaper community favorite. Minimalist powder with no enzymes (some diaper users prefer this)."
+    },
+    {
+      "id": "rockin-green-platinum",
+      "brand": "Rockin' Green",
+      "name": "Platinum Series Active Wear",
+      "category": "detergent",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Sodium percarbonate",
+        "Plant-derived surfactants",
+        "Multiple enzymes including lipase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "hard_water",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "eco",
+        "hard_water",
+        "athletic",
+        "cloth_diapers",
+        "powder_format",
+        "he_compatible"
+      ],
+      "price": "$18–26",
+      "description": "Hard-water champion. Cloth-diaper safe. Multi-enzyme plant formula."
+    },
+    {
+      "id": "branch-basics-concentrate",
+      "brand": "Branch Basics",
+      "name": "All-Purpose Concentrate",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Coco glucoside",
+        "Decyl glucoside",
+        "Sodium citrate",
+        "Sodium bicarbonate",
+        "Organic chamomile extract",
+        "Sodium phytate"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "plant_based",
+        "cult_favorite",
+        "he_compatible"
+      ],
+      "price": "$45 starter kit",
+      "description": "Multi-use concentrate (1 bottle = 70 cleaner bottles). MADE SAFE certified. Cleanest US ingredient list."
+    },
+    {
+      "id": "white-hack-sheets",
+      "brand": "White Hack",
+      "name": "Laundry Detergent Sheets (Refreshing Mist + Fragrance Free SKUs)",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Protease enzyme (per brand — for sweat, body odor, protein)",
+        "Lipase enzyme (per brand — for grease and sebum)",
+        "Polyvinyl alcohol (sheet binder)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "tannin_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "plant_based",
+        "sheet_format",
+        "he_compatible",
+        "athletic",
+        "cult_favorite"
+      ],
+      "price": "$15–22 / 60 loads",
+      "description": "Sweden-made enzyme-powered sheets. Brand markets protease + lipase activity — strong on sweat, body odor, grease, and activewear funk. Two SKUs: Refreshing Mist (mild fragrance) and Fragrance Free (for sensitive skin, baby clothes, chemical-sensitive households). Plastic-free, dissolves in cold or hot water."
+    },
+    {
+      "id": "white-hack-fragrance-free",
+      "brand": "White Hack",
+      "name": "Fragrance Free Laundry Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Protease enzyme",
+        "Lipase enzyme",
+        "No fragrance",
+        "No dyes",
+        "Polyvinyl alcohol (sheet binder)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "tannin_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "plant_based",
+        "sheet_format",
+        "he_compatible",
+        "athletic"
+      ],
+      "price": "$15–22 / 60 loads",
+      "description": "Same enzyme-powered formula as the standard White Hack sheets but with zero fragrance, dyes, or optical brighteners. Best pick when fragrance-free is required — eczema, baby clothes, asthma-sensitive households."
+    },
+    {
+      "id": "earth-breeze-sheets",
+      "brand": "Earth Breeze",
+      "name": "Eco Laundry Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Sodium dodecyl sulfate (SLS)",
+        "Alcohol ethoxylate",
+        "Protease",
+        "Sodium acetate",
+        "Glycerol",
+        "PVA (sheet binder)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based"
+      ],
+      "tags": [
+        "eco",
+        "sheet_format",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$15–25 / 60 loads",
+      "description": "Cheapest per-load sheet detergent (~$0.20–0.33). B Corp; donates 10 washes per pack."
+    },
+    {
+      "id": "tru-earth-strips",
+      "brand": "Tru Earth",
+      "name": "Eco-Strips Laundry Detergent",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Cocamidopropyl betaine",
+        "Sodium gluconate",
+        "Lauryl dimethyl amine oxide",
+        "Sulfonic acids",
+        "C14-16 alkanes",
+        "PVA"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "sensitive_skin",
+        "plant_based",
+        "sheet_format",
+        "he_compatible"
+      ],
+      "price": "$20–28 / 32 loads",
+      "description": "Pioneer of the sheet format. Paraben-free, phosphate-free, hypoallergenic."
+    },
+    {
+      "id": "kind-laundry-sheets",
+      "brand": "Kind Laundry",
+      "name": "Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived enzymes",
+        "Camellia japonica extract",
+        "Sapindus mukurossi (soapberry)",
+        "Kaolin",
+        "Sunflower seed oil",
+        "PVA"
+      ],
+      "best_for": [
+        "general_purpose",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "plant_based",
+        "sheet_format",
+        "he_compatible"
+      ],
+      "price": "$18–28 / 60 loads",
+      "description": "EWG Verified, Leaping Bunny, USDA BioPreferred, Mom's Choice. Stain-fighting enzymes."
+    },
+    {
+      "id": "heysunday-sheets",
+      "brand": "HeySunday",
+      "name": "Laundry Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Protease",
+        "Amylase",
+        "Sodium citrate",
+        "PVA"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "sheet_format",
+        "he_compatible"
+      ],
+      "price": "$18–25",
+      "description": "Independent sheet brand. Solid mid-tier eco option."
+    },
+    {
+      "id": "blueland-laundry-tablets",
+      "brand": "Blueland",
+      "name": "Laundry Detergent Tablets",
+      "category": "detergent",
+      "format": "tablet",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Sodium carbonate",
+        "Sodium citrate",
+        "Plant-derived enzymes",
+        "Glucoside surfactants"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$15–22",
+      "description": "Tablet format. Refillable Forever tin. Plastic-free. EPA Safer Choice."
+    },
+    {
+      "id": "sheets-laundry-club",
+      "brand": "Sheets Laundry Club",
+      "name": "Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Protease",
+        "Sodium citrate",
+        "PVA"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "plant_based",
+        "sheet_format",
+        "he_compatible"
+      ],
+      "price": "$12–18",
+      "description": "US-made budget sheet option."
+    },
+    {
+      "id": "berkley-green-proofed",
+      "brand": "Berkley Green",
+      "name": "Proofed! Laundry Detergent Sheets",
+      "category": "detergent",
+      "format": "sheet",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Enzymes",
+        "PVA"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "plant_based",
+        "sheet_format",
+        "he_compatible"
+      ],
+      "price": "$16–22",
+      "description": "Boutique eco sheet brand."
+    },
+    {
+      "id": "all-free-clear",
+      "brand": "All",
+      "name": "Free Clear Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium laureth sulfate",
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Protease",
+        "Amylase",
+        "No dyes",
+        "No fragrance"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based"
+      ],
+      "tags": [
+        "popular",
+        "fragrance_free",
+        "sensitive_skin",
+        "dermatologist_recommended",
+        "baby",
+        "he_compatible"
+      ],
+      "price": "$10–18",
+      "description": "#1 dermatologist-recommended. NEA + NPF Seals. Eczema gold standard."
+    },
+    {
+      "id": "tide-free-gentle",
+      "brand": "Tide",
+      "name": "Free & Gentle Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium borate",
+        "Methylisothiazolinone (preservative)",
+        "Alkoxylates",
+        "Ethanolamines",
+        "Protease",
+        "Amylase"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "fragrance_free",
+        "sensitive_skin",
+        "dermatologist_recommended",
+        "baby",
+        "he_compatible"
+      ],
+      "price": "$13–22",
+      "description": "Tide power without fragrance/dyes. NEA + NPF Seals."
+    },
+    {
+      "id": "persil-sensitive-skin",
+      "brand": "Persil",
+      "name": "ProClean Sensitive Skin",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Multi-enzymes (5)",
+        "Mild surfactants",
+        "No dyes",
+        "No fragrance"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "sensitive_skin",
+        "fragrance_free",
+        "dermatologist_recommended",
+        "he_compatible"
+      ],
+      "price": "$15–22",
+      "description": "Same 5-enzyme stain power as Persil ProClean, gentler on skin."
+    },
+    {
+      "id": "dreft-stage-1",
+      "brand": "Dreft",
+      "name": "Stage 1: Newborn Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium C10-16 alkylbenzenesulfonate (mild)",
+        "Sodium laureth sulfate",
+        "Protease",
+        "Mild fragrance",
+        "No dyes"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based"
+      ],
+      "tags": [
+        "popular",
+        "sensitive_skin",
+        "baby",
+        "dermatologist_recommended",
+        "he_compatible"
+      ],
+      "price": "$13–20",
+      "description": "Formulated for newborn skin. Has a signature soft scent (not fragrance-free)."
+    },
+    {
+      "id": "oxiclean-baby",
+      "brand": "OxiClean",
+      "name": "Baby Stain Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Hydrogen peroxide",
+        "Sodium percarbonate",
+        "Protease",
+        "Surfactants",
+        "No dyes/fragrance"
+      ],
+      "best_for": [
+        "protein_based",
+        "tannin_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "baby",
+        "sensitive_skin",
+        "fragrance_free",
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Gentle enough for baby clothes; strong on formula, blood, poop stains."
+    },
+    {
+      "id": "up-up-free-clear",
+      "brand": "Up & Up (Target)",
+      "name": "Free + Clear & Gentle Liquid",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium laureth sulfate",
+        "Sodium C10-16 alkylbenzenesulfonate",
+        "Protease",
+        "No dyes/fragrance"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "he_compatible"
+      ],
+      "price": "$8–14",
+      "description": "Target's house-brand answer to All Free Clear. Solid budget pick."
+    },
+    {
+      "id": "babyganics-laundry",
+      "brand": "Babyganics",
+      "name": "Plant-Based Baby Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Coco glucoside",
+        "Sodium citrate",
+        "Enzymes",
+        "No fragrance"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "sensitive_skin",
+        "baby",
+        "fragrance_free",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$14–20",
+      "description": "Plant-based baby formula. Pediatrician + dermatologist tested."
+    },
+    {
+      "id": "arm-hammer-sensitive-skin",
+      "brand": "Arm & Hammer",
+      "name": "Sensitive Skin Free of Perfumes & Dyes",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Linear alkylbenzene sulfonate",
+        "Protease",
+        "No fragrance",
+        "No dyes"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "fragrance_free",
+        "sensitive_skin",
+        "he_compatible"
+      ],
+      "price": "$8–12",
+      "description": "Budget sensitive-skin pick. Washing soda base gives mild builder action."
+    },
+    {
+      "id": "win-sports-detergent",
+      "brand": "WIN",
+      "name": "Sports Detergent (Activewear)",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Oxygen-based actives",
+        "Mild surfactants",
+        "No optical brighteners"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "sweat_aluminum_yellow_pit",
+        "protein_based"
+      ],
+      "tags": [
+        "athletic",
+        "specialty",
+        "he_compatible"
+      ],
+      "price": "$10–14",
+      "description": "Oxygen-ion based. Strips body-oil buildup from synthetic athletic fabric."
+    },
+    {
+      "id": "hex-performance",
+      "brand": "HEX Performance",
+      "name": "Laundry Detergent Free + Clear",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Proprietary \"hex\" surfactant molecule",
+        "Mild plant-derived cleaners",
+        "Cold-water actives"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "sweat_aluminum_yellow_pit",
+        "mold_or_mildew"
+      ],
+      "tags": [
+        "athletic",
+        "fragrance_free",
+        "specialty",
+        "he_compatible"
+      ],
+      "price": "$14–20",
+      "description": "Targets baked-in body odor in synthetic activewear. Strong on the lipid layer where bacteria live."
+    },
+    {
+      "id": "tide-plus-sport",
+      "brand": "Tide",
+      "name": "Plus Febreze Sport Odor Defense",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Tide active stack",
+        "Febreze odor counteractant",
+        "Protease",
+        "Amylase"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "athletic",
+        "he_compatible"
+      ],
+      "price": "$14–22",
+      "description": "Tide formula + Febreze for set workout-clothes smell."
+    },
+    {
+      "id": "sweat-x",
+      "brand": "Sweat X",
+      "name": "Sport Max Odor Defense",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Multi-enzymes",
+        "Heavy-duty surfactants",
+        "Odor-counteracting molecules"
+      ],
+      "best_for": [
+        "sweat_aluminum_yellow_pit",
+        "food_grease_or_body_oil",
+        "mold_or_mildew"
+      ],
+      "tags": [
+        "athletic",
+        "specialty",
+        "he_compatible"
+      ],
+      "price": "$12–18",
+      "description": "Specifically for embedded odors. Used by pro sports teams."
+    },
+    {
+      "id": "athletx-enzyme",
+      "brand": "AthletX",
+      "name": "Enzyme Sports Laundry Detergent",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Plant-based triple-enzyme blend (protease, amylase, lipase)",
+        "Mild surfactants",
+        "No fragrance"
+      ],
+      "best_for": [
+        "sweat_aluminum_yellow_pit",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "athletic",
+        "fragrance_free",
+        "eco",
+        "plant_based",
+        "he_compatible"
+      ],
+      "price": "$13–18",
+      "description": "Fragrance-free athletic enzyme detergent. Made in USA."
+    },
+    {
+      "id": "laundress-wash-stain",
+      "brand": "The Laundress",
+      "name": "Wash & Stain Bar",
+      "category": "stain_remover",
+      "format": "bar",
+      "active_ingredients": [
+        "Coconut-derived surfactants",
+        "Plant-based enzymes",
+        "Glycerin",
+        "Essential oils"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "food_grease_or_body_oil",
+        "tannin_based"
+      ],
+      "tags": [
+        "eco",
+        "specialty",
+        "cult_favorite"
+      ],
+      "price": "$12–16",
+      "description": "Spot-treat bar safe for silk, wool, cashmere. Hand-wash all-in-one."
+    },
+    {
+      "id": "laundress-wool-cashmere",
+      "brand": "The Laundress",
+      "name": "Wool & Cashmere Shampoo",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "pH-neutral mild surfactants",
+        "Lanolin",
+        "No enzymes (safe for protein fibers)"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "specialty",
+        "cult_favorite",
+        "fragrance_free"
+      ],
+      "price": "$18–24",
+      "description": "pH-balanced for animal-protein fibers. No enzymes that degrade keratin."
+    },
+    {
+      "id": "eucalan",
+      "brand": "Eucalan",
+      "name": "Delicate Wash No-Rinse",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Mild plant-derived surfactants",
+        "Lanolin",
+        "Eucalyptus oil (optional variants)"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "specialty",
+        "cult_favorite",
+        "fragrance_free"
+      ],
+      "price": "$10–16",
+      "description": "No-rinse delicates wash for wool, silk, lingerie. Knitting + lingerie community favorite."
+    },
+    {
+      "id": "soak-wash",
+      "brand": "Soak",
+      "name": "Soak Wash",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "Plant-derived mild surfactants",
+        "No phosphates",
+        "No enzymes"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "specialty",
+        "fragrance_free"
+      ],
+      "price": "$10–18",
+      "description": "No-rinse formula for delicates. Quilters and lingerie users swear by it."
+    },
+    {
+      "id": "laundress-denim",
+      "brand": "The Laundress",
+      "name": "Denim Wash",
+      "category": "detergent",
+      "format": "liquid",
+      "active_ingredients": [
+        "pH-balanced surfactants",
+        "Color-protection agents",
+        "No optical brighteners"
+      ],
+      "best_for": [
+        "color_protection"
+      ],
+      "tags": [
+        "dark_clothes",
+        "specialty",
+        "cult_favorite"
+      ],
+      "price": "$22–28",
+      "description": "Made for raw and selvedge denim. Preserves indigo dye without fading."
+    },
+    {
+      "id": "oxiclean-versatile",
+      "brand": "OxiClean",
+      "name": "Versatile Stain Remover Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Sodium carbonate",
+        "Surfactants",
+        "Polymers"
+      ],
+      "best_for": [
+        "tannin_based",
+        "protein_based",
+        "sweat_aluminum_yellow_pit",
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "powder_format"
+      ],
+      "price": "$10–18",
+      "description": "The universal oxygen booster. Soak 30 min to overnight for set stains."
+    },
+    {
+      "id": "oxiclean-maxforce-spray",
+      "brand": "OxiClean",
+      "name": "MaxForce Spray",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "3 enzymes (protease, amylase, lipase)",
+        "Alcohol ethoxylates",
+        "Sodium hydroxide",
+        "Sodium borate",
+        "Sodium percarbonate"
+      ],
+      "best_for": [
+        "tannin_based",
+        "protein_based",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite"
+      ],
+      "price": "$5–9",
+      "description": "3x stronger than original OxiClean. Pre-treat 5 minutes before wash."
+    },
+    {
+      "id": "oxiclean-white-revive",
+      "brand": "OxiClean",
+      "name": "White Revive Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Sodium percarbonate",
+        "EDTA",
+        "Sodium polyacrylate",
+        "Tinopal CBS (optical brightener)",
+        "Protease"
+      ],
+      "best_for": [
+        "sweat_aluminum_yellow_pit",
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "powder_format"
+      ],
+      "price": "$10–18",
+      "description": "Whiter than chlorine bleach by 40% per OxiClean testing. Heavy optical brightener load."
+    },
+    {
+      "id": "oxiclean-odor-blasters",
+      "brand": "OxiClean",
+      "name": "Odor Blasters Versatile",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Sodium carbonate",
+        "Odor-counteractant molecules",
+        "Surfactants"
+      ],
+      "best_for": [
+        "mold_or_mildew",
+        "sweat_aluminum_yellow_pit",
+        "smoke_odor"
+      ],
+      "tags": [
+        "powder_format",
+        "athletic"
+      ],
+      "price": "$10–15",
+      "description": "Versatile + targeted odor neutralizer. Strong on gym-funk and musty smells."
+    },
+    {
+      "id": "oxiclean-baby-stain",
+      "brand": "OxiClean",
+      "name": "Baby Stain Soaker Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Surfactants",
+        "No fragrance",
+        "No dyes"
+      ],
+      "best_for": [
+        "protein_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "baby",
+        "sensitive_skin",
+        "fragrance_free",
+        "powder_format"
+      ],
+      "price": "$8–12",
+      "description": "Gentler OxiClean formula. Soak for baby clothes, formula stains, blowouts."
+    },
+    {
+      "id": "shout-advanced",
+      "brand": "Shout",
+      "name": "Advanced Action Gel",
+      "category": "stain_remover",
+      "format": "gel",
+      "active_ingredients": [
+        "Sodium alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Hydrogen peroxide",
+        "Protease",
+        "Amylase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$4–8",
+      "description": "Classic pre-treater. Gel sticks to vertical surfaces during dwell time."
+    },
+    {
+      "id": "shout-triple-acting",
+      "brand": "Shout",
+      "name": "Triple-Acting Liquid",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Enzymes",
+        "Hydrogen peroxide"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$4–7",
+      "description": "Spray pre-treater. Same family as Advanced Gel, faster dwell."
+    },
+    {
+      "id": "shout-wipes",
+      "brand": "Shout",
+      "name": "Wipes (On-the-go)",
+      "category": "stain_remover",
+      "format": "wipe",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Glycol ethers",
+        "Plant-derived surfactants"
+      ],
+      "best_for": [
+        "general_purpose",
+        "food_grease_or_body_oil",
+        "tannin_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$3–6",
+      "description": "Single-use wipes for travel and on-the-spot treatment."
+    },
+    {
+      "id": "resolve-max",
+      "brand": "Resolve",
+      "name": "Max Pre-Treater Stain Spray",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Protease",
+        "Amylase"
+      ],
+      "best_for": [
+        "general_purpose",
+        "protein_based",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$4–7",
+      "description": "Strong pre-treater. Resolve's laundry sibling of the carpet cleaner."
+    },
+    {
+      "id": "zout-triple-enzyme",
+      "brand": "Zout",
+      "name": "Triple Enzyme Stain Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Protease",
+        "Amylase",
+        "Lipase",
+        "Alkaline builders"
+      ],
+      "best_for": [
+        "protein_based",
+        "food_grease_or_body_oil",
+        "tannin_based"
+      ],
+      "tags": [
+        "cult_favorite"
+      ],
+      "price": "$5–9",
+      "description": "Three-enzyme cocktail. Strong on grass, blood, food grease."
+    },
+    {
+      "id": "spray-n-wash",
+      "brand": "Spray 'n Wash",
+      "name": "Resolve Max Stain Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Alkylbenzenesulfonate",
+        "Sodium laureth sulfate",
+        "Enzymes"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$4–7",
+      "description": "Original pre-treater spray. Older brand, still effective."
+    },
+    {
+      "id": "miss-mouths",
+      "brand": "Miss Mouth's",
+      "name": "Messy Eater Stain Treater",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Hydrogen peroxide",
+        "Plant-derived surfactants",
+        "No fragrance",
+        "No dyes",
+        "No chemicals (per brand)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "baby",
+        "plant_based"
+      ],
+      "price": "$10–14",
+      "description": "TikTok-viral. Especially loved for kid messes. No-scrub, fragrance-free."
+    },
+    {
+      "id": "carbona-stain-wizard",
+      "brand": "Carbona",
+      "name": "Stain Wizard for All Stains",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Alcohol C10-12 ethoxylated propoxylated",
+        "Hydrogen peroxide",
+        "Surfactants"
+      ],
+      "best_for": [
+        "general_purpose",
+        "food_grease_or_body_oil",
+        "tannin_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Carbona's all-purpose pre-treater. Backup when you can't identify the stain class."
+    },
+    {
+      "id": "carbona-sd1",
+      "brand": "Carbona",
+      "name": "Stain Devils #1 — Lipstick, Tomato, Liquid Make-up",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Surfactants (cosmetics-targeted)",
+        "Solvents"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "tannin_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #1 — cosmetics + tomato. Most popular numbered Stain Devil."
+    },
+    {
+      "id": "carbona-sd2",
+      "brand": "Carbona",
+      "name": "Stain Devils #2 — Beverages, Mustard",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Citric acid",
+        "Surfactants",
+        "Mild oxidizers"
+      ],
+      "best_for": [
+        "tannin_based",
+        "dye_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #2 — soda, coffee, mustard. Targets tannin + turmeric dye."
+    },
+    {
+      "id": "carbona-sd3",
+      "brand": "Carbona",
+      "name": "Stain Devils #3 — Ink, Crayon, Marker",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Glycol ethers",
+        "Isopropyl alcohol",
+        "Surfactants"
+      ],
+      "best_for": [
+        "dye_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #3 — ink, crayon, marker. Solvent-rich for dye lift."
+    },
+    {
+      "id": "carbona-sd4",
+      "brand": "Carbona",
+      "name": "Stain Devils #4 — Blood, Dairy, Ice Cream",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Alcohol C10-12 ethoxylated propoxylated",
+        "Triethanolamine",
+        "Sodium polyacrylate",
+        "Mild enzymes"
+      ],
+      "best_for": [
+        "protein_based"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #4 — blood, milk, ice cream. Protein specialist."
+    },
+    {
+      "id": "carbona-sd5",
+      "brand": "Carbona",
+      "name": "Stain Devils #5 — Fat, Cooking Oil, Grease",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Solvents (mineral spirits family)",
+        "Surfactants"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #5 — butter, oil, pesto, mayo. Heavy-grease specialist."
+    },
+    {
+      "id": "carbona-sd6",
+      "brand": "Carbona",
+      "name": "Stain Devils #6 — Glue, Sap, Bubble Gum",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "d-Limonene (citrus solvent)",
+        "Glycol ethers"
+      ],
+      "best_for": [
+        "sugar_or_sticky"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #6 — sticky residues. Citrus-based polymer dissolver."
+    },
+    {
+      "id": "carbona-sd7",
+      "brand": "Carbona",
+      "name": "Stain Devils #7 — Motor Oil & Lubricant",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Heavy solvents",
+        "Surfactants",
+        "Alcohol ethoxylates"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #7 — motor oil, grease, asphalt. Workwear specialist."
+    },
+    {
+      "id": "carbona-sd8",
+      "brand": "Carbona",
+      "name": "Stain Devils #8 — Coffee, Tea, Wine, Juice",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Mild acids",
+        "Surfactants"
+      ],
+      "best_for": [
+        "tannin_based"
+      ],
+      "tags": [
+        "specialty",
+        "cult_favorite"
+      ],
+      "price": "$5–8",
+      "description": "Formula #8 — full tannin set. Wine, coffee, tea, fruit juice, cola."
+    },
+    {
+      "id": "carbona-sd9",
+      "brand": "Carbona",
+      "name": "Stain Devils #9 — Rust & Perspiration",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Citric acid",
+        "Oxalic acid (mild)",
+        "Surfactants"
+      ],
+      "best_for": [
+        "mineral_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "Formula #9 — rust + sweat. Mild-acid alternative to Whink."
+    },
+    {
+      "id": "wine-away",
+      "brand": "Wine Away",
+      "name": "Red Wine Stain Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Plant extracts (vegetable-derived)",
+        "Surfactants",
+        "No bleach",
+        "Biodegradable"
+      ],
+      "best_for": [
+        "tannin_based"
+      ],
+      "tags": [
+        "eco",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$7–10",
+      "description": "Purpose-built for red wine. Works on coffee and juice too. Strongest natural wine remover."
+    },
+    {
+      "id": "amodex",
+      "brand": "Amodex",
+      "name": "Ink & Stain Remover",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Mild plant-derived surfactants",
+        "No solvents that damage acetate"
+      ],
+      "best_for": [
+        "dye_based"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "sensitive_skin",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$10–14",
+      "description": "Gentler than rubbing alcohol. Safe on acetate/rayon/silk. Cult favorite for Sharpie + ballpoint."
+    },
+    {
+      "id": "whink-rust-remover",
+      "brand": "Whink",
+      "name": "Rust Stain Remover",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Hydrofluoric acid (1–3%)"
+      ],
+      "best_for": [
+        "mineral_based"
+      ],
+      "tags": [
+        "specialty",
+        "cult_favorite"
+      ],
+      "price": "$7–10",
+      "description": "Heavy-duty rust remover. Caustic — wear gloves. Most powerful US rust fabric option."
+    },
+    {
+      "id": "whink-iron-out-color",
+      "brand": "Whink",
+      "name": "Color-Safe Iron Out",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium hydrosulfite (mild reducing agent)",
+        "Sodium metabisulfite"
+      ],
+      "best_for": [
+        "mineral_based",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$8–12",
+      "description": "Color-safe alternative to standard Whink. For colored fabric, sunscreen yellowing, and old whites."
+    },
+    {
+      "id": "iron-out-spray",
+      "brand": "Iron Out",
+      "name": "Rust Stain Remover Spray Gel",
+      "category": "stain_remover",
+      "format": "gel",
+      "active_ingredients": [
+        "Oxalic acid",
+        "Surfactants",
+        "Thickeners"
+      ],
+      "best_for": [
+        "mineral_based"
+      ],
+      "tags": [
+        "popular",
+        "specialty"
+      ],
+      "price": "$5–9",
+      "description": "Gel sticks to vertical rust stains. Bathroom + fabric + carpet."
+    },
+    {
+      "id": "goo-gone",
+      "brand": "Goo Gone",
+      "name": "Original Citrus Cleaner",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "d-Limonene (orange peel)",
+        "Petroleum distillates",
+        "Glycol ethers"
+      ],
+      "best_for": [
+        "sugar_or_sticky",
+        "wax_based"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$6–10",
+      "description": "Citrus solvent. Adhesive, tape residue, gum, sap, tar."
+    },
+    {
+      "id": "lestoil",
+      "brand": "Lestoil",
+      "name": "Heavy-Duty Concentrate",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Petroleum distillates",
+        "Pine oil",
+        "Sodium tallate (soap)"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "wax_based"
+      ],
+      "tags": [
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$7–12",
+      "description": "1930s formula still made. Crayon-in-dryer disasters, motor oil, deep grease."
+    },
+    {
+      "id": "krud-kutter",
+      "brand": "Krud Kutter",
+      "name": "Original Cleaner / Degreaser",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Plant-derived surfactants",
+        "Sodium metasilicate",
+        "Citric acid"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil",
+        "wax_based"
+      ],
+      "tags": [
+        "popular",
+        "specialty",
+        "plant_based"
+      ],
+      "price": "$5–9",
+      "description": "Water-based biodegradable degreaser. Color-fast and fabric-safe."
+    },
+    {
+      "id": "dawn-blue",
+      "brand": "Dawn",
+      "name": "Ultra Original Blue Dish Soap",
+      "category": "stain_remover",
+      "format": "liquid",
+      "active_ingredients": [
+        "Sodium lauryl sulfate",
+        "Sodium laureth sulfate",
+        "C10-16 alkyldimethylamine oxide"
+      ],
+      "best_for": [
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite"
+      ],
+      "price": "$3–6",
+      "description": "Universal grease cutter. The single most-recommended stain pre-treater (~$3)."
+    },
+    {
+      "id": "tide-to-go-pen",
+      "brand": "Tide",
+      "name": "To Go Stain Remover Pen",
+      "category": "stain_remover",
+      "format": "stick",
+      "active_ingredients": [
+        "Sodium alkylbenzenesulfonate",
+        "Hydrogen peroxide",
+        "Sodium citrate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "popular",
+        "specialty"
+      ],
+      "price": "$3–5",
+      "description": "On-the-go spot treatment. Works fresh; not for set stains."
+    },
+    {
+      "id": "rocco-roxie",
+      "brand": "Rocco & Roxie",
+      "name": "Professional Strength Stain & Odor Eliminator",
+      "category": "pet_enzyme",
+      "format": "spray",
+      "active_ingredients": [
+        "Water",
+        "Hydrogen peroxide",
+        "Sodium laureth sulfate",
+        "Proprietary ethoxylated alcohol",
+        "d-Limonene",
+        "Potassium pyrophosphate",
+        "Bacteria-based enzyme (uricase)"
+      ],
+      "best_for": [
+        "pet_related"
+      ],
+      "tags": [
+        "popular",
+        "pet",
+        "specialty"
+      ],
+      "price": "$15–22",
+      "description": "Top-rated pet enzyme cleaner on Amazon. Uricase breaks uric acid crystals."
+    },
+    {
+      "id": "natures-miracle",
+      "brand": "Nature's Miracle",
+      "name": "Advanced Stain & Odor Eliminator",
+      "category": "pet_enzyme",
+      "format": "spray",
+      "active_ingredients": [
+        "Water",
+        "Alcohol",
+        "Microbial mixture (bacterial enzymes incl. uricase)",
+        "Pentasodium triphosphate",
+        "d-Limonene"
+      ],
+      "best_for": [
+        "pet_related"
+      ],
+      "tags": [
+        "popular",
+        "pet",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$12–18",
+      "description": "The classic. Cult favorite among pet owners. Multiple SKUs (dog, cat, urine destroyer)."
+    },
+    {
+      "id": "anti-icky-poo",
+      "brand": "Anti-Icky-Poo",
+      "name": "Mister Max Anti-Icky-Poo",
+      "category": "pet_enzyme",
+      "format": "spray",
+      "active_ingredients": [
+        "Multi-strain bacterial enzymes incl. uricase",
+        "Mild surfactants",
+        "No fragrance"
+      ],
+      "best_for": [
+        "pet_related"
+      ],
+      "tags": [
+        "pet",
+        "specialty",
+        "fragrance_free"
+      ],
+      "price": "$15–22",
+      "description": "Cat-spray specialist. Recommended for intact tomcats. No ammonia."
+    },
+    {
+      "id": "skouts-honor",
+      "brand": "Skout's Honor",
+      "name": "Stain & Odor Solution",
+      "category": "pet_enzyme",
+      "format": "spray",
+      "active_ingredients": [
+        "Plant-derived enzymes",
+        "Surfactants",
+        "No phosphates"
+      ],
+      "best_for": [
+        "pet_related"
+      ],
+      "tags": [
+        "pet",
+        "eco",
+        "plant_based",
+        "specialty"
+      ],
+      "price": "$10–15",
+      "description": "Plant-based enzyme alternative. Strong eco positioning."
+    },
+    {
+      "id": "simple-solution",
+      "brand": "Simple Solution",
+      "name": "Extreme Pet Stain & Odor Remover",
+      "category": "pet_enzyme",
+      "format": "spray",
+      "active_ingredients": [
+        "Bacterial enzymes incl. uricase",
+        "Surfactants",
+        "Mild fragrance"
+      ],
+      "best_for": [
+        "pet_related"
+      ],
+      "tags": [
+        "pet",
+        "specialty"
+      ],
+      "price": "$8–14",
+      "description": "Budget pet enzyme option. Effective + widely available."
+    },
+    {
+      "id": "folex-carpet",
+      "brand": "Folex",
+      "name": "Instant Carpet Spot Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Water-based surfactant blend",
+        "No solvents",
+        "No bleach"
+      ],
+      "best_for": [
+        "general_purpose",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$8–12",
+      "description": "No-rinse carpet spot remover. Cult favorite for carpet stains of all kinds."
+    },
+    {
+      "id": "resolve-carpet",
+      "brand": "Resolve",
+      "name": "Pet Carpet Stain Remover",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Surfactants",
+        "Hydrogen peroxide",
+        "Pet-targeted enzymes"
+      ],
+      "best_for": [
+        "pet_related",
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "pet",
+        "specialty"
+      ],
+      "price": "$5–9",
+      "description": "Pet-specific carpet variant of Resolve."
+    },
+    {
+      "id": "bissell-stomp",
+      "brand": "Bissell",
+      "name": "Stomp 'N Go Stain Lifter",
+      "category": "stain_remover",
+      "format": "spray",
+      "active_ingredients": [
+        "Surfactants",
+        "Hydrogen peroxide",
+        "Mild solvents"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "specialty"
+      ],
+      "price": "$8–12",
+      "description": "Spot treatment for carpets. Step-on-and-leave format."
+    },
+    {
+      "id": "borax-20-mule",
+      "brand": "20 Mule Team",
+      "name": "Borax Natural Laundry Booster",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium tetraborate decahydrate (borax)"
+      ],
+      "best_for": [
+        "general_purpose",
+        "mold_or_mildew",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "powder_format"
+      ],
+      "price": "$5–8",
+      "description": "pH-raising mineral booster. Stripping recipes, slime, mold, set yellow."
+    },
+    {
+      "id": "arm-hammer-washing-soda",
+      "brand": "Arm & Hammer",
+      "name": "Super Washing Soda",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate"
+      ],
+      "best_for": [
+        "general_purpose",
+        "food_grease_or_body_oil",
+        "hard_water"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "powder_format"
+      ],
+      "price": "$5–8",
+      "description": "Pure sodium carbonate. Hard water softener + heavy-grease booster."
+    },
+    {
+      "id": "biz-stain-odor",
+      "brand": "Biz",
+      "name": "Stain & Odor Eliminator Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium percarbonate",
+        "Protease",
+        "Amylase",
+        "Surfactants"
+      ],
+      "best_for": [
+        "protein_based",
+        "sweat_aluminum_yellow_pit",
+        "tannin_based"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "powder_format"
+      ],
+      "price": "$8–12",
+      "description": "Classic enzyme booster. Add to wash for blood, sweat, food stains."
+    },
+    {
+      "id": "calgon-water-softener",
+      "brand": "Calgon",
+      "name": "Water Softener Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium hexametaphosphate (sequestrant)",
+        "Sodium carbonate"
+      ],
+      "best_for": [
+        "hard_water"
+      ],
+      "tags": [
+        "hard_water",
+        "powder_format",
+        "specialty"
+      ],
+      "price": "$5–9",
+      "description": "Sequesters hard-water minerals so detergent works better. Essential for hard-water households."
+    },
+    {
+      "id": "charlies-booster",
+      "brand": "Charlie's Soap",
+      "name": "Booster & Hard Water Treatment",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Sodium metasilicate",
+        "Sodium percarbonate"
+      ],
+      "best_for": [
+        "hard_water",
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "hard_water",
+        "cult_favorite",
+        "powder_format"
+      ],
+      "price": "$15–22",
+      "description": "Pairs with Charlie's Soap for hard-water situations. Eco minimalist option."
+    },
+    {
+      "id": "odorklenz-laundry",
+      "brand": "OdorKlenz",
+      "name": "Laundry Additive Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Magnesium oxide",
+        "Aluminum oxide",
+        "Zinc oxide",
+        "Water"
+      ],
+      "best_for": [
+        "mold_or_mildew",
+        "smoke_odor",
+        "pet_related"
+      ],
+      "tags": [
+        "fragrance_free",
+        "specialty",
+        "powder_format"
+      ],
+      "price": "$25–35",
+      "description": "Mineral-based odor neutralizer. No masking fragrance. Smoke + musty + chemical odors."
+    },
+    {
+      "id": "enviroklenz-laundry",
+      "brand": "EnviroKlenz",
+      "name": "Laundry Enhancer Powder",
+      "category": "booster",
+      "format": "powder",
+      "active_ingredients": [
+        "Earth minerals (proprietary)",
+        "No fragrance"
+      ],
+      "best_for": [
+        "mold_or_mildew",
+        "smoke_odor",
+        "sweat_aluminum_yellow_pit"
+      ],
+      "tags": [
+        "fragrance_free",
+        "sensitive_skin",
+        "specialty",
+        "powder_format"
+      ],
+      "price": "$25–35",
+      "description": "Sister product to OdorKlenz. Great for chemical-sensitive households."
+    },
+    {
+      "id": "affresh-machine",
+      "brand": "Affresh",
+      "name": "Washing Machine Cleaner Tablets",
+      "category": "machine_cleaner",
+      "format": "tablet",
+      "active_ingredients": [
+        "Sodium carbonate",
+        "Sodium percarbonate",
+        "Surfactants"
+      ],
+      "best_for": [
+        "mold_or_mildew",
+        "hard_water"
+      ],
+      "tags": [
+        "popular",
+        "specialty"
+      ],
+      "price": "$10–15",
+      "description": "Treats the machine itself. Monthly cycle prevents musty front-loader smell."
+    },
+    {
+      "id": "downy-original",
+      "brand": "Downy",
+      "name": "Original Fabric Softener",
+      "category": "softener",
+      "format": "liquid",
+      "active_ingredients": [
+        "Quaternary ammonium softeners",
+        "Fragrance",
+        "Cationic surfactants"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$6–12",
+      "description": "Classic softener. AVOID on towels (kills absorbency) and athletic wear (kills wicking)."
+    },
+    {
+      "id": "downy-unstopables",
+      "brand": "Downy",
+      "name": "Unstopables In-Wash Scent Booster",
+      "category": "scent_booster",
+      "format": "granular",
+      "active_ingredients": [
+        "Fragrance microcapsules",
+        "Polyethylene glycol (encapsulant)"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "specialty"
+      ],
+      "price": "$8–14",
+      "description": "Long-lasting scent. Overdose kills towel absorbency."
+    },
+    {
+      "id": "gain-fireworks",
+      "brand": "Gain",
+      "name": "Fireworks In-Wash Scent Booster",
+      "category": "scent_booster",
+      "format": "granular",
+      "active_ingredients": [
+        "Fragrance microcapsules",
+        "PEG carriers"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular",
+        "specialty"
+      ],
+      "price": "$8–13",
+      "description": "Gain's scent-booster sibling of Downy Unstopables."
+    },
+    {
+      "id": "snuggle-supercare",
+      "brand": "Snuggle",
+      "name": "SuperCare Liquid Fabric Softener",
+      "category": "softener",
+      "format": "liquid",
+      "active_ingredients": [
+        "Quaternary ammonium softeners",
+        "Fragrance",
+        "Color brighteners"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "popular"
+      ],
+      "price": "$5–10",
+      "description": "Loved for long-lasting scent. Same caveats as Downy on towels."
+    },
+    {
+      "id": "wool-dryer-balls",
+      "brand": "Various",
+      "name": "Wool Dryer Balls (set of 6)",
+      "category": "softener",
+      "format": "ball",
+      "active_ingredients": [
+        "100% wool (lanolin-rich)"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "eco",
+        "fragrance_free",
+        "plant_based",
+        "cult_favorite"
+      ],
+      "price": "$10–18 / set",
+      "description": "Replaces dryer sheets. Cuts drying time. Eco-friendly + reusable for 1000+ loads."
+    },
+    {
+      "id": "pink-stuff-paste",
+      "brand": "The Pink Stuff",
+      "name": "Miracle Cleaning Paste",
+      "category": "stain_remover",
+      "format": "paste",
+      "active_ingredients": [
+        "Calcium carbonate (mild abrasive)",
+        "Quartz",
+        "Soap",
+        "Glycerin"
+      ],
+      "best_for": [
+        "mineral_based",
+        "food_grease_or_body_oil"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "specialty"
+      ],
+      "price": "$5–8",
+      "description": "TikTok-viral paste. Sinks, ovens, glass, mild rust. NOT great for fabric stains."
+    },
+    {
+      "id": "bar-keepers-friend",
+      "brand": "Bar Keepers Friend",
+      "name": "Cleanser Powder",
+      "category": "stain_remover",
+      "format": "powder",
+      "active_ingredients": [
+        "Oxalic acid",
+        "Feldspar (mild abrasive)",
+        "Surfactants"
+      ],
+      "best_for": [
+        "mineral_based"
+      ],
+      "tags": [
+        "popular",
+        "cult_favorite",
+        "specialty",
+        "powder_format"
+      ],
+      "price": "$3–6",
+      "description": "Stainless steel + rust specialist for hard surfaces. NOT for fabric."
+    },
+    {
+      "id": "hollywood-fashion-tape",
+      "brand": "Hollywood Fashion Secrets",
+      "name": "Stain Remover Stick",
+      "category": "stain_remover",
+      "format": "stick",
+      "active_ingredients": [
+        "Mild surfactants",
+        "Glycol ethers"
+      ],
+      "best_for": [
+        "general_purpose"
+      ],
+      "tags": [
+        "specialty",
+        "sensitive_skin"
+      ],
+      "price": "$5–8",
+      "description": "Pocket-sized stick. Especially good for deodorant marks and on-the-go."
+    }
+  ]
+}

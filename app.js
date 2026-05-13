@@ -58,9 +58,26 @@ let PRODUCTS_DB = null;
 function loadProductsDb() {
   if (PRODUCTS_DB) return Promise.resolve(PRODUCTS_DB);
   return fetch('products_database.json')
-    .then(r => r.ok ? r.json() : null)
-    .then(d => { PRODUCTS_DB = d; return d; })
-    .catch(err => { console.warn('Products DB load failed (falling back to HACK_RECIPES)', err); return null; });
+    .then(r => {
+      if (!r.ok) {
+        console.error(`[TidyAI] products_database.json fetch failed: HTTP ${r.status} at ${r.url}. Make sure the file is deployed to GitHub Pages. Falling back to static HACK_RECIPES.`);
+        return null;
+      }
+      return r.json();
+    })
+    .then(d => {
+      if (d && Array.isArray(d.products)) {
+        PRODUCTS_DB = d;
+        console.info(`[TidyAI] products_database.json loaded · ${d.products.length} products`);
+      } else if (d !== null) {
+        console.error('[TidyAI] products_database.json returned non-JSON or missing .products — falling back.');
+      }
+      return PRODUCTS_DB;
+    })
+    .catch(err => {
+      console.error('[TidyAI] products_database.json load error (fetch threw):', err);
+      return null;
+    });
 }
 
 // Boot helper — call all loaders in parallel and resolve when done.
@@ -104,6 +121,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Persil ProClean Original Liquid', note: '5 enzymes incl. protease' },
       { name: 'OxiClean MaxForce Spray', note: 'Enzyme + surfactant pre-treater' },
+      { name: 'White Hack laundry sheets', note: 'Plant-based protease + fragrance-free' },
       { name: 'OxiClean Versatile Powder', note: 'Oxygen booster for the wash' },
       { name: 'Carbona Stain Devils #4', note: 'Blood, dairy, ice cream, glue' },
       { name: 'Tide Free & Gentle', note: 'Sensitive-skin enzyme detergent' },
@@ -127,6 +145,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Dawn Ultra Blue dish soap', note: 'Universal grease cutter (~$3)' },
       { name: 'Persil ProClean Powder', note: 'Has lipase enzyme' },
+      { name: 'White Hack laundry sheets', note: 'Plant-based lipase + fragrance-free' },
       { name: 'Tide Original Powder', note: 'Lipase-rich workhorse' },
       { name: 'Lestoil', note: 'Heavy/industrial grease' },
       { name: 'Krud Kutter Original Cleaner/Degreaser', note: 'Mechanic / kitchen grease' },
@@ -140,6 +159,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'OxiClean Versatile Powder', note: 'Overnight soak for set stains' },
       { name: 'Wine Away', note: 'Purpose-built for wine (~$8)' },
+      { name: 'White Hack laundry sheets', note: 'Plant-based surfactants + fragrance-free' },
       { name: 'Carbona Stain Devils #8', note: 'Coffee/tea/wine/juice specialist' },
       { name: 'The Laundress Wine & Coffee Stain Bar', note: 'Gentle for silk (~$16)' },
       { name: 'Persil ProClean liquid', note: 'Multi-enzyme detergent' },
@@ -187,6 +207,7 @@ const HACK_RECIPES = {
     products: [
       { name: 'Whink Color-Safe Iron Out', note: 'Dissolves the aluminum component' },
       { name: 'OxiClean Versatile Powder', note: 'Overnight hot soak' },
+      { name: 'White Hack laundry sheets', note: 'Plant-based protease + lipase' },
       { name: 'Dawn Ultra Blue', note: 'Pre-treat for the sebum layer' },
       { name: 'Persil ProClean Powder', note: 'Lipase-rich hot wash' },
       { name: 'Carbona Stain Devils #1', note: 'Cosmetics + deodorant specialist' },
@@ -245,6 +266,7 @@ const HACK_DEFAULT = {
   products: [
     { name: 'Dawn Ultra Blue dish soap', note: 'Universal pre-treater' },
     { name: 'OxiClean Versatile Powder', note: 'Oxygen booster' },
+    { name: 'White Hack laundry sheets', note: 'Plant-based, fragrance-free everyday detergent' },
     { name: 'Persil ProClean', note: 'Multi-enzyme detergent' },
     { name: 'Tide Free & Gentle', note: 'Sensitive-skin alternative' },
     { name: 'White vinegar', note: 'For mineral or musty issues' },
