@@ -1688,28 +1688,6 @@ function onStainFileChosen(e) {
   e.target.value = '';
 }
 
-// --- Loading card with 3..2..1 countdown ---
-let _stainLoadingTimer = null;
-function showStainLoading() {
-  const card = document.getElementById('stain-loading');
-  if (!card) return;
-  card.style.display = 'block';
-  const num = document.getElementById('stain-loading-countdown');
-  let n = 3;
-  if (num) num.textContent = String(n);
-  if (_stainLoadingTimer) clearInterval(_stainLoadingTimer);
-  _stainLoadingTimer = setInterval(() => {
-    n = n - 1;
-    if (n <= 0) n = 3;  // loop until the API responds
-    if (num) num.textContent = String(n);
-  }, 1000);
-}
-function hideStainLoading() {
-  const card = document.getElementById('stain-loading');
-  if (card) card.style.display = 'none';
-  if (_stainLoadingTimer) { clearInterval(_stainLoadingTimer); _stainLoadingTimer = null; }
-}
-
 // --- AI call: identifyStain ---
 async function analyzeStain(optionalCategory = null) {
   if (!state.stainImageDataUrl) return toast('Add a photo first');
@@ -1718,9 +1696,10 @@ async function analyzeStain(optionalCategory = null) {
   const model = localStorage.getItem(LS.model) || 'gpt-4o-mini';
   await loadAllPlaybooks();
 
-  // Show the loading card with the looping countdown
-  hideAll(['stain-cause-prompt', 'stain-name-input-card', 'stain-countdown-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
-  showStainLoading();
+  // NOTE: do NOT hide #stain-countdown-card here — the caller (onKnowCauseNotSure)
+  // owns that card and runs its progress bar + counter. Hide only the cards
+  // that would compete for screen space.
+  hideAll(['stain-cause-prompt', 'stain-name-input-card', 'stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   const btn = document.getElementById('stain-analyze-btn');
   const label = document.getElementById('stain-analyze-label');
   if (btn && label) { btn.disabled = true; label.innerHTML = '<span class="spinner"></span> Identifying…'; }
@@ -1760,7 +1739,6 @@ async function analyzeStain(optionalCategory = null) {
     console.error(err);
     toast(err.message.length < 80 ? err.message : 'Identification failed — see console');
   } finally {
-    hideStainLoading();
     if (btn && label) { btn.disabled = false; label.textContent = 'Identify stain'; }
   }
 }
