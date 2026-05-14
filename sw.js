@@ -1,5 +1,5 @@
 // TidyAI service worker — network-first so updates always reach the user.
-const CACHE = 'tidyai-v18-candidates-typed';
+const CACHE = 'tidyai-v19-stain-detail';
 const SHELL = [
   './',
   './index.html',
