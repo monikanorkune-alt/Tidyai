@@ -469,6 +469,56 @@
       margin-top: 8px; font-size: 11px; color: var(--muted); font-style: italic; line-height: 1.4;
     }
 
+    /* Progress bar for the Not-sure countdown */
+    .progress-bar {
+      width: 100%; height: 6px; border-radius: 999px;
+      background: rgba(244,244,244,0.10); overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 1s linear;
+    }
+    .progress-fill.complete {
+      width: 100% !important; background: linear-gradient(90deg, var(--accent-2), var(--accent-2));
+    }
+    .analysis-done {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--accent-2); font-size: 22px; font-weight: 700;
+    }
+    .analysis-done .check {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent-2); color: #121212;
+      display: grid; place-items: center; font-size: 18px; font-weight: 800;
+    }
+
+    /* Rich-info blocks on the Most likely card */
+    .info-block { margin-top: 12px; }
+    .info-block h4 {
+      margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .info-block p { margin: 0; line-height: 1.5; color: var(--text); font-size: 14px; }
+    .info-block.pro-tip h4 { color: #FFB906; }
+    .info-block.expectation h4 { color: #FFB7D5; }
+    .info-block.alt-method h4 { color: #A5DEF4; }
+    .info-block.science h4 { color: var(--muted); }
+    .info-block.treatment h4 { color: #FFB906; }
+    .info-block.about h4 { color: var(--muted); }
+
+    /* Per-step "Alternative products" panel */
+    .step-relevant {
+      background: rgba(255,185,6,0.06); border: 1px solid rgba(255,185,6,0.22);
+      border-radius: 12px; padding: 12px; margin-top: 12px;
+    }
+    .step-relevant h5 {
+      margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #FFB906;
+    }
+    .step-relevant ul { margin: 0; padding-left: 18px; }
+    .step-relevant li { margin-bottom: 4px; line-height: 1.4; font-size: 13px; }
+
     /* Loading bar + countdown (shown while AI analyzes a stain) */
     .loading-bar {
       width: 100%; height: 6px; border-radius: 999px;
@@ -613,30 +663,46 @@
           <button class="btn" onclick="onSubmitStainName()">Find treatment</button>
         </div>
 
-        <!-- Not sure: visible 5 → 1 countdown while AI runs -->
+        <!-- Not sure: progress bar + 5→1 counter; when AI returns or count
+             reaches 0 → "✓ Analysis done", then transition to Most likely. -->
         <div id="stain-countdown-card" class="stain-result" style="display:none;text-align:center">
-          <div style="font-size:48px;font-weight:700;margin-bottom:6px"><span id="stain-countdown-text">Analyzing… 5</span></div>
-          <p style="font-size:13px;color:var(--muted)">Reading the photo carefully.</p>
+          <div id="stain-countdown-icon" style="font-size:48px;font-weight:700;margin-bottom:6px;line-height:1">
+            <span id="stain-countdown-text">Analyzing… 5</span>
+          </div>
+          <div class="progress-bar"><div id="stain-progress-fill" class="progress-fill"></div></div>
+          <p style="font-size:13px;color:var(--muted);margin-top:14px">Reading the photo carefully.</p>
         </div>
 
-        <!-- Result: confident match -->
+        <!-- Result: confident match — the rich "Most likely" card. Both the
+             Yes (manual) branch and the Not sure (AI) branch land here. -->
         <div id="stain-confident" class="stain-result" style="display:none">
           <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Most likely</div>
-          <h2 id="stain-name">—</h2>
-          <div id="stain-summary" style="font-size:13px;color:var(--muted);margin-bottom:4px"></div>
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <h2 id="stain-name" style="flex:1;margin:0">—</h2>
+            <img id="stain-result-photo" alt="uploaded stain" style="display:none;width:72px;height:72px;border-radius:10px;object-fit:cover;border:1px solid var(--border);flex:none" />
+          </div>
+          <div id="stain-summary" style="font-size:13px;color:var(--muted);margin:6px 0 4px"></div>
           <div class="stain-tags" id="stain-tags"></div>
           <div id="stain-warnings"></div>
+          <div id="stain-rich-info"></div>
           <div class="row" style="margin-top:8px">
             <button class="btn" onclick="startTreatment()">Start treatment</button>
             <button class="btn secondary" onclick="showCategoryPicker()">Wrong stain?</button>
           </div>
         </div>
 
-        <!-- Result: not sure — at most 3 candidates, no category fallback -->
+        <!-- Result: not sure — at most 2 candidates + free-text fallback -->
         <div id="stain-needs-category" class="stain-result" style="display:none">
           <h2>Pick the closest one</h2>
           <p id="stain-needs-reason" style="font-size:13px;color:var(--muted);margin-bottom:12px">I couldn't tell for sure — which looks closest?</p>
           <div id="stain-candidates-list"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px">
+            <div style="flex:1;height:0.5px;background:var(--border)"></div>
+            <span style="font-size:12px;color:var(--muted)">or type it</span>
+            <div style="flex:1;height:0.5px;background:var(--border)"></div>
+          </div>
+          <input type="text" id="stain-candidates-typed-input" list="stain-names-list" placeholder="e.g. red wine, blood, grass" autocomplete="off" autocapitalize="none" style="margin-bottom:10px" />
+          <button class="btn" onclick="onSubmitCandidateName()">Find treatment</button>
           <button class="btn ghost" onclick="resetStainFlow()" style="margin-top:6px">Start over</button>
         </div>
 

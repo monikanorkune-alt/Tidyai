@@ -1143,6 +1143,13 @@ window.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') { e.preventDefault(); findByTypedName(); }
     });
   }
+  // Enter on the "Pick the closest one" typed input submits as a manual pick
+  const candidatesTyped = document.getElementById('stain-candidates-typed-input');
+  if (candidatesTyped) {
+    candidatesTyped.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); onSubmitCandidateName(); }
+    });
+  }
   loadAllPlaybooks();
   restorePrefsUI();
   // On boot the Stains view shows just the photo upload card. The cause prompt
@@ -1521,6 +1528,16 @@ function onSubmitStainName() {
   if (!val) return toast('Please type the stain name');
   document.getElementById('stain-name-input-card').style.display = 'none';
   pickStainManually(val);  // SAME renderer as the AI flow — no separate code path
+}
+
+// "Pick the closest one" card → user types a stain name as a third option.
+// Reuses pickStainManually so the same playbook lookup + rendering applies.
+function onSubmitCandidateName() {
+  const input = document.getElementById('stain-candidates-typed-input');
+  const val = (input?.value || '').trim();
+  if (!val) return toast('Type a stain name first');
+  document.getElementById('stain-needs-category').style.display = 'none';
+  pickStainManually(val);
 }
 
 // Not sure branch: 5→1 counter paired with a progress bar. When the AI
@@ -1965,8 +1982,9 @@ function renderStainResult(parsed) {
   }
 }
 
-// Shape B (AI not sure). Per spec: cap candidates to 3, no "or pick a category"
-// fallback. The category grid lives only in the Hacks tab now.
+// Shape B (AI not sure). Cap candidates to 2 and always offer a free-text
+// "type the stain" fallback so the user is never stuck if the AI's guesses
+// are off. No "or pick a category" — the category grid lives only in Hacks.
 function showCategoryPicker(reason, _ignoredSuggestedCats, candidateStains) {
   hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-final', 'stain-surface-picker', 'stain-pro-tip-card']);
   const card = document.getElementById('stain-needs-category');
@@ -1976,22 +1994,28 @@ function showCategoryPicker(reason, _ignoredSuggestedCats, candidateStains) {
   const reasonEl = document.getElementById('stain-needs-reason');
   if (reasonEl) reasonEl.textContent = reason || "I couldn't tell for sure — which looks closest?";
 
+  // Make sure the datalist is populated for the typed-input autocomplete
+  if (PLAYBOOK || PLAYBOOK_V3) populateStainDatalist(); else loadAllPlaybooks();
+  // Clear any prior text so the user starts fresh each time the card opens
+  const typedInput = document.getElementById('stain-candidates-typed-input');
+  if (typedInput) typedInput.value = '';
+
   const list = document.getElementById('stain-candidates-list');
   if (!list) return;
-  const candidates = (Array.isArray(candidateStains) ? candidateStains : []).slice(0, 3);
+  const candidates = (Array.isArray(candidateStains) ? candidateStains : []).slice(0, 2);
   if (!candidates.length) {
-    list.innerHTML = `<p style="color:var(--muted);font-size:13px">No candidates — try the photo path again or open the Hacks tab to browse.</p>`;
-    return;
+    list.innerHTML = `<p style="color:var(--muted);font-size:13px">I don't have a close guess — type the stain below and I'll match it.</p>`;
+  } else {
+    list.innerHTML = candidates.map(name => `
+      <button class="stain-row" data-stain="${escapeHtml(name)}" style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--card-strong);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);cursor:pointer;min-height:48px;text-align:left;width:100%;margin-bottom:8px">
+        <span>${escapeHtml(name)}</span>
+        <span style="color:var(--muted)">›</span>
+      </button>
+    `).join('');
+    list.querySelectorAll('button[data-stain]').forEach(btn => {
+      btn.addEventListener('click', () => pickStainManually(btn.dataset.stain));
+    });
   }
-  list.innerHTML = candidates.map(name => `
-    <button class="stain-row" data-stain="${escapeHtml(name)}" style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--card-strong);border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);cursor:pointer;min-height:48px;text-align:left;width:100%;margin-bottom:8px">
-      <span>${escapeHtml(name)}</span>
-      <span style="color:var(--muted)">›</span>
-    </button>
-  `).join('');
-  list.querySelectorAll('button[data-stain]').forEach(btn => {
-    btn.addEventListener('click', () => pickStainManually(btn.dataset.stain));
-  });
 }
 
 // pickCategory is no longer used (the category grid was removed from the
