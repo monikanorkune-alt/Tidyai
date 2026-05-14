@@ -1909,6 +1909,10 @@ function renderStainResult(parsed) {
 
     const isV3 = treatment._source === 'v3';
 
+    // Hide the "Got a stain?" hero — Most likely view is its own world.
+    const heroEl = document.getElementById('laundry-hero');
+    if (heroEl) heroEl.style.display = 'none';
+
     // Summary line under the title: one short framing sentence.
     const summary = isV3
       ? (treatment.urgency_text || '')
@@ -1925,102 +1929,109 @@ function renderStainResult(parsed) {
       <span class="chip wash-chip ${wc.kind}">💧 ${escapeHtml(wc.label)} · ${escapeHtml(wc.range)}</span>
       <span class="chip chip-difficulty difficulty-${dKind}">${escapeHtml(hardnessLabel)}</span>
     `;
+    // Old "Never do" panel position is no longer used — content moves into the
+    // ordered rich-info as a "GOOD TO KNOW" block between How to treat & About.
+    document.getElementById('stain-warnings').innerHTML = '';
 
-    // === Single merged ⚠ warning block: never_do + common_mistakes as bullets ===
-    const warningsEl = document.getElementById('stain-warnings');
-    const mistakes = [];
-    if (isV3 && treatment.never_do) mistakes.push(treatment.never_do);
-    if (isV3 && Array.isArray(treatment.common_mistakes)) {
-      for (const m of treatment.common_mistakes) mistakes.push(m);
-    }
-    if (!isV3) {
-      if (parsed.warning_if_any) mistakes.push(parsed.warning_if_any);
-      for (const w of (treatment.applicable_warnings || [])) mistakes.push(w.warning);
-    }
-    const seenMist = new Set();
-    const uniqMist = mistakes
-      .map(m => (m || '').trim())
-      .filter(m => {
-        if (!m) return false;
-        const k = m.toLowerCase();
-        if (seenMist.has(k)) return false;
-        seenMist.add(k);
-        return true;
-      });
-    warningsEl.innerHTML = uniqMist.length ? `
-      <div class="never-do">
-        <strong>⚠ Never do</strong>
-        <ul style="margin:6px 0 0;padding-left:18px;line-height:1.5">
-          ${uniqMist.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
-        </ul>
-      </div>
-    ` : '';
-
-    // === Rich info: How to treat → About → Pro tip → What to expect → Recommended products ===
     const rich = document.getElementById('stain-rich-info');
     if (rich) {
-      // V3 stains have no top-level treatment_summary — stitch the first 2-3
-      // cotton-surface steps to form the "How to treat" paragraph.
+      // 1. How to treat — V3 stitches first 3 cotton steps; legacy uses treatment_summary
       let howToTreat = '';
       if (isV3 && treatment.surfaces) {
         const surf = treatment.surfaces.cotton || treatment.surfaces[Object.keys(treatment.surfaces)[0]];
-        if (surf?.steps?.length) {
-          howToTreat = surf.steps.slice(0, 3).join(' ');
-        }
+        if (surf?.steps?.length) howToTreat = surf.steps.slice(0, 3).join(' ');
       } else {
         howToTreat = treatment.treatment_summary || '';
       }
-      const aboutText = isV3
-        ? (treatment.science || '')
-        : ''; // legacy has no separate science field
+      // 2. GOOD TO KNOW — merged never_do + common_mistakes as bullets
+      const mistakes = [];
+      if (isV3 && treatment.never_do) mistakes.push(treatment.never_do);
+      if (isV3 && Array.isArray(treatment.common_mistakes)) {
+        for (const m of treatment.common_mistakes) mistakes.push(m);
+      }
+      if (!isV3) {
+        if (parsed.warning_if_any) mistakes.push(parsed.warning_if_any);
+        for (const w of (treatment.applicable_warnings || [])) mistakes.push(w.warning);
+      }
+      const seenMist = new Set();
+      const uniqMist = mistakes
+        .map(m => (m || '').trim())
+        .filter(m => { if (!m) return false; const k = m.toLowerCase(); if (seenMist.has(k)) return false; seenMist.add(k); return true; });
+
+      // 3. About paragraph (V3 only — legacy has no separate science field)
+      const aboutText = isV3 ? (treatment.science || '') : '';
+
+      // 4. Active ingredients from the chemistry-class HACK_RECIPES
+      const recipe = getHackRecipe(treatment);
+      const ingredients = (recipe?.ingredients || []).filter(Boolean);
+
+      // 5. Recommended products — 2–5 cap, deduped by brand, WH at position 2/3
+      let recProducts = pickProductsForStain(treatment, state.prefs) || [];
+      recProducts = dedupeByBrand(recProducts);
+      recProducts = promoteWhiteHack(recProducts, treatment, state.prefs).slice(0, 5);
+      // If DB unavailable, fall back to static tidyai_products / legacy products
+      if (!recProducts.length) {
+        let altList = [];
+        if (isV3 && Array.isArray(treatment.tidyai_products?.primary)) altList = altList.concat(treatment.tidyai_products.primary);
+        else if (Array.isArray(treatment.products)) altList = treatment.products.map(p => p?.name || p);
+        const seen = new Set();
+        recProducts = altList
+          .map(s => String(s || '').trim())
+          .filter(s => { const k = s.toLowerCase(); if (!s || seen.has(k)) return false; seen.add(k); return true; })
+          .slice(0, 5)
+          .map(s => ({ brand: '', name: s, description: '' }));
+      }
+
       const blocks = [];
-      // How to treat goes FIRST per the spec
+      // === Render in the spec's order ===
+      // 1. How to treat
       if (howToTreat) blocks.push(`<div class="info-block treatment"><h4>How to treat</h4><p>${escapeHtml(howToTreat)}</p></div>`);
+      // 2. GOOD TO KNOW (merged warning, ⚠ icon, bullets)
+      if (uniqMist.length) {
+        blocks.push(`
+          <div class="never-do" style="margin-top:12px">
+            <strong>⚠ GOOD TO KNOW</strong>
+            <ul style="margin:6px 0 0;padding-left:18px;line-height:1.5">
+              ${uniqMist.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
+            </ul>
+          </div>
+        `);
+      }
+      // 3. About
       if (aboutText && aboutText !== howToTreat) {
         blocks.push(`<div class="info-block about"><h4>About</h4><p>${escapeHtml(aboutText)}</p></div>`);
       }
-      // No emojis on these headers per the spec
-      if (isV3 && treatment.pro_tip)    blocks.push(`<div class="info-block pro-tip"><h4>PRO TIP from experts community</h4><p>${escapeHtml(treatment.pro_tip)}</p></div>`);
-      if (isV3 && treatment.expectation) blocks.push(`<div class="info-block expectation"><h4>What to expect</h4><p>${escapeHtml(treatment.expectation)}</p></div>`);
-      // Alt method moved to the completion card per spec — NOT on Most likely.
-
-      // === RECOMMENDED PRODUCTS — numbered list, deduped by brand, WH promoted ===
-      let recProducts = pickProductsForStain(treatment, state.prefs) || [];
-      recProducts = dedupeByBrand(recProducts);
-      recProducts = promoteWhiteHack(recProducts, treatment, state.prefs).slice(0, 10);
+      // 4. What to expect (no emoji)
+      if (isV3 && treatment.expectation) {
+        blocks.push(`<div class="info-block expectation"><h4>What to expect</h4><p>${escapeHtml(treatment.expectation)}</p></div>`);
+      }
+      // 5. Active ingredients needed
+      if (ingredients.length) {
+        blocks.push(`
+          <div class="info-block">
+            <h4>Active ingredients needed:</h4>
+            <ul style="margin:6px 0 0;padding-left:18px;line-height:1.6">
+              ${ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}
+            </ul>
+          </div>
+        `);
+      }
+      // 6. RECOMMENDED PRODUCTS — numbered, 2–5
       if (recProducts.length) {
         blocks.push(`
           <div class="info-block">
             <h4>RECOMMENDED PRODUCTS</h4>
             <ol style="margin:6px 0 0;padding-left:24px;line-height:1.6">
-              ${recProducts.map(p => `<li style="margin-bottom:4px"><strong>${escapeHtml(p.brand || '')}</strong>${p.brand ? ' · ' : ''}${escapeHtml(p.name || '')}${p.description ? `<div style="font-size:12px;color:var(--muted);margin-top:2px">${escapeHtml(p.description)}</div>` : ''}</li>`).join('')}
+              ${recProducts.map(p => `<li style="margin-bottom:4px">${p.brand ? `<strong>${escapeHtml(p.brand)}</strong> · ` : ''}${escapeHtml(p.name || '')}${p.description ? `<div style="font-size:12px;color:var(--muted);margin-top:2px">${escapeHtml(p.description)}</div>` : ''}</li>`).join('')}
             </ol>
           </div>
         `);
-      } else {
-        // Fallback to V3 / legacy static list if DB hasn't loaded
-        let altList = [];
-        if (isV3) {
-          const tp = treatment.tidyai_products || {};
-          if (Array.isArray(tp.primary)) altList = altList.concat(tp.primary);
-        } else if (Array.isArray(treatment.products)) {
-          altList = treatment.products.map(p => p?.name || p);
-        }
-        const seen = new Set();
-        const cleaned = altList
-          .map(s => String(s || '').trim())
-          .filter(s => { const k = s.toLowerCase(); if (!s || seen.has(k)) return false; seen.add(k); return true; });
-        if (cleaned.length) {
-          blocks.push(`
-            <div class="info-block">
-              <h4>RECOMMENDED PRODUCTS</h4>
-              <ol style="margin:6px 0 0;padding-left:24px;line-height:1.6">
-                ${cleaned.map(s => `<li style="margin-bottom:4px">${escapeHtml(s)}</li>`).join('')}
-              </ol>
-            </div>
-          `);
-        }
       }
+      // 7. PRO TIP from experts community (bottom of the rich info)
+      if (isV3 && treatment.pro_tip) {
+        blocks.push(`<div class="info-block pro-tip"><h4>PRO TIP from experts community</h4><p>${escapeHtml(treatment.pro_tip)}</p></div>`);
+      }
+      // (Alt method intentionally NOT on Most likely — it lives on the last step.)
       rich.innerHTML = blocks.join('');
     }
   } else if (parsed && parsed.needs_category) {
@@ -2302,42 +2313,68 @@ function renderStepV3() {
   const isLast = i === steps.length - 1;
   const actionText = String(steps[i] || '');
 
+  // Hide the "Got a stain?" hero on step screens.
+  const heroEl = document.getElementById('laundry-hero');
+  if (heroEl) heroEl.style.display = 'none';
+
+  // Show a small uploaded-photo thumbnail at the top of each step.
+  const photo = document.getElementById('step-photo');
+  const photoWrap = document.getElementById('step-photo-wrap');
+  if (photo && photoWrap) {
+    if (state.stainImageDataUrl) {
+      photo.src = state.stainImageDataUrl;
+      photoWrap.style.display = 'block';
+    } else {
+      photoWrap.style.display = 'none';
+    }
+  }
+
   const surfaceLabel = SURFACE_LABEL[surface] || surface;
   document.getElementById('step-counter').innerHTML =
     `${escapeHtml(t.name)} · ${escapeHtml(surfaceLabel)} · Step ${i + 1} of ${steps.length}`;
 
-  // On the LAST step, prepend "Active ingredients needed" + 3–7 product cards.
-  // Ingredients come from HACK_RECIPES[resolved chemistry class]; products
-  // come from the DB picker (deduped by brand + WH promoted to position 3).
-  let stepBodyHTML = '';
+  // On the LAST step: action text → Active ingredients → Recommended products
+  // → "DOESN'T WORK? YOU CAN TRY THIS:" (alt method, renamed). On other steps:
+  // just the action text.
+  let stepBodyHTML = escapeHtml(actionText);
   if (isLast) {
     const recipe = getHackRecipe(t);
     const ingredients = (recipe?.ingredients || []).filter(Boolean);
     let recProducts = pickProductsForStain(t, state.prefs) || [];
     recProducts = dedupeByBrand(recProducts);
     recProducts = promoteWhiteHack(recProducts, t, state.prefs);
-    // Cap at 7; floor at 3 if the DB returned that many.
-    const capped = recProducts.slice(0, Math.min(7, Math.max(3, recProducts.length)));
-    stepBodyHTML += `
-      <div class="rec-card" style="margin-bottom:12px">
-        <h4>Active ingredients needed</h4>
-        <ul style="margin:6px 0 0;padding-left:18px;line-height:1.6">
-          ${ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}
-        </ul>
-      </div>
-    `;
+    // Cap at 5 max, 2 min per spec.
+    const capped = recProducts.slice(0, Math.min(5, Math.max(2, recProducts.length)));
+    if (ingredients.length) {
+      stepBodyHTML += `
+        <div class="rec-card" style="margin-top:12px">
+          <h4>Active ingredients needed:</h4>
+          <ul style="margin:6px 0 0;padding-left:18px;line-height:1.6">
+            ${ingredients.map(ing => `<li>${escapeHtml(ing)}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
     if (capped.length) {
       stepBodyHTML += `
-        <div class="info-block" style="margin-bottom:12px">
+        <div class="info-block" style="margin-top:12px">
           <h4>RECOMMENDED PRODUCTS</h4>
           <ol style="margin:6px 0 0;padding-left:24px;line-height:1.6">
-            ${capped.map(p => `<li style="margin-bottom:4px"><strong>${escapeHtml(p.brand || '')}</strong>${p.brand ? ' · ' : ''}${escapeHtml(p.name || '')}${p.description ? `<div style="font-size:12px;color:var(--muted);margin-top:2px">${escapeHtml(p.description)}</div>` : ''}</li>`).join('')}
+            ${capped.map(p => `<li style="margin-bottom:4px">${p.brand ? `<strong>${escapeHtml(p.brand)}</strong> · ` : ''}${escapeHtml(p.name || '')}${p.description ? `<div style="font-size:12px;color:var(--muted);margin-top:2px">${escapeHtml(p.description)}</div>` : ''}</li>`).join('')}
           </ol>
         </div>
       `;
     }
+    if (t.alt_method) {
+      stepBodyHTML += `
+        <div class="info-block alt-method" style="margin-top:12px">
+          <h4>DOESN'T WORK? YOU CAN TRY THIS:</h4>
+          <p>${escapeHtml(t.alt_method)}</p>
+        </div>
+      `;
+    }
   }
-  document.getElementById('step-action').innerHTML = stepBodyHTML + escapeHtml(actionText);
+  document.getElementById('step-action').innerHTML = stepBodyHTML;
 
   // No clock, no minutes. Only show a wash-temperature chip if the step
   // explicitly mentions water at a specific temperature.
@@ -2423,24 +2460,13 @@ function finishTreatment() {
     state.stainHistory = state.stainHistory.slice(0, 20);
     save(LS.stainHistory, state.stainHistory);
   }
-  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-surface-picker']);
+  hideAll(['stain-confident', 'stain-needs-category', 'stain-treatment', 'stain-surface-picker', 'stain-pro-tip-card']);
+  // Keep the hero hidden through completion.
+  const heroEl = document.getElementById('laundry-hero');
+  if (heroEl) heroEl.style.display = 'none';
 
-  // V3 → completion card. Pro tip + expectation + science already shown on
-  // the Most likely card; here we surface only the Alt method ("if the
-  // primary plan didn't fully work, here's the next thing to try").
-  if (t?._source === 'v3') {
-    const body = document.getElementById('stain-pro-tip-body');
-    let html = '';
-    if (t.alt_method) {
-      html += `<div class="pro-tip-block alt-method"><h4>🔁 Alt method</h4><p>${escapeHtml(t.alt_method)}</p></div>`;
-    }
-    body.innerHTML = html;
-    document.getElementById('stain-pro-tip-card').style.display = 'block';
-    renderStainHistory();
-    return;
-  }
-
-  // Legacy: original verify-photo card
+  // Both V3 and legacy go straight to the verify-photo card now — alt method
+  // lives on the last step ("DOESN'T WORK? YOU CAN TRY THIS:").
   document.getElementById('stain-final').style.display = 'block';
   document.getElementById('stain-verify-result').style.display = 'none';
   document.getElementById('stain-verify-result').innerHTML = '';
@@ -2625,6 +2651,11 @@ function resetStainFlow() {
   // Re-show the gallery/camera buttons
   const uploadBtns = document.getElementById('stain-upload-buttons');
   if (uploadBtns) uploadBtns.style.display = 'flex';
+  // Clear the per-step photo thumbnail
+  const stepPhoto = document.getElementById('step-photo');
+  const stepPhotoWrap = document.getElementById('step-photo-wrap');
+  if (stepPhoto) stepPhoto.src = '';
+  if (stepPhotoWrap) stepPhotoWrap.style.display = 'none';
 }
 
 function hideAll(ids) {
